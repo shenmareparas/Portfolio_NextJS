@@ -24,7 +24,7 @@ export function Header() {
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-2">
                     <Link href="/" className="flex items-center space-x-2">
-                        <span className="text-xl font-bold">DevPortfolio</span>
+                        <span className="text-xl font-bold">Paras Shenmare</span>
                     </Link>
                 </div>
 
