@@ -11,7 +11,6 @@ export function ThemeSwitcher({ className }: { className?: string }) {
     const [isOpen, setIsOpen] = React.useState(false);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-    // Close dropdown when clicking outside
     React.useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (

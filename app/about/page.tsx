@@ -29,10 +29,10 @@ export default function AboutPage() {
                         </p>
                         <p>
                             I specialize in creating intuitive, user-friendly
-                            mobile experiences using technologies like React
-                            Native, Flutter, and native iOS/Android frameworks.
-                            I believe in writing clean, maintainable code and
-                            staying up-to-date with the latest industry trends.
+                            mobile experiences using technologies like Flutter,
+                            and native iOS/Android frameworks. I believe in
+                            writing clean, maintainable code and staying
+                            up-to-date with the latest industry trends.
                         </p>
                         <p>
                             When I&apos;m not coding, you can find me exploring

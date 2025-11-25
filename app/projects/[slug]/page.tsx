@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, Github, Smartphone, Globe } from "lucide-react";
+import { siGoogleplay } from "simple-icons/icons";
+import { SimpleIconComponent } from "@/components/simple-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import projectsData from "@/data/projects.json";
@@ -142,8 +144,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
-                                    <Smartphone className="h-4 w-4" /> Play
-                                    Store
+                                    <SimpleIconComponent
+                                        icon={siGoogleplay}
+                                        className="h-4 w-4"
+                                    />{" "}
+                                    Play Store
                                 </a>
                             </Button>
                         )}

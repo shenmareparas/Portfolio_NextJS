@@ -19,7 +19,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 
-// Form Schema
 const formSchema = z.object({
     name: z.string().min(2, {
         message: "Name must be at least 2 characters.",
@@ -39,7 +38,6 @@ export function ContactForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { toast } = useToast();
 
-    // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,7 +48,6 @@ export function ContactForm() {
         },
     });
 
-    // 2. Define a submit handler.
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsSubmitting(true);
         try {

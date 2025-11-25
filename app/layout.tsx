@@ -23,15 +23,16 @@ export const metadata: Metadata = {
         template: "%s | Paras S.",
     },
     description:
-        "Portfolio of a passionate Mobile Developer specializing in React Native and iOS development.",
+        "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
     keywords: [
         "Mobile Developer",
-        "React Native",
+        "Flutter",
+        "Android",
         "iOS",
         "Portfolio",
         "Software Engineer",
     ],
-    metadataBase: new URL("https://example.com"),
+    metadataBase: new URL("https://parasnextjs.com"),
 };
 
 export default function RootLayout({
