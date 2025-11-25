@@ -19,8 +19,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
     title: {
-        default: "Mobile Developer Portfolio",
-        template: "%s | Mobile Developer Portfolio",
+        default: "Paras Shenmare",
+        template: "%s | Paras S.",
     },
     description:
         "Portfolio of a passionate Mobile Developer specializing in React Native and iOS development.",

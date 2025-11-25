@@ -5,9 +5,11 @@ import { FadeIn } from "@/components/fade-in";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Home",
+    title: {
+        absolute: "Paras Shenmare",
+    },
     description:
-        "Paras - Mobile Developer Portfolio. specialized in React Native and iOS development.",
+        "Paras - Mobile Developer Portfolio. specialized in android and iOS development.",
 };
 
 export default function Home() {
@@ -26,7 +28,7 @@ export default function Home() {
                         <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
                             I build accessible, pixel-perfect, and performant
                             mobile applications for iOS and Android. Passionate
-                            about React Native, Swift, and Kotlin.
+                            about Flutter, Kotlin and Swift.
                         </p>
                         <div className="flex flex-col gap-4 sm:flex-row">
                             <Link href="/projects">
