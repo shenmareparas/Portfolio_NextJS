@@ -71,7 +71,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             {/* Back Button */}
             <Link
                 href="/projects"
-                className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
+                className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover"
             >
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
             </Link>

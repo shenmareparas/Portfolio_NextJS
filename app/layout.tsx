@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
+import { CustomCursor } from "@/components/ui/custom-cursor";
 
 const inter = Inter({
     variable: "--font-sans",
@@ -51,6 +52,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    <CustomCursor />
                     <Header />
                     <main className="flex-1">{children}</main>
                     <Footer />

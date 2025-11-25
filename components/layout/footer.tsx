@@ -15,7 +15,7 @@ export function Footer() {
                             href="https://github.com/shenmareparas/Portfolio_NextJS"
                             target="_blank"
                             rel="noreferrer"
-                            className="font-medium underline underline-offset-4"
+                            className="font-medium underline underline-offset-4 cursor-hover"
                         >
                             GitHub
                         </a>
@@ -29,7 +29,7 @@ export function Footer() {
                             href={social.href}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-muted-foreground hover:text-foreground transition-colors"
+                            className="text-muted-foreground hover:text-foreground transition-colors cursor-hover"
                             aria-label={social.name}
                         >
                             <social.icon className="h-5 w-5" />
