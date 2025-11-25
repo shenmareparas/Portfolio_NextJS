@@ -3,7 +3,7 @@ import { Linkedin } from "lucide-react";
 import type { SimpleIcon } from "simple-icons";
 
 const SimpleIconWrapper = (icon: SimpleIcon) => {
-    return ({ className }: { className?: string }) => (
+    const Icon = ({ className }: { className?: string }) => (
         <svg
             role="img"
             viewBox="0 0 24 24"
@@ -14,6 +14,8 @@ const SimpleIconWrapper = (icon: SimpleIcon) => {
             <path d={icon.path} />
         </svg>
     );
+    Icon.displayName = `SimpleIconWrapper(${icon.title})`;
+    return Icon;
 };
 
 export const socials = [
