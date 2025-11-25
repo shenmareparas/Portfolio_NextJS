@@ -1,0 +1,117 @@
+import { ContactForm } from "@/components/contact-form";
+import { Mail, Phone } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { socials } from "@/data/socials";
+import { FadeIn } from "@/components/fade-in";
+
+export const metadata = {
+    title: "Contact",
+    description: "Get in touch with me for opportunities or collaborations.",
+};
+
+export default function ContactPage() {
+    return (
+        <div className="container mx-auto py-12 px-4 space-y-12">
+            <FadeIn>
+                <div className="flex flex-col gap-4 text-center">
+                    <h1 className="text-4xl font-bold tracking-tight">
+                        Get in Touch
+                    </h1>
+                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                        Have a project in mind or just want to say hi? I&apos;d
+                        love to hear from you.
+                    </p>
+                </div>
+            </FadeIn>
+
+            <FadeIn delay={0.2}>
+                <div className="grid gap-12 md:grid-cols-2 max-w-5xl mx-auto">
+                    {/* Contact Form */}
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <h2 className="text-2xl font-semibold tracking-tight">
+                                Send a Message
+                            </h2>
+                            <p className="text-muted-foreground">
+                                Fill out the form below and I&apos;ll get back
+                                to you as soon as possible.
+                            </p>
+                        </div>
+                        <ContactForm />
+                    </div>
+
+                    {/* Contact Info */}
+                    <div className="space-y-8">
+                        <div className="space-y-2">
+                            <h2 className="text-2xl font-semibold tracking-tight">
+                                Contact Information
+                            </h2>
+                            <p className="text-muted-foreground">
+                                You can also reach me through the following
+                                channels.
+                            </p>
+                        </div>
+
+                        <div className="space-y-4">
+                            <a
+                                href="mailto:shenmareparas@gmail.com"
+                                className="flex items-center gap-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                            >
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                    <Mail className="h-5 w-5 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="font-medium">Email</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        shenmareparas@gmail.com
+                                    </p>
+                                </div>
+                            </a>
+                            <a
+                                href="tel:+918830620995"
+                                className="flex items-center gap-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+                            >
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                                    <Phone className="h-5 w-5 text-primary" />
+                                </div>
+                                <div>
+                                    <p className="font-medium">Phone</p>
+                                    <p className="text-sm text-muted-foreground">
+                                        +91 8830620995
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+
+                        <div className="space-y-4">
+                            <h3 className="font-medium">Social Media</h3>
+                            <div className="flex flex-wrap gap-4">
+                                {socials.map((social) => {
+                                    const Icon = social.icon;
+                                    return (
+                                        <Button
+                                            key={social.name}
+                                            variant="outline"
+                                            size="icon"
+                                            className="h-12 w-12 rounded-full"
+                                            asChild
+                                        >
+                                            <a
+                                                href={social.href}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                aria-label={social.name}
+                                            >
+                                                <Icon className="h-5 w-5" />
+                                            </a>
+                                        </Button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </FadeIn>
+        </div>
+    );
+}

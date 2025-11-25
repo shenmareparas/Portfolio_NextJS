@@ -1,0 +1,110 @@
+[
+    {
+        "id": "1",
+        "slug": "vit-mess",
+        "title": "VIT Mess",
+        "description": "Cross-platform app & website for real-time mess menu search at VIT University.",
+        "fullDescription": "Engineered a Flutter-based cross-platform mobile application (Android/iOS) and responsive website that allows VIT students to instantly check available mess food items. Reduced food waste by 20% and cut average food-search time by 15% for over 10,000 daily users. Achieved 4,000+ Play Store downloads with 4.8★ rating and 3,000+ daily website visits.",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "JavaScript",
+            "Firebase",
+            "Android",
+            "iOS",
+            "Web"
+        ],
+        "role": "Full Stack Flutter Developer",
+        "timeline": "2023 - 2024",
+        "links": {
+            "github": "https://github.com/shenmareparas/VIT_Bhopal_Mess",
+            "demo": "https://vitbmessdemo.vercel.app"
+        },
+        "image": "/project.svg",
+        "gallery": [
+            "/project.svg",
+            "/project.svg",
+            "/project.svg"
+        ]
+    },
+    {
+        "id": "2",
+        "slug": "ai-chess",
+        "title": "AI Chess",
+        "description": "Feature-rich chess app with AI opponent and online multiplayer.",
+        "fullDescription": "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Includes Stockfish-level AI, online multiplayer, puzzles, and educational content. Gained 150,000+ downloads and 35,000 active users in the first quarter. Maintained 4+ star rating on Play Store.",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "Flame Engine",
+            "Chess AI",
+            "Android",
+            "iOS"
+        ],
+        "role": "Lead Flutter Developer",
+        "timeline": "2023 - 2024",
+        "links": {
+            "github": "https://github.com/shenmareparas/Chess",
+            "playStore": "https://play.google.com/store/apps/details?id=com.shenmareparas.chess"
+        },
+        "image": "/project.svg",
+        "gallery": [
+            "/project.svg",
+            "/project.svg",
+            "/project.svg"
+        ]
+    },
+    {
+        "id": "3",
+        "slug": "yodoc",
+        "title": "YoDoc",
+        "description": "Symptom checker & first-aid recommendation mobile app.",
+        "fullDescription": "Developed a health-tech mobile application that enables users to input symptoms and receive instant first-aid and over-the-counter medication suggestions. Focused on clean UI/UX and reliable medical data presentation. Reduced user-reported bugs by 25% through rigorous code audits.",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "Android",
+            "iOS",
+            "Healthcare"
+        ],
+        "role": "Mobile Developer",
+        "timeline": "2023",
+        "links": {
+            "github": "https://github.com/shenmareparas/yodoc",
+            "playStore": "https://play.google.com/store/apps/details?id=com.shenmareparas.yodoc"
+        },
+        "image": "/project.svg",
+        "gallery": [
+            "/project.svg",
+            "/project.svg",
+            "/project.svg"
+        ]
+    },
+    {
+        "id": "4",
+        "slug": "cropshop",
+        "title": "CropShop",
+        "description": "E-commerce platform connecting farmers directly to consumers.",
+        "fullDescription": "Dual-app system (User + Admin) built with Flutter and Firebase for real-time inventory, orders, and payments. Improved operational efficiency by 45%, reduced manual data entry by 50%, and increased transaction volume by 30%. Features separate dashboards for farmers and buyers.",
+        "tags": [
+            "Flutter",
+            "Dart",
+            "Firebase",
+            "Android",
+            "iOS",
+            "E-commerce"
+        ],
+        "role": "Full Stack Mobile Developer",
+        "timeline": "2024",
+        "links": {
+            "github": "https://github.com/shenmareparas/CropShop",
+            "githubAdmin": "https://github.com/shenmareparas/CropShop-Admin"
+        },
+        "image": "/project.svg",
+        "gallery": [
+            "/project.svg",
+            "/project.svg",
+            "/project.svg"
+        ]
+    }
+]
