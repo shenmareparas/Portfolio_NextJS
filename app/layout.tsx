@@ -7,6 +7,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { CustomCursor } from "@/components/ui/custom-cursor";
+import { Preloader } from "@/components/ui/preloader";
 
 const inter = Inter({
     variable: "--font-sans",
@@ -52,6 +53,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    <Preloader />
                     <CustomCursor />
                     <Header />
                     <main className="flex-1">{children}</main>

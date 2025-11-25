@@ -1,0 +1,55 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+export function Preloader() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [counter, setCounter] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCounter((prev) => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => setIsLoading(false), 500); // Small delay after reaching 100%
+                    return 100;
+                }
+                // Random increment for more realistic feel
+                const increment = Math.floor(Math.random() * 10) + 1;
+                return Math.min(prev + increment, 100);
+            });
+        }, 100);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <AnimatePresence mode="wait">
+            {isLoading && (
+                <motion.div
+                    className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-background"
+                    initial={{ y: 0 }}
+                    exit={{
+                        y: "-100%",
+                        transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
+                    }}
+                >
+                    <div className="flex items-end overflow-hidden">
+                        <motion.span
+                            className="text-[15vw] font-bold leading-none text-foreground"
+                            initial={{ opacity: 0, y: 100 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                        >
+                            {counter}
+                        </motion.span>
+                        <span className="mb-4 text-4xl font-bold text-foreground">
+                            %
+                        </span>
+                    </div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+}
