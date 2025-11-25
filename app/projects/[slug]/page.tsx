@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BackButton } from "@/components/ui/back-button";
 import { ArrowLeft, Github, Smartphone, Globe } from "lucide-react";
 import { siGoogleplay } from "simple-icons/icons";
 import { SimpleIconComponent } from "@/components/simple-icon";
@@ -69,12 +69,9 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     return (
         <div className="container mx-auto py-12 px-4 space-y-12">
             {/* Back Button */}
-            <Link
-                href="/projects"
-                className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover"
-            >
+            <BackButton className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover">
                 <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
-            </Link>
+            </BackButton>
 
             {/* Hero Section */}
             <div className="grid gap-8 md:grid-cols-2">
