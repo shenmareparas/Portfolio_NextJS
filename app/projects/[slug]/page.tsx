@@ -109,6 +109,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
 
                     <div className="flex flex-wrap gap-4">
+                        {project.links?.githubAdmin && (
+                            <Button asChild variant="outline" className="gap-2">
+                                <a
+                                    href={project.links.githubAdmin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Github className="h-4 w-4" /> GitHub
+                                    (Admin)
+                                </a>
+                            </Button>
+                        )}
                         {project.links?.github && (
                             <Button asChild variant="outline" className="gap-2">
                                 <a
@@ -120,18 +132,6 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                     {project.links.githubAdmin
                                         ? "GitHub (User)"
                                         : "GitHub"}
-                                </a>
-                            </Button>
-                        )}
-                        {project.links?.githubAdmin && (
-                            <Button asChild variant="outline" className="gap-2">
-                                <a
-                                    href={project.links.githubAdmin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Github className="h-4 w-4" /> GitHub
-                                    (Admin)
                                 </a>
                             </Button>
                         )}
