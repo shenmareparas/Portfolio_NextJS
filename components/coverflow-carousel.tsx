@@ -88,11 +88,88 @@ export function CoverflowCarousel({
         }
     };
 
+    const lastWheelTime = useRef<number>(0);
+    const mouseStart = useRef<number | null>(null);
+    const mouseEnd = useRef<number | null>(null);
+    const isDragging = useRef(false);
+    const wasDragging = useRef(false);
+
+    const onMouseDown = (e: React.MouseEvent) => {
+        isDragging.current = true;
+        mouseStart.current = e.clientX;
+        mouseEnd.current = null;
+        wasDragging.current = false;
+    };
+
+    const onMouseMove = (e: React.MouseEvent) => {
+        if (!isDragging.current) return;
+        mouseEnd.current = e.clientX;
+        e.preventDefault();
+    };
+
+    const onMouseUp = () => {
+        if (!isDragging.current) return;
+        isDragging.current = false;
+
+        if (mouseStart.current === null || mouseEnd.current === null) return;
+
+        const distance = mouseStart.current - mouseEnd.current;
+
+        if (Math.abs(distance) > minSwipeDistance) {
+            wasDragging.current = true;
+            if (distance > 0) {
+                triggerInteractionPause();
+                setActive((prev) => Math.min(prev + 1, images.length - 1));
+            } else {
+                triggerInteractionPause();
+                setActive((prev) => Math.max(prev - 1, 0));
+            }
+        }
+    };
+
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
+
+        const handleWheel = (e: WheelEvent) => {
+            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+                e.preventDefault();
+
+                const now = Date.now();
+                if (now - lastWheelTime.current < 500) return;
+
+                if (Math.abs(e.deltaX) > 10) {
+                    triggerInteractionPause();
+                    if (e.deltaX > 0) {
+                        setActive((prev) =>
+                            Math.min(prev + 1, images.length - 1)
+                        );
+                    } else {
+                        setActive((prev) => Math.max(prev - 1, 0));
+                    }
+                    lastWheelTime.current = now;
+                }
+            }
+        };
+
+        container.addEventListener("wheel", handleWheel, { passive: false });
+        return () => container.removeEventListener("wheel", handleWheel);
+    }, [images.length]);
+
     return (
         <div
+            ref={containerRef}
             className={cn("relative w-full max-w-6xl mx-auto py-12", className)}
             onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
+            onMouseLeave={() => {
+                setIsPaused(false);
+                if (isDragging.current) onMouseUp();
+            }}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
@@ -151,9 +228,10 @@ export function CoverflowCarousel({
                     return (
                         <div
                             key={i}
-                            className="absolute w-[260px] md:w-[320px] aspect-[9/16] transition-all duration-500 ease-out cursor-pointer touch-manipulation"
+                            className="absolute w-[260px] md:w-[320px] aspect-[9/16] transition-all duration-500 ease-out cursor-pointer touch-manipulation select-none"
                             style={style}
                             onClick={() => {
+                                if (wasDragging.current) return;
                                 triggerInteractionPause();
                                 setActive(i);
                             }}
@@ -166,6 +244,7 @@ export function CoverflowCarousel({
                                     className="object-cover"
                                     sizes="(max-width: 768px) 100vw, 320px"
                                     priority={isActive}
+                                    draggable={false}
                                 />
                                 {/* Overlay for inactive cards */}
                                 <div
