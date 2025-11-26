@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -18,23 +18,38 @@ export function CoverflowCarousel({
     const [active, setActive] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
 
+    const [interactionPause, setInteractionPause] = useState(false);
+    const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const triggerInteractionPause = () => {
+        setInteractionPause(true);
+        if (interactionTimeoutRef.current) {
+            clearTimeout(interactionTimeoutRef.current);
+        }
+        interactionTimeoutRef.current = setTimeout(() => {
+            setInteractionPause(false);
+        }, 3000);
+    };
+
     // Handle auto-scrolling
     useEffect(() => {
-        if (isPaused) return;
+        if (isPaused || interactionPause) return;
 
         const interval = setInterval(() => {
             setActive((prev) => (prev + 1) % images.length);
         }, autoScrollInterval);
 
         return () => clearInterval(interval);
-    }, [isPaused, images.length, autoScrollInterval]);
+    }, [isPaused, interactionPause, images.length, autoScrollInterval]);
 
     // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === "ArrowLeft") {
+                triggerInteractionPause();
                 setActive((prev) => Math.max(prev - 1, 0));
             } else if (e.key === "ArrowRight") {
+                triggerInteractionPause();
                 setActive((prev) => Math.min(prev + 1, images.length - 1));
             }
         };
@@ -42,11 +57,45 @@ export function CoverflowCarousel({
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [images.length]);
 
+    const touchStart = useRef<number | null>(null);
+    const touchEnd = useRef<number | null>(null);
+
+    // Minimum swipe distance (in px)
+    const minSwipeDistance = 50;
+
+    const onTouchStart = (e: React.TouchEvent) => {
+        touchEnd.current = null;
+        touchStart.current = e.targetTouches[0].clientX;
+    };
+
+    const onTouchMove = (e: React.TouchEvent) => {
+        touchEnd.current = e.targetTouches[0].clientX;
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStart.current || !touchEnd.current) return;
+        const distance = touchStart.current - touchEnd.current;
+        const isLeftSwipe = distance > minSwipeDistance;
+        const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe) {
+            triggerInteractionPause();
+            setActive((prev) => Math.min(prev + 1, images.length - 1));
+        }
+        if (isRightSwipe) {
+            triggerInteractionPause();
+            setActive((prev) => Math.max(prev - 1, 0));
+        }
+    };
+
     return (
         <div
             className={cn("relative w-full max-w-6xl mx-auto py-12", className)}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         >
             <div className="relative w-full h-[600px] flex items-center justify-center [perspective:500px] [transform-style:preserve-3d] overflow-hidden">
                 {/* Left Navigation */}
@@ -61,6 +110,7 @@ export function CoverflowCarousel({
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        triggerInteractionPause();
                         if (active > 0) {
                             setActive((prev) => prev - 1);
                         }
@@ -103,7 +153,10 @@ export function CoverflowCarousel({
                             key={i}
                             className="absolute w-[260px] md:w-[320px] aspect-[9/16] transition-all duration-500 ease-out cursor-pointer touch-manipulation"
                             style={style}
-                            onClick={() => setActive(i)}
+                            onClick={() => {
+                                triggerInteractionPause();
+                                setActive(i);
+                            }}
                         >
                             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-900 border border-white/10 shadow-2xl">
                                 <Image
@@ -136,6 +189,7 @@ export function CoverflowCarousel({
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        triggerInteractionPause();
                         if (active < images.length - 1) {
                             setActive((prev) => prev + 1);
                         }
@@ -154,6 +208,7 @@ export function CoverflowCarousel({
                         type="button"
                         onClick={(e) => {
                             e.preventDefault();
+                            triggerInteractionPause();
                             setActive(idx);
                         }}
                         className={cn(

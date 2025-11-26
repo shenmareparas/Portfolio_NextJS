@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
+import { NavigationProvider } from "@/components/providers/navigation-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
@@ -53,12 +54,14 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Preloader />
-                    <CustomCursor />
-                    <Header />
-                    <main className="flex-1 md:pb-16">{children}</main>
-                    <Footer />
-                    <Toaster />
+                    <NavigationProvider>
+                        <Preloader />
+                        <CustomCursor />
+                        <Header />
+                        <main className="flex-1 md:pb-16">{children}</main>
+                        <Footer />
+                        <Toaster />
+                    </NavigationProvider>
                 </ThemeProvider>
                 <Analytics />
             </body>

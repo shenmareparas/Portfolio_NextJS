@@ -7,6 +7,7 @@ import { SimpleIconComponent } from "@/components/simple-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CoverflowCarousel } from "@/components/coverflow-carousel";
+import { FadeIn } from "@/components/fade-in";
 import projectsData from "@/data/projects.json";
 
 interface ProjectPageProps {
@@ -54,6 +55,7 @@ interface Project {
         githubAdmin?: string;
     };
     image: string;
+    logo: string;
     gallery: string[];
     accentColor?: string;
 }
@@ -71,126 +73,148 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     return (
         <div className="container mx-auto py-12 px-4 space-y-12">
             {/* Back Button */}
-            <BackButton className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover">
-                <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
-            </BackButton>
+            <FadeIn>
+                <BackButton className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover">
+                    <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
+                </BackButton>
+            </FadeIn>
 
             {/* Hero Section */}
-            <div className="grid gap-8 md:grid-cols-2">
-                <div className="space-y-6">
-                    <h1 className="text-4xl font-bold tracking-tight">
-                        {project.title}
-                    </h1>
-                    <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag) => (
-                            <Badge
-                                key={tag}
-                                variant="secondary"
-                                style={
-                                    project.accentColor
-                                        ? {
-                                              backgroundColor: `${project.accentColor}15`,
-                                              color: project.accentColor,
-                                          }
-                                        : undefined
-                                }
-                            >
-                                {tag}
-                            </Badge>
-                        ))}
-                    </div>
-                    <p className="text-xl text-muted-foreground leading-relaxed">
-                        {project.fullDescription}
-                    </p>
-
-                    <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/40">
-                        <div>
-                            <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
-                                Role
-                            </h3>
-                            <p className="mt-1 font-medium">{project.role}</p>
+            <FadeIn delay={0.1}>
+                <div className="grid gap-8 md:grid-cols-2">
+                    <div className="space-y-6">
+                        <Image
+                            src={project.logo}
+                            alt={`${project.title} logo`}
+                            width={80}
+                            height={80}
+                            className="mb-4 rounded-2xl shadow-sm"
+                        />
+                        <h1 className="text-4xl font-bold tracking-tight">
+                            {project.title}
+                        </h1>
+                        <div className="flex flex-wrap gap-2">
+                            {project.tags.map((tag) => (
+                                <Badge
+                                    key={tag}
+                                    variant="secondary"
+                                    style={
+                                        project.accentColor
+                                            ? {
+                                                  backgroundColor: `${project.accentColor}15`,
+                                                  color: project.accentColor,
+                                              }
+                                            : undefined
+                                    }
+                                >
+                                    {tag}
+                                </Badge>
+                            ))}
                         </div>
-                        <div>
-                            <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
-                                Timeline
-                            </h3>
-                            <p className="mt-1 font-medium">
-                                {project.timeline}
-                            </p>
+                        <p className="text-xl text-muted-foreground leading-relaxed">
+                            {project.fullDescription}
+                        </p>
+
+                        <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/40">
+                            <div>
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
+                                    Role
+                                </h3>
+                                <p className="mt-1 font-medium">
+                                    {project.role}
+                                </p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
+                                    Timeline
+                                </h3>
+                                <p className="mt-1 font-medium">
+                                    {project.timeline}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4">
+                            {project.links?.githubAdmin && (
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="gap-2"
+                                >
+                                    <a
+                                        href={project.links.githubAdmin}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Github className="h-4 w-4" /> GitHub
+                                        (Admin)
+                                    </a>
+                                </Button>
+                            )}
+                            {project.links?.github && (
+                                <Button
+                                    asChild
+                                    variant="outline"
+                                    className="gap-2"
+                                >
+                                    <a
+                                        href={project.links.github}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Github className="h-4 w-4" />{" "}
+                                        {project.links.githubAdmin
+                                            ? "GitHub (User)"
+                                            : "GitHub"}
+                                    </a>
+                                </Button>
+                            )}
+                            {project.links?.playStore && (
+                                <Button asChild className="gap-2">
+                                    <a
+                                        href={project.links.playStore}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <SimpleIconComponent
+                                            icon={siGoogleplay}
+                                            className="h-4 w-4"
+                                        />{" "}
+                                        Play Store
+                                    </a>
+                                </Button>
+                            )}
+                            {project.links?.appStore && (
+                                <Button asChild className="gap-2">
+                                    <a
+                                        href={project.links.appStore}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Smartphone className="h-4 w-4" /> App
+                                        Store
+                                    </a>
+                                </Button>
+                            )}
+                            {project.links?.demo && (
+                                <Button asChild className="gap-2">
+                                    <a
+                                        href={project.links.demo}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Globe className="h-4 w-4" /> Live Demo
+                                    </a>
+                                </Button>
+                            )}
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-4">
-                        {project.links?.githubAdmin && (
-                            <Button asChild variant="outline" className="gap-2">
-                                <a
-                                    href={project.links.githubAdmin}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Github className="h-4 w-4" /> GitHub
-                                    (Admin)
-                                </a>
-                            </Button>
-                        )}
-                        {project.links?.github && (
-                            <Button asChild variant="outline" className="gap-2">
-                                <a
-                                    href={project.links.github}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Github className="h-4 w-4" />{" "}
-                                    {project.links.githubAdmin
-                                        ? "GitHub (User)"
-                                        : "GitHub"}
-                                </a>
-                            </Button>
-                        )}
-                        {project.links?.playStore && (
-                            <Button asChild className="gap-2">
-                                <a
-                                    href={project.links.playStore}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <SimpleIconComponent
-                                        icon={siGoogleplay}
-                                        className="h-4 w-4"
-                                    />{" "}
-                                    Play Store
-                                </a>
-                            </Button>
-                        )}
-                        {project.links?.appStore && (
-                            <Button asChild className="gap-2">
-                                <a
-                                    href={project.links.appStore}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Smartphone className="h-4 w-4" /> App Store
-                                </a>
-                            </Button>
-                        )}
-                        {project.links?.demo && (
-                            <Button asChild className="gap-2">
-                                <a
-                                    href={project.links.demo}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <Globe className="h-4 w-4" /> Live Demo
-                                </a>
-                            </Button>
-                        )}
+                    <div className="w-full mx-auto">
+                        <CoverflowCarousel images={project.gallery || []} />
                     </div>
                 </div>
-
-                <div className="w-full mx-auto">
-                    <CoverflowCarousel images={project.gallery || []} />
-                </div>
-            </div>
+            </FadeIn>
         </div>
     );
 }

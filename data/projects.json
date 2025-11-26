@@ -20,7 +20,8 @@
             "github": "https://github.com/shenmareparas/VIT_Bhopal_Mess",
             "demo": "https://vitbmessdemo.vercel.app"
         },
-        "image": "/project/banner/VIT_Mess.webp",
+        "image": "/project/vitbmess/banner.webp",
+        "logo": "/project/vitbmess/logo.webp",
         "accentColor": "#4F870D",
         "gallery": [
             "/project/vitbmess/1.webp",
@@ -53,7 +54,8 @@
             "github": "https://github.com/shenmareparas/Chess",
             "playStore": "https://play.google.com/store/apps/details?id=com.shenmareparas.chess"
         },
-        "image": "/project/banner/AI_Chess.webp",
+        "image": "/project/ai_chess/banner.webp",
+        "logo": "/project/ai_chess/logo.webp",
         "accentColor": "#2EA66E",
         "gallery": [
             "/project/ai_chess/1.webp",
@@ -84,7 +86,8 @@
             "github": "https://github.com/shenmareparas/yodoc",
             "playStore": "https://play.google.com/store/apps/details?id=com.shenmareparas.yodoc"
         },
-        "image": "/project/banner/YoDoc.webp",
+        "image": "/project/yodoc/banner.webp",
+        "logo": "/project/yodoc/logo.webp",
         "accentColor": "#26A6EF",
         "gallery": [
             "/project/yodoc/1.webp",
@@ -114,6 +117,7 @@
             "github": "https://github.com/shenmareparas/CropShop"
         },
         "image": "/project.svg",
+        "logo": "/project.svg",
         "accentColor": "#06D6A0",
         "gallery": [
             "/project.svg",
@@ -138,6 +142,7 @@
             "github": "https://github.com/shenmareparas/Apple_Vision_Pro_UI"
         },
         "image": "/project.svg",
+        "logo": "/project.svg",
         "accentColor": "#7209B7",
         "gallery": [
             "/project/vision_pro/1.webp",
@@ -162,6 +167,7 @@
             "github": "https://github.com/shenmareparas/music_player"
         },
         "image": "/project.svg",
+        "logo": "/project.svg",
         "accentColor": "#F72585",
         "gallery": [
             "/project.svg",
@@ -182,6 +188,7 @@
         "role": "Full Stack Developer",
         "timeline": "2025 - 2026",
         "image": "/upcoming.svg",
+        "logo": "/upcoming.svg",
         "accentColor": "#F72585",
         "gallery": [
             "/upcoming.svg",

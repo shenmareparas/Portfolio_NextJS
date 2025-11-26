@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import { useNavigation } from "@/components/providers/navigation-provider";
 import { Github, ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -32,9 +33,16 @@ interface ProjectCardProps {
 }
 
 export function ProjectCard({ project, index }: ProjectCardProps) {
+    const { previousPath } = useNavigation();
+    const shouldAnimate = !(
+        previousPath?.startsWith("/projects/") && previousPath !== "/projects"
+    );
+
     return (
         <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={
+                shouldAnimate ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }
+            }
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
             whileHover={{ y: -5 }}
