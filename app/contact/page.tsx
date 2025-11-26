@@ -3,6 +3,12 @@ import { Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { socials } from "@/data/socials";
 import { FadeIn } from "@/components/fade-in";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const metadata = {
     title: "Contact",
@@ -89,22 +95,32 @@ export default function ContactPage() {
                                 {socials.map((social) => {
                                     const Icon = social.icon;
                                     return (
-                                        <Button
-                                            key={social.name}
-                                            variant="outline"
-                                            size="icon"
-                                            className="h-12 w-12 rounded-full"
-                                            asChild
-                                        >
-                                            <a
-                                                href={social.href}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                aria-label={social.name}
-                                            >
-                                                <Icon className="h-5 w-5" />
-                                            </a>
-                                        </Button>
+                                        <TooltipProvider key={social.name}>
+                                            <Tooltip>
+                                                <TooltipTrigger asChild>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="h-12 w-12 rounded-full"
+                                                        asChild
+                                                    >
+                                                        <a
+                                                            href={social.href}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            aria-label={
+                                                                social.name
+                                                            }
+                                                        >
+                                                            <Icon className="h-5 w-5" />
+                                                        </a>
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>{social.name}</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                     );
                                 })}
                             </div>

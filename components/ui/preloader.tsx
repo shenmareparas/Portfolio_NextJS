@@ -1,18 +1,32 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
+    const [shouldAnimate, setShouldAnimate] = useState(true);
     const [counter, setCounter] = useState(0);
 
-    useEffect(() => {
+    const useIsomorphicLayoutEffect =
+        typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+    useIsomorphicLayoutEffect(() => {
+        const hasShown = sessionStorage.getItem("preloader_shown");
+        if (hasShown) {
+            setShouldAnimate(false);
+            setIsLoading(false);
+            return;
+        }
+
         const interval = setInterval(() => {
             setCounter((prev) => {
                 if (prev >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => setIsLoading(false), 500); // Small delay after reaching 100%
+                    setTimeout(() => {
+                        setIsLoading(false);
+                        sessionStorage.setItem("preloader_shown", "true");
+                    }, 500); // Small delay after reaching 100%
                     return 100;
                 }
                 // Random increment for more realistic feel
@@ -30,10 +44,17 @@ export function Preloader() {
                 <motion.div
                     className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-background"
                     initial={{ y: 0 }}
-                    exit={{
-                        y: "-100%",
-                        transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] },
-                    }}
+                    exit={
+                        shouldAnimate
+                            ? {
+                                  y: "-100%",
+                                  transition: {
+                                      duration: 0.8,
+                                      ease: [0.76, 0, 0.24, 1],
+                                  },
+                              }
+                            : { opacity: 0, transition: { duration: 0 } }
+                    }
                 >
                     <div className="flex items-end overflow-hidden">
                         <motion.span

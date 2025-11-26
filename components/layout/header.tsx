@@ -42,6 +42,18 @@ export function Header() {
         <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-2 z-50">
+                    {/* Mobile Menu Toggle */}
+                    <button
+                        className="p-2 md:hidden"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        {isMobileMenuOpen ? (
+                            <X className="h-6 w-6" />
+                        ) : (
+                            <Menu className="h-6 w-6" />
+                        )}
+                    </button>
                     <Link
                         href="/"
                         className="flex items-center space-x-2 cursor-hover"
@@ -75,17 +87,6 @@ export function Header() {
                 {/* Mobile Menu Toggle */}
                 <div className="flex items-center md:hidden gap-4 z-50">
                     <ThemeSwitcher />
-                    <button
-                        className="p-2"
-                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                        aria-label="Toggle menu"
-                    >
-                        {isMobileMenuOpen ? (
-                            <X className="h-6 w-6" />
-                        ) : (
-                            <Menu className="h-6 w-6" />
-                        )}
-                    </button>
                 </div>
             </div>
 
@@ -102,7 +103,7 @@ export function Header() {
                                 className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm md:hidden"
                             >
                                 <button
-                                    className="absolute top-4 right-4 p-2"
+                                    className="absolute top-4 left-4 p-2"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                     aria-label="Close menu"
                                 >

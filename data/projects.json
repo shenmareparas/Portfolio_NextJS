@@ -54,9 +54,13 @@
         },
         "image": "/project/banner/AI_Chess.webp",
         "gallery": [
-            "/project.svg",
-            "/project.svg",
-            "/project.svg"
+            "/project/ai_chess/1.webp",
+            "/project/ai_chess/2.webp",
+            "/project/ai_chess/3.webp",
+            "/project/ai_chess/4.webp",
+            "/project/ai_chess/5.webp",
+            "/project/ai_chess/6.webp",
+            "/project/ai_chess/7.webp"
         ]
     },
     {

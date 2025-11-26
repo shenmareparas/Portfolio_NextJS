@@ -1,4 +1,10 @@
 import { socials } from "@/data/socials";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function Footer() {
     return (
@@ -24,16 +30,24 @@ export function Footer() {
                 </div>
                 <div className="flex items-center gap-4">
                     {socials.map((social) => (
-                        <a
-                            key={social.name}
-                            href={social.href}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-muted-foreground hover:text-foreground transition-colors cursor-hover"
-                            aria-label={social.name}
-                        >
-                            <social.icon className="h-5 w-5" />
-                        </a>
+                        <TooltipProvider key={social.name}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <a
+                                        href={social.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="text-muted-foreground hover:text-foreground transition-colors cursor-hover"
+                                        aria-label={social.name}
+                                    >
+                                        <social.icon className="h-5 w-5" />
+                                    </a>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{social.name}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     ))}
                 </div>
             </div>
