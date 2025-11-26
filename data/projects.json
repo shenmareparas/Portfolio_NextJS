@@ -140,9 +140,8 @@
         "image": "/project.svg",
         "accentColor": "#7209B7",
         "gallery": [
-            "/project.svg",
-            "/project.svg",
-            "/project.svg"
+            "/project/vision_pro/1.webp",
+            "/project/vision_pro/2.webp"
         ]
     },
     {
@@ -168,6 +167,26 @@
             "/project.svg",
             "/project.svg",
             "/project.svg"
+        ]
+    },
+    {
+        "id": "7",
+        "slug": "tabletop",
+        "title": "Table Top",
+        "description": "Improves your dining experience.",
+        "fullDescription": "Elevates your dining experience with TableTop, a restaurant ordering app that streamlines the ordering process and enhances your dining experience.",
+        "tags": [
+            "Flutter",
+            "NextJS"
+        ],
+        "role": "Full Stack Developer",
+        "timeline": "2025 - 2026",
+        "image": "/upcoming.svg",
+        "accentColor": "#F72585",
+        "gallery": [
+            "/upcoming.svg",
+            "/upcoming.svg",
+            "/upcoming.svg"
         ]
     }
 ]
