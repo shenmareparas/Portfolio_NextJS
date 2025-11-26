@@ -6,6 +6,7 @@ import { siGoogleplay } from "simple-icons/icons";
 import { SimpleIconComponent } from "@/components/simple-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { CoverflowCarousel } from "@/components/coverflow-carousel";
 import projectsData from "@/data/projects.json";
 
 interface ProjectPageProps {
@@ -186,44 +187,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                 </div>
 
-                <div className="relative aspect-video overflow-hidden rounded-xl border bg-muted shadow-sm">
-                    <Image
-                        src={project.image}
-                        alt={project.title}
-                        fill
-                        className="object-cover"
-                        priority
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                    />
+                <div className="w-full mx-auto">
+                    <CoverflowCarousel images={project.gallery || []} />
                 </div>
             </div>
-
-            {/* Gallery Section */}
-            {project.gallery && project.gallery.length > 0 && (
-                <div className="space-y-6">
-                    <h2 className="text-2xl font-bold tracking-tight">
-                        Gallery
-                    </h2>
-                    <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
-                        {project.gallery.map((image, index) => (
-                            <div
-                                key={index}
-                                className="relative aspect-[9/16] overflow-hidden rounded-lg border bg-muted shadow-sm hover:shadow-md transition-shadow"
-                            >
-                                <Image
-                                    src={image}
-                                    alt={`${project.title} screenshot ${
-                                        index + 1
-                                    }`}
-                                    fill
-                                    className="object-cover transition-transform duration-300 hover:scale-105"
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

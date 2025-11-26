@@ -87,9 +87,10 @@
         "image": "/project/banner/YoDoc.webp",
         "accentColor": "#26A6EF",
         "gallery": [
-            "/project.svg",
-            "/project.svg",
-            "/project.svg"
+            "/project/yodoc/1.webp",
+            "/project/yodoc/2.webp",
+            "/project/yodoc/3.webp",
+            "/project/yodoc/4.webp"
         ]
     },
     {
