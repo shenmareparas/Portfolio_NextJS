@@ -54,6 +54,7 @@ interface Project {
     };
     image: string;
     gallery: string[];
+    accentColor?: string;
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
@@ -81,7 +82,18 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </h1>
                     <div className="flex flex-wrap gap-2">
                         {project.tags.map((tag) => (
-                            <Badge key={tag} variant="secondary">
+                            <Badge
+                                key={tag}
+                                variant="secondary"
+                                style={
+                                    project.accentColor
+                                        ? {
+                                              backgroundColor: `${project.accentColor}15`,
+                                              color: project.accentColor,
+                                          }
+                                        : undefined
+                                }
+                            >
                                 {tag}
                             </Badge>
                         ))}

@@ -21,6 +21,7 @@
             "demo": "https://vitbmessdemo.vercel.app"
         },
         "image": "/project/banner/VIT_Mess.webp",
+        "accentColor": "#4F870D",
         "gallery": [
             "/project/vitbmess/1.webp",
             "/project/vitbmess/2.webp",
@@ -53,6 +54,7 @@
             "playStore": "https://play.google.com/store/apps/details?id=com.shenmareparas.chess"
         },
         "image": "/project/banner/AI_Chess.webp",
+        "accentColor": "#2EA66E",
         "gallery": [
             "/project/ai_chess/1.webp",
             "/project/ai_chess/2.webp",
@@ -83,6 +85,7 @@
             "playStore": "https://play.google.com/store/apps/details?id=com.shenmareparas.yodoc"
         },
         "image": "/project/banner/YoDoc.webp",
+        "accentColor": "#26A6EF",
         "gallery": [
             "/project.svg",
             "/project.svg",
@@ -110,6 +113,7 @@
             "github": "https://github.com/shenmareparas/CropShop"
         },
         "image": "/project.svg",
+        "accentColor": "#06D6A0",
         "gallery": [
             "/project.svg",
             "/project.svg",
@@ -133,6 +137,7 @@
             "github": "https://github.com/shenmareparas/Apple_Vision_Pro_UI"
         },
         "image": "/project.svg",
+        "accentColor": "#7209B7",
         "gallery": [
             "/project.svg",
             "/project.svg",
@@ -157,6 +162,7 @@
             "github": "https://github.com/shenmareparas/music_player"
         },
         "image": "/project.svg",
+        "accentColor": "#F72585",
         "gallery": [
             "/project.svg",
             "/project.svg",
