@@ -20,12 +20,14 @@ const CarouselCard = React.memo(
         active,
         total,
         onClick,
+        isDragging,
     }: {
         src: string;
         index: number;
         active: number;
         total: number;
         onClick: () => void;
+        isDragging?: boolean;
     }) => {
         // Calculate circular distance
         let diff = index - active;
@@ -35,7 +37,7 @@ const CarouselCard = React.memo(
         const offset = -diff / 3; // Invert diff for offset to match original direction
         const absOffset = Math.abs(diff) / 3;
         const direction = Math.sign(-diff);
-        const isActive = index === active;
+        const isActive = Math.abs(diff) < 0.5;
 
         if (Math.abs(diff) > MAX_VISIBILITY) return null;
 
@@ -57,7 +59,12 @@ const CarouselCard = React.memo(
 
         return (
             <div
-                className="absolute w-[260px] md:w-[320px] aspect-[9/16] transition-all duration-500 ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className={cn(
+                    "absolute w-[260px] md:w-[320px] aspect-[9/16] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    isDragging
+                        ? "transition-none"
+                        : "transition-all duration-500"
+                )}
                 style={style}
                 onClick={onClick}
                 role="button"
@@ -98,6 +105,7 @@ export function CoverflowCarousel({
 }: CoverflowCarouselProps) {
     const [active, setActive] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+    const [dragOffset, setDragOffset] = useState(0); // In slide units
 
     const [interactionPause, setInteractionPause] = useState(false);
     const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -175,6 +183,10 @@ export function CoverflowCarousel({
     const isDragging = useRef(false);
     const wasDragging = useRef(false);
 
+    // Pill dragging refs
+    const isPillDragging = useRef(false);
+    const pillDragStart = useRef<number | null>(null);
+
     const onMouseDown = useCallback((e: React.MouseEvent) => {
         isDragging.current = true;
         mouseStart.current = e.clientX;
@@ -239,9 +251,111 @@ export function CoverflowCarousel({
         return () => container.removeEventListener("wheel", handleWheel);
     }, [images.length, triggerInteractionPause]);
 
+    // Pill drag logic
+    const handlePillDrag = useCallback(
+        (currentX: number) => {
+            if (pillDragStart.current === null) return;
+            const distance = currentX - pillDragStart.current;
+
+            // Sensitivity: 100px drag = 1 slide change
+            let offset = distance / 100;
+
+            // Clamp offset to prevent looping
+            // We want active + offset to be between [0, images.length - 1]
+            const minOffset = -active;
+            const maxOffset = images.length - 1 - active;
+
+            offset = Math.max(minOffset, Math.min(maxOffset, offset));
+
+            setDragOffset(offset);
+        },
+        [setDragOffset, active, images.length]
+    );
+
+    useEffect(() => {
+        const handleWindowMouseMove = (e: MouseEvent) => {
+            if (isPillDragging.current) {
+                handlePillDrag(e.clientX);
+            }
+        };
+        const handleWindowMouseUp = () => {
+            if (isPillDragging.current) {
+                isPillDragging.current = false;
+
+                // Snap to nearest slide
+                const newActive = active + dragOffset;
+
+                // Normalize newActive
+                // We want to round to the nearest integer
+                const snapped = Math.round(newActive);
+
+                // No wrapping needed since we clamped the offset
+                setActive(snapped);
+                setDragOffset(0);
+                pillDragStart.current = null;
+                triggerInteractionPause();
+            }
+        };
+
+        window.addEventListener("mousemove", handleWindowMouseMove);
+        window.addEventListener("mouseup", handleWindowMouseUp);
+        return () => {
+            window.removeEventListener("mousemove", handleWindowMouseMove);
+            window.removeEventListener("mouseup", handleWindowMouseUp);
+        };
+    }, [
+        handlePillDrag,
+        active,
+        dragOffset,
+        images.length,
+        triggerInteractionPause,
+    ]);
+
+    const onPillMouseDown = useCallback(
+        (e: React.MouseEvent) => {
+            e.stopPropagation();
+            e.preventDefault(); // Prevent text selection
+            isPillDragging.current = true;
+            pillDragStart.current = e.clientX;
+            setDragOffset(0);
+        },
+        [setDragOffset]
+    );
+
+    const onPillTouchStart = useCallback(
+        (e: React.TouchEvent) => {
+            e.stopPropagation();
+            pillDragStart.current = e.touches[0].clientX;
+            setDragOffset(0);
+        },
+        [setDragOffset]
+    );
+
+    const onPillTouchMove = useCallback(
+        (e: React.TouchEvent) => {
+            e.stopPropagation();
+            handlePillDrag(e.touches[0].clientX);
+        },
+        [handlePillDrag]
+    );
+
+    const onPillTouchEnd = useCallback(() => {
+        if (isPillDragging.current) {
+            isPillDragging.current = false;
+
+            const newActive = active + dragOffset;
+            const snapped = Math.round(newActive);
+
+            setActive(snapped);
+            setDragOffset(0);
+            pillDragStart.current = null;
+            triggerInteractionPause();
+        }
+    }, [active, dragOffset, triggerInteractionPause]);
+
     const handleCardClick = useCallback(
         (index: number) => {
-            if (wasDragging.current) return;
+            if (wasDragging.current || isPillDragging.current) return;
             triggerInteractionPause();
 
             if (index === active) return;
@@ -259,6 +373,17 @@ export function CoverflowCarousel({
         },
         [triggerInteractionPause, active, images.length]
     );
+
+    // Calculate effective active state for rendering
+    // We round the value so that the carousel snaps to integer positions
+    // instead of interpolating smoothly. This creates a "snap" effect
+    // where the cards animate to the next position only when the threshold is crossed.
+    const effectiveActive = Math.round(active + dragOffset);
+
+    // Calculate normalized active index for dots
+    // This ensures the "pill" snaps to the correct dot even when wrapping around
+    const normalizedActive =
+        ((effectiveActive % images.length) + images.length) % images.length;
 
     return (
         <div
@@ -300,9 +425,11 @@ export function CoverflowCarousel({
                         key={i}
                         src={src}
                         index={i}
-                        active={active}
+                        active={effectiveActive}
                         total={images.length}
                         onClick={() => handleCardClick(i)}
+                        // We want transitions enabled so they animate to the new snapped position
+                        isDragging={false}
                     />
                 ))}
 
@@ -335,11 +462,21 @@ export function CoverflowCarousel({
                         }}
                         className={cn(
                             "h-2 rounded-full transition-all duration-300",
-                            idx === active
-                                ? "bg-primary w-8"
+                            idx === normalizedActive
+                                ? "bg-primary w-8 cursor-grab active:cursor-grabbing"
                                 : "bg-primary/20 w-2 hover:bg-primary/40"
                         )}
                         aria-label={`Go to slide ${idx + 1}`}
+                        onMouseDown={
+                            idx === active ? onPillMouseDown : undefined
+                        }
+                        onTouchStart={
+                            idx === active ? onPillTouchStart : undefined
+                        }
+                        onTouchMove={
+                            idx === active ? onPillTouchMove : undefined
+                        }
+                        onTouchEnd={idx === active ? onPillTouchEnd : undefined}
                     />
                 ))}
             </div>
