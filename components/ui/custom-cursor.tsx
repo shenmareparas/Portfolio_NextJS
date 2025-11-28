@@ -1,13 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import {
-    motion,
-    useMotionValue,
-    useSpring,
-    useTransform,
-    AnimatePresence,
-} from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 export const CustomCursor = () => {
     const [isVisible, setIsVisible] = useState(false);

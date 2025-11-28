@@ -35,7 +35,32 @@ export const metadata: Metadata = {
         "Portfolio",
         "Software Engineer",
     ],
-    metadataBase: new URL("https://parasnextjs.com"),
+    metadataBase: new URL("https://parasnextjs.vercel.app"),
+    openGraph: {
+        type: "website",
+        locale: "en_US",
+        url: "https://parasnextjs.vercel.app",
+        title: "Paras Shenmare | Mobile Developer",
+        description:
+            "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
+        siteName: "Paras Shenmare Portfolio",
+        images: [
+            {
+                url: "/cover.webp",
+                width: 1200,
+                height: 630,
+                alt: "Paras Shenmare Portfolio",
+            },
+        ],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Paras Shenmare | Mobile Developer",
+        description:
+            "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
+        images: ["/cover.webp"],
+        creator: "@parasshenmare",
+    },
 };
 
 export default function RootLayout({

@@ -23,7 +23,7 @@ export function Header() {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
+        setTimeout(() => setMounted(true), 0);
     }, []);
 
     // Lock body scroll when mobile menu is open

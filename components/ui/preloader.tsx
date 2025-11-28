@@ -30,10 +30,10 @@ export function Preloader() {
                     return 100;
                 }
                 // Random increment for more realistic feel
-                const increment = Math.floor(Math.random() * 10) + 1;
+                const increment = Math.floor(Math.random() * 15) + 5; // Faster increment
                 return Math.min(prev + increment, 100);
             });
-        }, 100);
+        }, 50); // Faster interval
 
         return () => clearInterval(interval);
     }, []);

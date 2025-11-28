@@ -57,9 +57,17 @@ const CarouselCard = React.memo(
 
         return (
             <div
-                className="absolute w-[260px] md:w-[320px] aspect-[9/16] transition-all duration-500 ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter]"
+                className="absolute w-[260px] md:w-[320px] aspect-[9/16] transition-all duration-500 ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 style={style}
                 onClick={onClick}
+                role="button"
+                tabIndex={isActive ? 0 : -1}
+                aria-label={`View slide ${index + 1}`}
+                onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                        onClick();
+                    }
+                }}
             >
                 <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-900 border border-white/10 shadow-2xl">
                     <Image
