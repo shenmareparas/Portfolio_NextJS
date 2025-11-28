@@ -16,7 +16,6 @@ export function NavigationProvider({
     const [previousPath, setPreviousPath] = useState<string | null>(null);
     const currentPathRef = useRef(pathname);
 
-    // Update previousPath if pathname changes
     if (currentPathRef.current !== pathname) {
         setPreviousPath(currentPathRef.current);
         currentPathRef.current = pathname;

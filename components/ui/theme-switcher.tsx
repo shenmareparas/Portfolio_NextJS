@@ -19,8 +19,42 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         setMounted(true);
     }, []);
 
-    const toggleTheme = () => {
-        setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+
+        // @ts-ignore
+        if (!document.startViewTransition) {
+            setTheme(newTheme);
+            return;
+        }
+
+        const x = e.clientX;
+        const y = e.clientY;
+        const endRadius = Math.hypot(
+            Math.max(x, innerWidth - x),
+            Math.max(y, innerHeight - y)
+        );
+
+        // @ts-ignore
+        const transition = document.startViewTransition(() => {
+            setTheme(newTheme);
+        });
+
+        transition.ready.then(() => {
+            document.documentElement.animate(
+                {
+                    clipPath: [
+                        `circle(0px at ${x}px ${y}px)`,
+                        `circle(${endRadius}px at ${x}px ${y}px)`,
+                    ],
+                },
+                {
+                    duration: 500,
+                    easing: "ease-in-out",
+                    pseudoElement: "::view-transition-new(root)",
+                }
+            );
+        });
     };
 
     const CurrentIcon =
