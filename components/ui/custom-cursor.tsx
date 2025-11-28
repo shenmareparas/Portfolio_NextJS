@@ -17,6 +17,7 @@ export const CustomCursor = () => {
     } | null>(null);
 
     useEffect(() => {
+        // Only show custom cursor on devices with fine pointer (mouse)
         const mediaQuery = window.matchMedia("(pointer: fine)");
 
         const handleMediaChange = (e: MediaQueryListEvent) => {
