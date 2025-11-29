@@ -141,8 +141,8 @@
         "links": {
             "github": "https://github.com/shenmareparas/Apple_Vision_Pro_UI"
         },
-        "image": "/project.svg",
-        "logo": "/project.svg",
+        "image": "/project/vision_pro/banner.webp",
+        "logo": "/project/vision_pro/logo.svg",
         "accentColor": "#7209B7",
         "gallery": [
             "/project/vision_pro/1.webp",
@@ -166,13 +166,13 @@
         "links": {
             "github": "https://github.com/shenmareparas/music_player"
         },
-        "image": "/project.svg",
-        "logo": "/project.svg",
+        "image": "/project/music_player/banner.webp",
+        "logo": "/project/music_player/logo.webp",
         "accentColor": "#F72585",
         "gallery": [
-            "/project.svg",
-            "/project.svg",
-            "/project.svg"
+            "/project/music_player/1.webp",
+            "/project/music_player/2.webp",
+            "/project/music_player/3.webp"
         ]
     },
     {

@@ -257,8 +257,12 @@ export function CoverflowCarousel({
             if (pillDragStart.current === null) return;
             const distance = currentX - pillDragStart.current;
 
-            // Sensitivity: 100px drag = 1 slide change
-            let offset = distance / 100;
+            // Calculate sensitivity based on container width
+            const containerWidth = containerRef.current?.clientWidth || 1000;
+            const totalSlides = Math.max(1, images.length - 1);
+            const pixelsPerSlide = containerWidth / totalSlides;
+
+            let offset = distance / pixelsPerSlide;
 
             // Clamp offset to prevent looping
             // We want active + offset to be between [0, images.length - 1]
