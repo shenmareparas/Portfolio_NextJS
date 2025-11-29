@@ -14,10 +14,20 @@ export const CustomCursor = () => {
         // Only show custom cursor on devices with fine pointer (mouse)
         const mediaQuery = window.matchMedia("(pointer: fine)");
 
+        // Immediately hide cursor if on a device with fine pointer
+        if (mediaQuery.matches) {
+            document.documentElement.classList.add("hide-default-cursor");
+        }
+
         const handleMediaChange = (e: MediaQueryListEvent) => {
             if (!e.matches) {
                 setIsVisible(false);
                 setInitialPos(null);
+                document.documentElement.classList.remove(
+                    "hide-default-cursor"
+                );
+            } else {
+                document.documentElement.classList.add("hide-default-cursor");
             }
         };
 
@@ -29,11 +39,12 @@ export const CustomCursor = () => {
         };
 
         mediaQuery.addEventListener("change", handleMediaChange);
-        window.addEventListener("mousemove", handleFirstMove);
+        window.addEventListener("mousemove", handleFirstMove, { once: true });
 
         return () => {
             mediaQuery.removeEventListener("change", handleMediaChange);
             window.removeEventListener("mousemove", handleFirstMove);
+            document.documentElement.classList.remove("hide-default-cursor");
         };
     }, [initialPos]);
 
@@ -52,7 +63,8 @@ const CursorInner = ({
     const mouseX = useMotionValue(initialX);
     const mouseY = useMotionValue(initialY);
 
-    const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
+    // Smoother spring config: reduced mass for responsiveness, adjusted damping/stiffness
+    const springConfig = { damping: 20, stiffness: 300, mass: 0.2 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
@@ -61,11 +73,12 @@ const CursorInner = ({
 
     const [isHovering, setIsHovering] = useState(false);
     const hoveredEl = useRef<HTMLElement | null>(null);
+    const hoveredRect = useRef<DOMRect | null>(null);
 
     useEffect(() => {
         const updateMousePosition = (e: MouseEvent) => {
-            if (hoveredEl.current) {
-                const rect = hoveredEl.current.getBoundingClientRect();
+            if (hoveredEl.current && hoveredRect.current) {
+                const rect = hoveredRect.current;
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
 
@@ -91,24 +104,35 @@ const CursorInner = ({
             if (interactive) {
                 setIsHovering(true);
                 hoveredEl.current = interactive as HTMLElement;
+                hoveredRect.current = interactive.getBoundingClientRect();
             } else {
                 setIsHovering(false);
                 hoveredEl.current = null;
+                hoveredRect.current = null;
+            }
+        };
+
+        // Update rect on scroll to keep magnetic effect accurate
+        const handleScroll = () => {
+            if (hoveredEl.current) {
+                hoveredRect.current = hoveredEl.current.getBoundingClientRect();
             }
         };
 
         window.addEventListener("mousemove", updateMousePosition);
         window.addEventListener("mouseover", handleMouseOver);
+        window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
             window.removeEventListener("mousemove", updateMousePosition);
             window.removeEventListener("mouseover", handleMouseOver);
+            window.removeEventListener("scroll", handleScroll);
         };
     }, [mouseX, mouseY]);
 
     return (
         <motion.div
-            className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference"
+            className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
             style={{
                 x: cursorX,
                 y: cursorY,
