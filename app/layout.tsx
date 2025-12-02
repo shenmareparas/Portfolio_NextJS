@@ -46,6 +46,20 @@ export const metadata: Metadata = {
         description: siteConfig.description,
         images: ["/cover.webp"],
     },
+    applicationName: "Paras Shenmare Portfolio",
+    authors: [{ name: "Paras Shenmare", url: siteConfig.url }],
+    generator: "Next.js",
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            "max-video-preview": -1,
+            "max-image-preview": "large",
+            "max-snippet": -1,
+        },
+    },
 };
 
 export default function RootLayout({

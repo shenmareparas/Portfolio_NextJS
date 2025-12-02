@@ -19,7 +19,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         setMounted(true);
     }, []);
 
-    const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const toggleTheme = () => {
         const newTheme = resolvedTheme === "dark" ? "light" : "dark";
 
         if (!document.startViewTransition) {

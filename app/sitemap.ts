@@ -1,8 +1,10 @@
 import { MetadataRoute } from "next";
 import projects from "@/data/projects.json";
 
+import { siteConfig } from "@/data/config";
+
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = "https://parasnextjs.vercel.app";
+    const baseUrl = siteConfig.url;
 
     const projectUrls = projects.map((project) => ({
         url: `${baseUrl}/projects/${project.slug}`,
