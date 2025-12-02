@@ -19,8 +19,30 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         setMounted(true);
     }, []);
 
-    const toggleTheme = () => {
-        setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    const toggleTheme = (e: React.MouseEvent<HTMLButtonElement>) => {
+        const newTheme = resolvedTheme === "dark" ? "light" : "dark";
+
+        if (!document.startViewTransition) {
+            setTheme(newTheme);
+            return;
+        }
+
+        const transition = document.startViewTransition(() => {
+            setTheme(newTheme);
+        });
+
+        transition.ready.then(() => {
+            document.documentElement.animate(
+                {
+                    clipPath: ["inset(0 0 100% 0)", "inset(0 0 0 0)"],
+                },
+                {
+                    duration: 500,
+                    easing: "ease-in-out",
+                    pseudoElement: "::view-transition-new(root)",
+                }
+            );
+        });
     };
 
     const CurrentIcon =
