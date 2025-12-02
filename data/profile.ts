@@ -2,6 +2,7 @@ export const profile = {
     name: "Paras",
     fullName: "Paras Shenmare",
     title: "Mobile Developer",
+    titles: ["Software Developer", "UI/UX Designer", "App Developer", "Web Developer"],
     description:
         "I build accessible, pixel-perfect, and performant mobile applications for iOS and Android. Passionate about Flutter, Kotlin and Swift.",
     resumeLink: "/ParasShenmare_Resume.pdf",

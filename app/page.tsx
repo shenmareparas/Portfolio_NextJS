@@ -5,6 +5,7 @@ import { FadeIn } from "@/components/fade-in";
 import { Metadata } from "next";
 import { profile } from "@/data/profile";
 import { siteConfig } from "@/data/config";
+import { RotatingTitle } from "@/components/rotating-title";
 
 export const metadata: Metadata = {
     title: {
@@ -24,7 +25,7 @@ export default function Home() {
                             <span className="text-primary">{profile.name}</span>
                         </h1>
                         <h2 className="font-heading text-xl sm:text-2xl md:text-3xl text-muted-foreground">
-                            {profile.title}
+                            <RotatingTitle titles={profile.titles} />
                         </h2>
                         <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
                             {profile.description}
