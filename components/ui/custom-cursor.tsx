@@ -14,20 +14,14 @@ export const CustomCursor = () => {
         // Only show custom cursor on devices with fine pointer (mouse)
         const mediaQuery = window.matchMedia("(pointer: fine)");
 
-        // Immediately hide cursor if on a device with fine pointer
-        if (mediaQuery.matches) {
-            document.documentElement.classList.add("hide-default-cursor");
-        }
-
         const handleMediaChange = (e: MediaQueryListEvent) => {
             if (!e.matches) {
                 setIsVisible(false);
                 setInitialPos(null);
-                document.documentElement.classList.remove(
-                    "hide-default-cursor"
-                );
             } else {
-                document.documentElement.classList.add("hide-default-cursor");
+                window.addEventListener("mousemove", handleFirstMove, {
+                    once: true,
+                });
             }
         };
 
@@ -39,14 +33,30 @@ export const CustomCursor = () => {
         };
 
         mediaQuery.addEventListener("change", handleMediaChange);
-        window.addEventListener("mousemove", handleFirstMove, { once: true });
+        if (!initialPos) {
+            window.addEventListener("mousemove", handleFirstMove, {
+                once: true,
+            });
+        }
 
         return () => {
             mediaQuery.removeEventListener("change", handleMediaChange);
             window.removeEventListener("mousemove", handleFirstMove);
-            document.documentElement.classList.remove("hide-default-cursor");
         };
     }, [initialPos]);
+
+    // Toggle cursor class based on visibility
+    useEffect(() => {
+        if (isVisible) {
+            document.documentElement.classList.add("hide-default-cursor");
+        } else {
+            document.documentElement.classList.remove("hide-default-cursor");
+        }
+
+        return () => {
+            document.documentElement.classList.remove("hide-default-cursor");
+        };
+    }, [isVisible]);
 
     if (!isVisible || !initialPos) return null;
 
