@@ -25,7 +25,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
                 isBackFromProjectDetails ? { opacity: 1 } : { y: 0, opacity: 1 }
             }
             transition={{ ease: "easeInOut", duration: 0.75 }}
-            className="min-h-screen"
+            className="flex-1 flex flex-col"
         >
             {children}
         </motion.div>

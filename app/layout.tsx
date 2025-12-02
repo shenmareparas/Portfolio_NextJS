@@ -83,7 +83,9 @@ export default function RootLayout({
                         <Preloader />
                         <CustomCursor />
                         <Header />
-                        <main className="flex-1 md:pb-16">{children}</main>
+                        <main className="flex-1 flex flex-col md:pb-16">
+                            {children}
+                        </main>
                         <Footer />
                         <Toaster />
                     </NavigationProvider>
