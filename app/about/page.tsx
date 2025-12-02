@@ -1,3 +1,4 @@
+import { profile } from "@/data/profile";
 import { skills } from "@/data/skills";
 import { education, certifications, achievements } from "@/data/education";
 import Link from "next/link";
@@ -20,25 +21,9 @@ export default function AboutPage() {
                         About Me
                     </h1>
                     <div className="prose dark:prose-invert max-w-none text-muted-foreground text-lg leading-relaxed">
-                        <p>
-                            Hello! I&apos;m Paras, a passionate Mobile Developer
-                            with a strong foundation in building cross-platform
-                            and native applications. My journey in software
-                            development started with a curiosity for how things
-                            work on the little screens we carry everywhere.
-                        </p>
-                        <p>
-                            I specialize in creating intuitive, user-friendly
-                            mobile experiences using technologies like Flutter,
-                            and native iOS/Android frameworks. I believe in
-                            writing clean, maintainable code and staying
-                            up-to-date with the latest industry trends.
-                        </p>
-                        <p>
-                            When I&apos;m not coding, you can find me exploring
-                            new tech, contributing to open-source projects, or
-                            enjoying a good cup of coffee.
-                        </p>
+                        {profile.bio.map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                        ))}
                     </div>
                 </section>
             </FadeIn>

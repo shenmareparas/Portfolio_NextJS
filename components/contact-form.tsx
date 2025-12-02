@@ -34,6 +34,8 @@ const formSchema = z.object({
     }),
 });
 
+import { siteConfig } from "@/data/config";
+
 export function ContactForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { toast } = useToast();
@@ -51,7 +53,7 @@ export function ContactForm() {
     async function onSubmit(values: z.infer<typeof formSchema>) {
         setIsSubmitting(true);
         try {
-            const response = await fetch("https://formspree.io/f/manwypwk", {
+            const response = await fetch(siteConfig.contactFormUrl, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

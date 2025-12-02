@@ -143,7 +143,7 @@
         },
         "image": "/project/vision_pro/banner.webp",
         "logo": "/project/vision_pro/logo.svg",
-        "accentColor": "#7209B7",
+        "accentColor": "#DBDED6",
         "gallery": [
             "/project/vision_pro/1.webp",
             "/project/vision_pro/2.webp"
@@ -168,7 +168,7 @@
         },
         "image": "/project/music_player/banner.webp",
         "logo": "/project/music_player/logo.webp",
-        "accentColor": "#F72585",
+        "accentColor": "#21BF5C",
         "gallery": [
             "/project/music_player/1.webp",
             "/project/music_player/2.webp",
@@ -189,7 +189,7 @@
         "timeline": "2025 - 2026",
         "image": "/upcoming.svg",
         "logo": "/upcoming.svg",
-        "accentColor": "#F72585",
+        "accentColor": "#DBDED6",
         "gallery": [
             "/upcoming.svg",
             "/upcoming.svg",

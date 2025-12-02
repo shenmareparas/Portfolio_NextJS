@@ -9,6 +9,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { profile } from "@/data/profile";
 
 export const metadata = {
     title: "Contact",
@@ -57,10 +58,9 @@ export default function ContactPage() {
                                 channels.
                             </p>
                         </div>
-
                         <div className="space-y-4">
                             <a
-                                href="mailto:shenmareparas@gmail.com"
+                                href={`mailto:${profile.email}`}
                                 className="flex items-center gap-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
                             >
                                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
@@ -69,12 +69,12 @@ export default function ContactPage() {
                                 <div>
                                     <p className="font-medium">Email</p>
                                     <p className="text-sm text-muted-foreground">
-                                        shenmareparas@gmail.com
+                                        {profile.email}
                                     </p>
                                 </div>
                             </a>
                             <a
-                                href="tel:+918830620995"
+                                href={`tel:${profile.phone.replace(/\s/g, "")}`}
                                 className="flex items-center gap-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
                             >
                                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
@@ -83,12 +83,11 @@ export default function ContactPage() {
                                 <div>
                                     <p className="font-medium">Phone</p>
                                     <p className="text-sm text-muted-foreground">
-                                        +91 8830620995
+                                        {profile.phone}
                                     </p>
                                 </div>
                             </a>
                         </div>
-
                         <div className="space-y-4">
                             <h3 className="font-medium">Social Media</h3>
                             <div className="flex flex-wrap gap-4">

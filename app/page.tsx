@@ -3,13 +3,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, FileText } from "lucide-react";
 import { FadeIn } from "@/components/fade-in";
 import { Metadata } from "next";
+import { profile } from "@/data/profile";
+import { siteConfig } from "@/data/config";
 
 export const metadata: Metadata = {
     title: {
-        absolute: "Paras Shenmare",
+        absolute: profile.fullName,
     },
-    description:
-        "Paras - Mobile Developer Portfolio. specialized in android and iOS development.",
+    description: siteConfig.description,
 };
 
 export default function Home() {
@@ -20,15 +21,13 @@ export default function Home() {
                     <div className="container flex max-w-[64rem] flex-col items-center gap-4 text-center">
                         <h1 className="font-heading text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                             Hi, I&apos;m{" "}
-                            <span className="text-primary">Paras</span>
+                            <span className="text-primary">{profile.name}</span>
                         </h1>
                         <h2 className="font-heading text-xl sm:text-2xl md:text-3xl text-muted-foreground">
-                            Mobile Developer
+                            {profile.title}
                         </h2>
                         <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
-                            I build accessible, pixel-perfect, and performant
-                            mobile applications for iOS and Android. Passionate
-                            about Flutter, Kotlin and Swift.
+                            {profile.description}
                         </p>
                         <div className="flex flex-col gap-4 sm:flex-row">
                             <Link href="/projects">
@@ -41,7 +40,7 @@ export default function Home() {
                                 </Button>
                             </Link>
                             <a
-                                href="/ParasShenmare_Resume.pdf"
+                                href={profile.resumeLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

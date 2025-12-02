@@ -1,4 +1,5 @@
 import { socials } from "@/data/socials";
+import { siteConfig } from "@/data/config";
 import {
     Tooltip,
     TooltipContent,
@@ -14,11 +15,11 @@ export function Footer() {
                     <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
                         Built by{" "}
                         <a className="font-medium underline underline-offset-4">
-                            Paras
+                            {siteConfig.footer.builtBy}
                         </a>
                         . Source code is available on{" "}
                         <a
-                            href="https://github.com/shenmareparas/Portfolio_NextJS"
+                            href={siteConfig.footer.githubLink}
                             target="_blank"
                             rel="noreferrer"
                             className="font-medium underline underline-offset-4 cursor-hover"

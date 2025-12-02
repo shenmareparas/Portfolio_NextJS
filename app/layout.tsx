@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { Preloader } from "@/components/ui/preloader";
+import { siteConfig } from "@/data/config";
 
 const inter = Inter({
     variable: "--font-sans",
@@ -21,45 +22,29 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-    title: {
-        default: "Paras Shenmare",
-        template: "%s | Paras S.",
-    },
-    description:
-        "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
-    keywords: [
-        "Mobile Developer",
-        "Flutter",
-        "Android",
-        "iOS",
-        "Portfolio",
-        "Software Engineer",
-    ],
-    metadataBase: new URL("https://parasnextjs.vercel.app"),
+    title: siteConfig.metadata.title,
+    description: siteConfig.metadata.description,
+    keywords: siteConfig.keywords,
+    metadataBase: new URL(siteConfig.url),
     openGraph: {
-        type: "website",
-        locale: "en_US",
-        url: "https://parasnextjs.vercel.app",
-        title: "Paras Shenmare | Mobile Developer",
-        description:
-            "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
-        siteName: "Paras Shenmare Portfolio",
+        ...siteConfig.metadata.openGraph,
+        url: siteConfig.url,
+        title: siteConfig.title,
+        description: siteConfig.description,
         images: [
             {
                 url: "/cover.webp",
                 width: 1200,
                 height: 630,
-                alt: "Paras Shenmare Portfolio",
+                alt: siteConfig.title,
             },
         ],
     },
     twitter: {
-        card: "summary_large_image",
-        title: "Paras Shenmare | Mobile Developer",
-        description:
-            "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
+        ...siteConfig.metadata.twitter,
+        title: siteConfig.title,
+        description: siteConfig.description,
         images: ["/cover.webp"],
-        creator: "@parasshenmare",
     },
 };
 
