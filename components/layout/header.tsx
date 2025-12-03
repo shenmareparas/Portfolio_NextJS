@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { cn } from "@/lib/utils";
-import { Menu, X } from "lucide-react";
+
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { createPortal } from "react-dom";
@@ -39,24 +39,55 @@ export function Header() {
     }, [isMobileMenuOpen]);
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <header
+            className={cn(
+                "sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60",
+                isMobileMenuOpen
+                    ? "bg-transparent border-transparent"
+                    : "bg-background/95 border-border/40"
+            )}
+        >
             <div className="container mx-auto flex h-16 items-center justify-between px-4">
                 <div className="flex items-center gap-2 z-50">
                     {/* Mobile Menu Toggle */}
                     <button
-                        className="p-2 md:hidden"
+                        className="p-2 md:hidden z-[1000] relative"
                         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         aria-label="Toggle menu"
                     >
-                        {isMobileMenuOpen ? (
-                            <X className="h-6 w-6" />
-                        ) : (
-                            <Menu className="h-6 w-6" />
-                        )}
+                        <div className="flex flex-col justify-center items-center w-5 h-5 gap-1">
+                            <motion.span
+                                animate={
+                                    isMobileMenuOpen
+                                        ? { rotate: 45, y: 6 }
+                                        : { rotate: 0, y: 0 }
+                                }
+                                className="w-5 h-0.5 bg-foreground block"
+                            />
+                            <motion.span
+                                animate={
+                                    isMobileMenuOpen
+                                        ? { opacity: 0 }
+                                        : { opacity: 1 }
+                                }
+                                className="w-5 h-0.5 bg-foreground block"
+                            />
+                            <motion.span
+                                animate={
+                                    isMobileMenuOpen
+                                        ? { rotate: -45, y: -6 }
+                                        : { rotate: 0, y: 0 }
+                                }
+                                className="w-5 h-0.5 bg-foreground block"
+                            />
+                        </div>
                     </button>
                     <Link
                         href="/"
-                        className="flex items-center space-x-2 cursor-hover"
+                        className={cn(
+                            "flex items-center space-x-2 cursor-hover",
+                            isMobileMenuOpen ? "hidden" : "flex"
+                        )}
                         onClick={() => setIsMobileMenuOpen(false)}
                     >
                         <span className="text-xl font-bold">
@@ -84,8 +115,12 @@ export function Header() {
                     <ThemeSwitcher />
                 </nav>
 
-                {/* Mobile Menu Toggle */}
-                <div className="flex items-center md:hidden gap-4 z-50">
+                <div
+                    className={cn(
+                        "flex items-center md:hidden gap-4 z-50",
+                        isMobileMenuOpen ? "hidden" : "flex"
+                    )}
+                >
                     <ThemeSwitcher />
                 </div>
             </div>
@@ -100,15 +135,8 @@ export function Header() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.2 }}
-                                className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-background/95 backdrop-blur-sm md:hidden"
+                                className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-background/80 backdrop-blur-md md:hidden"
                             >
-                                <button
-                                    className="absolute top-4 left-4 p-2"
-                                    onClick={() => setIsMobileMenuOpen(false)}
-                                    aria-label="Close menu"
-                                >
-                                    <X className="h-6 w-6" />
-                                </button>
                                 <nav className="flex flex-col items-center gap-8 p-4">
                                     {navItems.map((item, index) => (
                                         <motion.div
