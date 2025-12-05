@@ -73,7 +73,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                             alt={`${project.title} logo`}
                             width={80}
                             height={80}
-                            className="mb-4 rounded-2xl shadow-sm"
+                            className="mb-4 rounded-2xl"
                         />
                         <h1 className="text-4xl font-bold tracking-tight">
                             {project.title}

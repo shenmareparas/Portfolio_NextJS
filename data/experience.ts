@@ -21,7 +21,7 @@ export const experience: Experience[] = [
             "Flutter",
             "Dart",
             "Firebase",
-            "Provider / Riverpod",
+            "Provider",
             "Git",
             "Android",
             "iOS",

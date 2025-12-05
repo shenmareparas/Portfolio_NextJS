@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { Preloader } from "@/components/ui/preloader";
+import { GoToTop } from "@/components/ui/go-to-top";
 import { siteConfig } from "@/data/config";
 
 const inter = Inter({
@@ -82,6 +83,7 @@ export default function RootLayout({
                         <Preloader />
                         <CustomCursor />
                         <Header />
+                        <GoToTop />
                         <main className="flex-1 flex flex-col md:pb-16">
                             {children}
                         </main>
