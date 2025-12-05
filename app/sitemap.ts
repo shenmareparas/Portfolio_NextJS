@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import projects from "@/data/projects.json";
+import { projects } from "@/data/projects";
 
 import { siteConfig } from "@/data/config";
 

@@ -15,16 +15,7 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 
-interface Project {
-    id: string;
-    slug: string;
-    title: string;
-    description: string;
-    tags: string[];
-    link?: string;
-    image: string;
-    accentColor?: string | { light: string; dark: string };
-}
+import { Project } from "@/data/projects";
 
 interface ProjectCardProps {
     project: Project;
@@ -71,26 +62,6 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                         className="object-cover transition-transform duration-300 hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
-                    {project.link && (
-                        <div className="absolute right-2 top-2 z-20">
-                            <Button
-                                asChild
-                                size="icon"
-                                variant="secondary"
-                                className="h-8 w-8 rounded-full bg-background/80 backdrop-blur-sm transition-colors hover:bg-background hover:text-primary"
-                            >
-                                <a
-                                    href={project.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
-                                    <Github className="h-4 w-4" />
-                                    <span className="sr-only">GitHub</span>
-                                </a>
-                            </Button>
-                        </div>
-                    )}
                 </div>
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">

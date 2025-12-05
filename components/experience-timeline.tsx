@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import experienceData from "@/data/experience.json";
+import { experience as experienceData } from "@/data/experience";
 
 export function ExperienceTimeline() {
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             {experienceData.map((job, index) => (
                 <motion.div
-                    key={job.id}
+                    key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}

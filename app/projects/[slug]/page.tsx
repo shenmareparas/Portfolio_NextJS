@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CoverflowCarousel } from "@/components/coverflow-carousel";
 import { FadeIn } from "@/components/fade-in";
-import projectsData from "@/data/projects.json";
+import { projects as projectsData, Project } from "@/data/projects";
 
 interface ProjectPageProps {
     params: Promise<{
@@ -38,33 +38,9 @@ export async function generateMetadata({ params }: ProjectPageProps) {
     };
 }
 
-interface Project {
-    id: string;
-    slug: string;
-    title: string;
-    description: string;
-    fullDescription: string;
-    tags: string[];
-    role: string;
-    timeline: string;
-    links: {
-        github: string;
-        demo?: string;
-        playStore?: string;
-        appStore?: string;
-        githubAdmin?: string;
-    };
-    image: string;
-    logo: string;
-    gallery: string[];
-    accentColor?: string | { light: string; dark: string };
-}
-
 export default async function ProjectPage({ params }: ProjectPageProps) {
     const { slug } = await params;
-    const project = projectsData.find(
-        (p) => p.slug === slug
-    ) as unknown as Project;
+    const project = projectsData.find((p) => p.slug === slug);
 
     if (!project) {
         notFound();
