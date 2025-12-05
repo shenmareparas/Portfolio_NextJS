@@ -20,7 +20,7 @@ export function RotatingTitle({ titles, interval = 3000 }: RotatingTitleProps) {
     }, [titles, interval]);
 
     return (
-        <div className="h-8 sm:h-10 md:h-12 flex items-center justify-center [perspective:1000px]">
+        <div className="h-10 sm:h-10 md:h-12 flex items-center justify-center [perspective:1000px]">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={titles[index]}
