@@ -78,8 +78,8 @@ const CursorInner = ({
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
-    const cursorX = useTransform(springX, (x) => x - 16);
-    const cursorY = useTransform(springY, (y) => y - 16);
+    const cursorX = useTransform(springX, (x) => x - 40);
+    const cursorY = useTransform(springY, (y) => y - 40);
 
     const [isHovering, setIsHovering] = useState(false);
     const hoveredEl = useRef<HTMLElement | null>(null);
@@ -142,15 +142,15 @@ const CursorInner = ({
 
     return (
         <motion.div
-            className="fixed top-0 left-0 w-8 h-8 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
+            className="fixed top-0 left-0 w-20 h-20 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
             style={{
                 x: cursorX,
                 y: cursorY,
             }}
-            initial={{ opacity: 0, scale: 0.5 }}
+            initial={{ opacity: 0, scale: 0.2 }}
             animate={{
                 opacity: 1,
-                scale: isHovering ? 2.5 : 1,
+                scale: isHovering ? 1 : 0.4,
             }}
             exit={{ opacity: 0, scale: 0 }}
             transition={{
