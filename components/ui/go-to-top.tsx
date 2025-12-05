@@ -41,12 +41,11 @@ export function GoToTop() {
                     className="fixed bottom-6 right-6 z-50 md:hidden"
                 >
                     <Button
-                        size="icon"
-                        className="rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80"
+                        className="h-12 w-12 rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80"
                         onClick={scrollToTop}
                         aria-label="Go to top"
                     >
-                        <ArrowUp className="h-5 w-5" />
+                        <ArrowUp className="h-6 w-6" />
                     </Button>
                 </motion.div>
             )}

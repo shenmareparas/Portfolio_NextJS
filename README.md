@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Paras Shenmare Portfolio
 
-## Getting Started
+A modern, high-performance portfolio website built with Next.js 16, TypeScript, and Tailwind CSS. Featuring smooth animations, a custom design system, and a seamless user experience.
 
-First, run the development server:
+## 🚀 Tech Stack
+
+-   **Framework:** [Next.js 16 (App Router)](https://nextjs.org/)
+-   **Styling:** [Tailwind CSS 4](https://tailwindcss.com/)
+-   **Animations:** [Framer Motion](https://www.framer.com/motion/)
+-   **UI Components:** [Shadcn UI](https://ui.shadcn.com/)
+-   **Icons:** [Lucide React](https://lucide.dev/) & [Simple Icons](https://simpleicons.org/)
+-   **Forms:** React Hook Form + Zod
+-   **Analytics:** Vercel Analytics
+
+## ✨ Key Features
+
+-   **🎨 Modern Design:** Clean, minimalist UI with a focus on typography and whitespace.
+-   **🌓 Dark/Light Mode:** System-aware theme switching with smooth transitions.
+-   **⚡ High Performance:** Optimized with Next.js Server Components and dynamic imports.
+-   **🌊 Smooth Animations:**
+    -   Page transition effects
+    -   Custom preloader with percentage counter
+    -   Scroll-triggered reveals
+    -   Magnetic navigation buttons
+-   **🖱️ Custom Cursor:** Interactive custom cursor that reacts to hover states.
+-   **📱 Fully Responsive:** Adaptive layout that works perfectly on all devices.
+-   **💼 Project Showcase:** Detailed project cards with galleries and tech tags.
+-   **📧 Contact Form:** Functional contact form with validation.
+
+## 🛠️ Getting Started
+
+Follow these steps to set up the project locally.
+
+### Prerequisites
+
+-   Node.js 18+
+-   npm / yarn / pnpm / bun
+
+### Installation
+
+1.  **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/shenmareparas/portfolio-nextjs.git
+    cd portfolio-nextjs
+    ```
+
+2.  **Install dependencies:**
+
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
+
+3.  **Run the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+4.  **Open locally:**
+    Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 📂 Project Structure
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+├── app/                  # App Router pages and layouts
+├── components/           # React components
+│   ├── layout/           # Layout components (Header, Footer)
+│   ├── providers/        # Context providers (Theme, Nav)
+│   └── ui/               # Reusable UI components
+├── data/                 # Static data (Projects, Config)
+├── lib/                  # Utility functions
+└── public/               # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Configuration
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+You can customize the site metadata and core settings in `data/config.ts`:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   **Site Metadata:** Title, description, URL.
+-   **Personal Info:** Name, role, social links.
+-   **Keywords:** SEO keywords.

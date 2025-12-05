@@ -409,7 +409,7 @@ export function CoverflowCarousel({
                 {/* Left Navigation */}
                 <button
                     type="button"
-                    className="absolute left-4 z-50 p-3 rounded-full bg-black/50 backdrop-blur-md text-white hover:bg-black/70 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
+                    className="absolute left-4 z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -440,7 +440,7 @@ export function CoverflowCarousel({
                 {/* Right Navigation */}
                 <button
                     type="button"
-                    className="absolute right-4 z-50 p-3 rounded-full bg-black/50 backdrop-blur-md text-white hover:bg-black/70 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
+                    className="absolute right-4 z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();

@@ -47,7 +47,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             whileHover={{ y: -5 }}
             className="h-full"
         >
-            <Card className="group relative flex h-full flex-col overflow-hidden border-muted/40 transition-colors hover:border-primary/40 hover:shadow-lg">
+            <Card className="group relative flex h-full flex-col overflow-hidden border-primary/40 transition-colors hover:border-border hover:shadow-lg">
                 <Link
                     href={`/projects/${project.slug}`}
                     className="absolute inset-0 z-10"
