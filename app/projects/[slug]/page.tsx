@@ -57,7 +57,7 @@ interface Project {
     image: string;
     logo: string;
     gallery: string[];
-    accentColor?: string;
+    accentColor?: string | { light: string; dark: string };
 }
 
 export default async function ProjectPage({ params }: ProjectPageProps) {
@@ -69,6 +69,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     if (!project) {
         notFound();
     }
+
+    const accentLight =
+        typeof project.accentColor === "object"
+            ? project.accentColor.light
+            : project.accentColor;
+    const accentDark =
+        typeof project.accentColor === "object"
+            ? project.accentColor.dark
+            : project.accentColor;
 
     return (
         <div className="container mx-auto py-12 px-4 space-y-12">
@@ -98,16 +107,31 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                 <Badge
                                     key={tag}
                                     variant="secondary"
+                                    className={`font-normal transition-colors ${
+                                        project.accentColor
+                                            ? "bg-[var(--accent-light-bg)] dark:bg-[var(--accent-dark-bg)] hover:bg-[var(--accent-light-bg)] dark:hover:bg-[var(--accent-dark-bg)]"
+                                            : ""
+                                    }`}
                                     style={
                                         project.accentColor
-                                            ? {
-                                                  backgroundColor: `${project.accentColor}15`,
-                                                  color: project.accentColor,
-                                              }
+                                            ? ({
+                                                  "--accent-light": accentLight,
+                                                  "--accent-dark": accentDark,
+                                                  "--accent-light-bg": `${accentLight}15`,
+                                                  "--accent-dark-bg": `${accentDark}15`,
+                                              } as React.CSSProperties)
                                             : undefined
                                     }
                                 >
-                                    {tag}
+                                    <span
+                                        className={
+                                            project.accentColor
+                                                ? "text-[var(--accent-light)] dark:text-[var(--accent-dark)]"
+                                                : ""
+                                        }
+                                    >
+                                        {tag}
+                                    </span>
                                 </Badge>
                             ))}
                         </div>
