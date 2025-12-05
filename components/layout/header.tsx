@@ -38,6 +38,10 @@ export function Header() {
         };
     }, [isMobileMenuOpen]);
 
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [pathname]);
+
     return (
         <header
             className={cn(
@@ -155,9 +159,6 @@ export function Header() {
                                                         ? "text-foreground"
                                                         : "text-muted-foreground"
                                                 )}
-                                                onClick={() =>
-                                                    setIsMobileMenuOpen(false)
-                                                }
                                             >
                                                 {item.name}
                                             </Link>
