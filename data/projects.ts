@@ -1,3 +1,5 @@
+export type GalleryItem = string | { light: string; dark: string };
+
 export interface Project {
     slug: string;
     title: string;
@@ -16,7 +18,7 @@ export interface Project {
     image: string;
     logo: string;
     accentColor?: string | { light: string; dark: string };
-    gallery?: string[];
+    gallery?: GalleryItem[];
 }
 
 export const projects: Project[] = [
@@ -46,14 +48,38 @@ export const projects: Project[] = [
         logo: "/project/vitbmess/logo.webp",
         accentColor: "#4F870D",
         gallery: [
-            "/project/vitbmess/1.webp",
-            "/project/vitbmess/2.webp",
-            "/project/vitbmess/3.webp",
-            "/project/vitbmess/4.webp",
-            "/project/vitbmess/5.webp",
-            "/project/vitbmess/6.webp",
-            "/project/vitbmess/7.webp",
-            "/project/vitbmess/8.webp",
+            {
+                light: "/project/vitbmess/1a.webp",
+                dark: "/project/vitbmess/1b.webp",
+            },
+            {
+                light: "/project/vitbmess/2a.webp",
+                dark: "/project/vitbmess/2b.webp",
+            },
+            {
+                light: "/project/vitbmess/3a.webp",
+                dark: "/project/vitbmess/3b.webp",
+            },
+            {
+                light: "/project/vitbmess/4a.webp",
+                dark: "/project/vitbmess/4b.webp",
+            },
+            {
+                light: "/project/vitbmess/5a.webp",
+                dark: "/project/vitbmess/5b.webp",
+            },
+            {
+                light: "/project/vitbmess/6a.webp",
+                dark: "/project/vitbmess/6b.webp",
+            },
+            {
+                light: "/project/vitbmess/7a.webp",
+                dark: "/project/vitbmess/7b.webp",
+            },
+            {
+                light: "/project/vitbmess/8a.webp",
+                dark: "/project/vitbmess/8b.webp",
+            },
         ],
     },
     {
@@ -106,6 +132,7 @@ export const projects: Project[] = [
             "/project/yodoc/2.webp",
             "/project/yodoc/3.webp",
             "/project/yodoc/4.webp",
+            "/project/yodoc/5.webp",
         ],
     },
     {

@@ -64,157 +64,145 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </BackButton>
             </FadeIn>
 
-            {/* Hero Section */}
-            <FadeIn delay={0.1}>
-                <div className="grid gap-8 md:grid-cols-2">
-                    <div className="space-y-6">
-                        <Image
-                            src={project.logo}
-                            alt={`${project.title} logo`}
-                            width={80}
-                            height={80}
-                            className="mb-4 rounded-2xl"
-                        />
-                        <h1 className="text-4xl font-bold tracking-tight">
-                            {project.title}
-                        </h1>
-                        <div className="flex flex-wrap gap-2">
-                            {project.tags.map((tag) => (
-                                <Badge
-                                    key={tag}
-                                    variant="secondary"
-                                    className={`font-normal transition-colors ${
+            <div className="grid gap-8 md:grid-cols-2">
+                <FadeIn className="space-y-6" delay={0.1}>
+                    <Image
+                        src={project.logo}
+                        alt={`${project.title} logo`}
+                        width={80}
+                        height={80}
+                        className="mb-4 rounded-2xl"
+                    />
+                    <h1 className="text-4xl font-bold tracking-tight">
+                        {project.title}
+                    </h1>
+                    <div className="flex flex-wrap gap-2">
+                        {project.tags.map((tag) => (
+                            <Badge
+                                key={tag}
+                                variant="secondary"
+                                className={`font-normal transition-colors ${
+                                    project.accentColor
+                                        ? "bg-[var(--accent-light-bg)] dark:bg-[var(--accent-dark-bg)] hover:bg-[var(--accent-light-bg)] dark:hover:bg-[var(--accent-dark-bg)]"
+                                        : ""
+                                }`}
+                                style={
+                                    project.accentColor
+                                        ? ({
+                                              "--accent-light": accentLight,
+                                              "--accent-dark": accentDark,
+                                              "--accent-light-bg": `${accentLight}15`,
+                                              "--accent-dark-bg": `${accentDark}15`,
+                                          } as React.CSSProperties)
+                                        : undefined
+                                }
+                            >
+                                <span
+                                    className={
                                         project.accentColor
-                                            ? "bg-[var(--accent-light-bg)] dark:bg-[var(--accent-dark-bg)] hover:bg-[var(--accent-light-bg)] dark:hover:bg-[var(--accent-dark-bg)]"
+                                            ? "text-[var(--accent-light)] dark:text-[var(--accent-dark)]"
                                             : ""
-                                    }`}
-                                    style={
-                                        project.accentColor
-                                            ? ({
-                                                  "--accent-light": accentLight,
-                                                  "--accent-dark": accentDark,
-                                                  "--accent-light-bg": `${accentLight}15`,
-                                                  "--accent-dark-bg": `${accentDark}15`,
-                                              } as React.CSSProperties)
-                                            : undefined
                                     }
                                 >
-                                    <span
-                                        className={
-                                            project.accentColor
-                                                ? "text-[var(--accent-light)] dark:text-[var(--accent-dark)]"
-                                                : ""
-                                        }
-                                    >
-                                        {tag}
-                                    </span>
-                                </Badge>
-                            ))}
-                        </div>
-                        <p className="text-xl text-muted-foreground leading-relaxed">
-                            {project.fullDescription}
-                        </p>
+                                    {tag}
+                                </span>
+                            </Badge>
+                        ))}
+                    </div>
+                    <p className="text-xl text-muted-foreground leading-relaxed">
+                        {project.fullDescription}
+                    </p>
 
-                        <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/40">
-                            <div>
-                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
-                                    Role
-                                </h3>
-                                <p className="mt-1 font-medium">
-                                    {project.role}
-                                </p>
-                            </div>
-                            <div>
-                                <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
-                                    Timeline
-                                </h3>
-                                <p className="mt-1 font-medium">
-                                    {project.timeline}
-                                </p>
-                            </div>
+                    <div className="grid grid-cols-2 gap-4 py-4 border-y border-border/40">
+                        <div>
+                            <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
+                                Role
+                            </h3>
+                            <p className="mt-1 font-medium">{project.role}</p>
                         </div>
-
-                        <div className="flex flex-wrap gap-4">
-                            {project.links?.githubAdmin && (
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    className="gap-2"
-                                >
-                                    <a
-                                        href={project.links.githubAdmin}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <Github className="h-4 w-4" /> GitHub
-                                        (Admin)
-                                    </a>
-                                </Button>
-                            )}
-                            {project.links?.github && (
-                                <Button
-                                    asChild
-                                    variant="outline"
-                                    className="gap-2"
-                                >
-                                    <a
-                                        href={project.links.github}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <Github className="h-4 w-4" />{" "}
-                                        {project.links.githubAdmin
-                                            ? "GitHub (User)"
-                                            : "GitHub"}
-                                    </a>
-                                </Button>
-                            )}
-                            {project.links?.playStore && (
-                                <Button asChild className="gap-2">
-                                    <a
-                                        href={project.links.playStore}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <SimpleIconComponent
-                                            icon={siGoogleplay}
-                                            className="h-4 w-4"
-                                        />{" "}
-                                        Play Store
-                                    </a>
-                                </Button>
-                            )}
-                            {project.links?.appStore && (
-                                <Button asChild className="gap-2">
-                                    <a
-                                        href={project.links.appStore}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <Smartphone className="h-4 w-4" /> App
-                                        Store
-                                    </a>
-                                </Button>
-                            )}
-                            {project.links?.demo && (
-                                <Button asChild className="gap-2">
-                                    <a
-                                        href={project.links.demo}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                    >
-                                        <Globe className="h-4 w-4" /> Live Demo
-                                    </a>
-                                </Button>
-                            )}
+                        <div>
+                            <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider">
+                                Timeline
+                            </h3>
+                            <p className="mt-1 font-medium">
+                                {project.timeline}
+                            </p>
                         </div>
                     </div>
 
-                    <div className="w-full mx-auto">
+                    <div className="flex flex-wrap gap-4">
+                        {project.links?.githubAdmin && (
+                            <Button asChild variant="outline" className="gap-2">
+                                <a
+                                    href={project.links.githubAdmin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Github className="h-4 w-4" /> GitHub
+                                    (Admin)
+                                </a>
+                            </Button>
+                        )}
+                        {project.links?.github && (
+                            <Button asChild variant="outline" className="gap-2">
+                                <a
+                                    href={project.links.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Github className="h-4 w-4" />{" "}
+                                    {project.links.githubAdmin
+                                        ? "GitHub (User)"
+                                        : "GitHub"}
+                                </a>
+                            </Button>
+                        )}
+                        {project.links?.playStore && (
+                            <Button asChild className="gap-2">
+                                <a
+                                    href={project.links.playStore}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <SimpleIconComponent
+                                        icon={siGoogleplay}
+                                        className="h-4 w-4"
+                                    />{" "}
+                                    Play Store
+                                </a>
+                            </Button>
+                        )}
+                        {project.links?.appStore && (
+                            <Button asChild className="gap-2">
+                                <a
+                                    href={project.links.appStore}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Smartphone className="h-4 w-4" /> App Store
+                                </a>
+                            </Button>
+                        )}
+                        {project.links?.demo && (
+                            <Button asChild className="gap-2">
+                                <a
+                                    href={project.links.demo}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    <Globe className="h-4 w-4" /> Live Demo
+                                </a>
+                            </Button>
+                        )}
+                    </div>
+                </FadeIn>
+
+                <div className="w-full mx-auto md:fixed md:top-0 md:right-0 md:h-screen md:w-1/2 md:flex md:items-center md:justify-center pointer-events-none md:pointer-events-auto">
+                    <FadeIn className="pointer-events-auto w-full" delay={0.1}>
                         <CoverflowCarousel images={project.gallery || []} />
-                    </div>
+                    </FadeIn>
                 </div>
-            </FadeIn>
+            </div>
         </div>
     );
 }

@@ -3,10 +3,12 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import Image from "next/image";
+import { GalleryItem } from "@/data/projects";
 
 interface CoverflowCarouselProps {
-    images: string[];
+    images: GalleryItem[];
     className?: string;
     autoScrollInterval?: number;
 }
@@ -21,6 +23,7 @@ const CarouselCard = React.memo(
         total,
         onClick,
         isDragging,
+        className,
     }: {
         src: string;
         index: number;
@@ -28,6 +31,7 @@ const CarouselCard = React.memo(
         total: number;
         onClick: () => void;
         isDragging?: boolean;
+        className?: string;
     }) => {
         // Calculate circular distance
         let diff = index - active;
@@ -61,6 +65,7 @@ const CarouselCard = React.memo(
             <div
                 className={cn(
                     "absolute w-[260px] md:w-[320px] aspect-[9/16] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    className,
                     isDragging
                         ? "transition-none"
                         : "transition-all duration-500"
@@ -106,6 +111,18 @@ export function CoverflowCarousel({
     const [active, setActive] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
     const [dragOffset, setDragOffset] = useState(0); // In slide units
+    const { resolvedTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    const getImageUrl = (item: GalleryItem) => {
+        if (typeof item === "string") return item;
+        if (!mounted) return item.light; // Default to light during SSR/hydration
+        return resolvedTheme === "dark" ? item.dark : item.light;
+    };
 
     const [interactionPause, setInteractionPause] = useState(false);
     const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -405,7 +422,7 @@ export function CoverflowCarousel({
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
         >
-            <div className="relative w-full h-[600px] flex items-center justify-center [perspective:500px] [transform-style:preserve-3d] overflow-hidden">
+            <div className="relative w-full h-[800px] flex items-center justify-center [perspective:500px] [transform-style:preserve-3d] overflow-hidden">
                 {/* Left Navigation */}
                 <button
                     type="button"
@@ -424,16 +441,17 @@ export function CoverflowCarousel({
                 </button>
 
                 {/* Cards */}
-                {images.map((src, i) => (
+                {images.map((item, i) => (
                     <CarouselCard
                         key={i}
-                        src={src}
+                        src={getImageUrl(item)}
                         index={i}
                         active={effectiveActive}
                         total={images.length}
                         onClick={() => handleCardClick(i)}
                         // We want transitions enabled so they animate to the new snapped position
                         isDragging={false}
+                        className="w-[260px] md:w-[320px] aspect-[1320/2868]"
                     />
                 ))}
 
