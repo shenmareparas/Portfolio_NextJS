@@ -22,6 +22,9 @@ A modern, high-performance portfolio website built with Next.js 16, TypeScript, 
     -   Custom preloader with percentage counter
     -   Scroll-triggered reveals
     -   Magnetic navigation buttons
+    -   **3D Coverflow Carousel:** Interactive 3D carousel for immersive project showcasing.
+    -   **Dynamic Rotating Titles:** Engaging animated text components for headers.
+    -   **Experience Timeline:** Structured, responsive timeline for professional history.
 -   **🖱️ Custom Cursor:** Interactive custom cursor that reacts to hover states.
 -   **📱 Fully Responsive:** Adaptive layout that works perfectly on all devices.
 -   **💼 Project Showcase:** Detailed project cards with galleries and tech tags.
@@ -33,8 +36,7 @@ Follow these steps to set up the project locally.
 
 ### Prerequisites
 
--   Node.js 18+
--   npm / yarn / pnpm / bun
+-   **Bun** 1.0+ (Recommended)
 
 ### Installation
 
@@ -48,17 +50,13 @@ Follow these steps to set up the project locally.
 2.  **Install dependencies:**
 
     ```bash
-    npm install
-    # or
-    yarn install
-    # or
-    pnpm install
+    bun install
     ```
 
 3.  **Run the development server:**
 
     ```bash
-    npm run dev
+    bun dev
     ```
 
 4.  **Open locally:**
