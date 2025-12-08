@@ -84,7 +84,7 @@ export default function RootLayout({
                         <CustomCursor />
                         <Header />
                         <GoToTop />
-                        <main className="flex-1 flex flex-col md:pb-16">
+                        <main className="flex-1 flex flex-col pt-16 md:pb-16">
                             {children}
                         </main>
                         <Footer />

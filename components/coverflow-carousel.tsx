@@ -64,7 +64,7 @@ const CarouselCard = React.memo(
         return (
             <div
                 className={cn(
-                    "absolute w-[260px] md:w-[320px] aspect-[9/16] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary",
+                    "absolute w-[260px] md:w-[320px] aspect-[9/16] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary [container-type:inline-size]",
                     className,
                     isDragging
                         ? "transition-none"
@@ -81,20 +81,42 @@ const CarouselCard = React.memo(
                     }
                 }}
             >
-                <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-900 border border-white/10 shadow-2xl">
-                    <Image
-                        src={src}
-                        alt={`Slide ${index + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, 320px"
-                        priority={isActive}
-                        draggable={false}
-                    />
-                    <div
-                        className="absolute inset-0 bg-black transition-opacity duration-500 pointer-events-none"
-                        style={{ opacity: isActive ? 0 : 0.4 }}
-                    />
+                <div className="relative w-full h-full rounded-[14cqw] bg-[#1c1c1e] p-[1.2cqw] shadow-2xl ring-1 ring-white/10">
+                    {/* Titanium Frame Highlight */}
+                    <div className="absolute inset-0 rounded-[14cqw] border-[0.5cqw] border-[#ffffff10] pointer-events-none z-10" />
+
+                    {/* Screen Container */}
+                    <div className="relative w-full h-full bg-black rounded-[12.8cqw] overflow-hidden border border-[#ffffff05] shadow-inner">
+                        <Image
+                            src={src}
+                            alt={`Slide ${index + 1}`}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 320px"
+                            priority={isActive}
+                            draggable={false}
+                        />
+                        <div
+                            className="absolute inset-0 bg-black transition-opacity duration-500 pointer-events-none"
+                            style={{ opacity: isActive ? 0 : 0.4 }}
+                        />
+                    </div>
+
+                    {/* Accurate Button Placements (Left Side) */}
+                    {/* Action Button */}
+                    <div className="absolute top-[12%] -left-[1cqw] w-[1cqw] h-[5%] bg-[#3a3a3a] rounded-l-sm shadow-[inset_-1px_0_2px_rgba(0,0,0,0.5)] z-[-1]" />
+                    {/* Volume Up */}
+                    <div className="absolute top-[20%] -left-[1cqw] w-[1cqw] h-[8%] bg-[#3a3a3a] rounded-l-sm shadow-[inset_-1px_0_2px_rgba(0,0,0,0.5)] z-[-1]" />
+                    {/* Volume Down */}
+                    <div className="absolute top-[30%] -left-[1cqw] w-[1cqw] h-[8%] bg-[#3a3a3a] rounded-l-sm shadow-[inset_-1px_0_2px_rgba(0,0,0,0.5)] z-[-1]" />
+
+                    {/* Accurate Button Placements (Right Side) */}
+                    {/* Power Button */}
+                    <div className="absolute top-[20%] -right-[1cqw] w-[1cqw] h-[12%] bg-[#3a3a3a] rounded-r-sm shadow-[inset_1px_0_2px_rgba(0,0,0,0.5)] z-[-1]" />
+
+                    {/* Antena Lines (Subtle details) */}
+                    <div className="absolute top-[10%] left-0 w-full h-[1px] bg-[#ffffff05]" />
+                    <div className="absolute bottom-[10%] left-0 w-full h-[1px] bg-[#ffffff05]" />
                 </div>
             </div>
         );
@@ -409,7 +431,10 @@ export function CoverflowCarousel({
     return (
         <div
             ref={containerRef}
-            className={cn("relative w-full max-w-6xl mx-auto py-12", className)}
+            className={cn(
+                "relative w-full max-w-6xl mx-auto py-12 md:flex md:flex-col",
+                className
+            )}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => {
                 setIsPaused(false);
@@ -422,11 +447,11 @@ export function CoverflowCarousel({
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
         >
-            <div className="relative w-full h-[800px] flex items-center justify-center [perspective:500px] [transform-style:preserve-3d] overflow-hidden">
+            <div className="relative w-full h-[800px] md:h-auto md:flex-1 md:min-h-0 flex items-center justify-center [perspective:500px] [transform-style:preserve-3d] overflow-hidden">
                 {/* Left Navigation */}
                 <button
                     type="button"
-                    className="absolute left-4 z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
+                    className="absolute left-4 md:left-[calc(50%-250px)] z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -451,14 +476,14 @@ export function CoverflowCarousel({
                         onClick={() => handleCardClick(i)}
                         // We want transitions enabled so they animate to the new snapped position
                         isDragging={false}
-                        className="w-[260px] md:w-[320px] aspect-[1320/2868]"
+                        className="w-[260px] md:w-auto md:h-[80%] aspect-[1320/2868]"
                     />
                 ))}
 
                 {/* Right Navigation */}
                 <button
                     type="button"
-                    className="absolute right-4 z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
+                    className="absolute right-4 md:right-[calc(50%-250px)] z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
@@ -469,38 +494,40 @@ export function CoverflowCarousel({
                 >
                     <ChevronRight className="w-8 h-8" />
                 </button>
-            </div>
 
-            {/* Dots Navigation */}
-            <div className="flex justify-center gap-2 mt-8">
-                {images.map((_, idx) => (
-                    <button
-                        key={idx}
-                        type="button"
-                        onClick={(e) => {
-                            e.preventDefault();
-                            triggerInteractionPause();
-                            setActive(idx);
-                        }}
-                        className={cn(
-                            "h-2 rounded-full transition-all duration-300",
-                            idx === normalizedActive
-                                ? "bg-primary w-8 cursor-grab active:cursor-grabbing"
-                                : "bg-primary/20 w-2 hover:bg-primary/40"
-                        )}
-                        aria-label={`Go to slide ${idx + 1}`}
-                        onMouseDown={
-                            idx === active ? onPillMouseDown : undefined
-                        }
-                        onTouchStart={
-                            idx === active ? onPillTouchStart : undefined
-                        }
-                        onTouchMove={
-                            idx === active ? onPillTouchMove : undefined
-                        }
-                        onTouchEnd={idx === active ? onPillTouchEnd : undefined}
-                    />
-                ))}
+                {/* Dots Navigation */}
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-50">
+                    {images.map((_, idx) => (
+                        <button
+                            key={idx}
+                            type="button"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                triggerInteractionPause();
+                                setActive(idx);
+                            }}
+                            className={cn(
+                                "h-2 rounded-full transition-all duration-300",
+                                idx === normalizedActive
+                                    ? "bg-primary w-8 cursor-grab active:cursor-grabbing"
+                                    : "bg-primary/20 w-2 hover:bg-primary/40"
+                            )}
+                            aria-label={`Go to slide ${idx + 1}`}
+                            onMouseDown={
+                                idx === active ? onPillMouseDown : undefined
+                            }
+                            onTouchStart={
+                                idx === active ? onPillTouchStart : undefined
+                            }
+                            onTouchMove={
+                                idx === active ? onPillTouchMove : undefined
+                            }
+                            onTouchEnd={
+                                idx === active ? onPillTouchEnd : undefined
+                            }
+                        />
+                    ))}
+                </div>
             </div>
         </div>
     );

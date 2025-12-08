@@ -43,9 +43,9 @@ export function Header() {
     }, [pathname]);
 
     return (
-        <header
+        <motion.header
             className={cn(
-                "sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60",
+                "fixed top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60",
                 isMobileMenuOpen
                     ? "bg-transparent border-transparent"
                     : "bg-background/95 border-border/40"
@@ -170,6 +170,6 @@ export function Header() {
                     </AnimatePresence>,
                     document.body
                 )}
-        </header>
+        </motion.header>
     );
 }

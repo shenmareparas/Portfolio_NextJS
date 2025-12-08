@@ -197,9 +197,15 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                 </FadeIn>
 
-                <div className="w-full mx-auto md:fixed md:top-0 md:right-0 md:h-screen md:w-1/2 md:flex md:items-center md:justify-center pointer-events-none md:pointer-events-auto">
-                    <FadeIn className="pointer-events-auto w-full" delay={0.1}>
-                        <CoverflowCarousel images={project.gallery || []} />
+                <div className="w-full mx-auto md:fixed md:top-16 md:right-0 md:h-[calc(100vh-8rem)] md:w-1/2 md:flex md:items-center md:justify-center pointer-events-none md:pointer-events-auto">
+                    <FadeIn
+                        className="pointer-events-auto w-full h-full"
+                        delay={0.1}
+                    >
+                        <CoverflowCarousel
+                            className="h-full md:py-0"
+                            images={project.gallery || []}
+                        />
                     </FadeIn>
                 </div>
             </div>
