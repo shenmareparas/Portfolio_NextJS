@@ -108,6 +108,9 @@ export const projects: Project[] = [
             "/project/ai_chess/5.webp",
             "/project/ai_chess/6.webp",
             "/project/ai_chess/7.webp",
+            "/project/ai_chess/8.webp",
+            "/project/ai_chess/9.webp",
+            "/project/ai_chess/10.webp",
         ],
     },
     {

@@ -4,6 +4,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { NavigationProvider } from "@/components/providers/navigation-provider";
+import { LoadingProvider } from "@/components/providers/loading-provider";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Toaster } from "@/components/ui/toaster";
@@ -71,6 +72,7 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body
+                suppressHydrationWarning
                 className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen flex flex-col`}
             >
                 <ThemeProvider
@@ -80,15 +82,17 @@ export default function RootLayout({
                     disableTransitionOnChange
                 >
                     <NavigationProvider>
-                        <Preloader />
-                        <CustomCursor />
-                        <Header />
-                        <GoToTop />
-                        <main className="flex-1 flex flex-col pt-16 md:pb-16">
-                            {children}
-                        </main>
-                        <Footer />
-                        <Toaster />
+                        <LoadingProvider>
+                            <Preloader />
+                            <CustomCursor />
+                            <Header />
+                            <GoToTop />
+                            <main className="flex-1 flex flex-col pt-16 md:pb-16">
+                                {children}
+                            </main>
+                            <Footer />
+                            <Toaster />
+                        </LoadingProvider>
                     </NavigationProvider>
                 </ThemeProvider>
                 <Analytics />

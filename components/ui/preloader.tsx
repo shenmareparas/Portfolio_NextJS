@@ -2,11 +2,13 @@
 
 import { useEffect, useState, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useLoadingValue } from "@/components/providers/loading-provider";
 
 export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
     const [shouldAnimate, setShouldAnimate] = useState(true);
     const [counter, setCounter] = useState(0);
+    const loadingCount = useLoadingValue();
 
     const useIsomorphicLayoutEffect =
         typeof window !== "undefined" ? useLayoutEffect : useEffect;
@@ -21,6 +23,11 @@ export function Preloader() {
 
         const interval = setInterval(() => {
             setCounter((prev) => {
+                // If we're waiting for external assets and reached 99%, stay there
+                if (loadingCount > 0 && prev >= 99) {
+                    return 99;
+                }
+
                 if (prev >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
@@ -31,12 +38,15 @@ export function Preloader() {
                 }
                 // Random increment for more realistic feel
                 const increment = Math.floor(Math.random() * 15) + 5; // Faster increment
-                return Math.min(prev + increment, 100);
+
+                // If we are waiting for assets, don't go past 99 yet
+                const maxNext = loadingCount > 0 ? 99 : 100;
+                return Math.min(prev + increment, maxNext);
             });
         }, 50); // Faster interval
 
         return () => clearInterval(interval);
-    }, []);
+    }, [loadingCount]);
 
     return (
         <AnimatePresence mode="wait">

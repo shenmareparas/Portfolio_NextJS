@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { GalleryItem } from "@/data/projects";
+import { useLoadingActions } from "@/components/providers/loading-provider";
 
 interface CoverflowCarouselProps {
     images: GalleryItem[];
@@ -43,7 +44,26 @@ const CarouselCard = React.memo(
         const direction = Math.sign(-diff);
         const isActive = Math.abs(diff) < 0.5;
 
-        if (Math.abs(diff) > MAX_VISIBILITY) return null;
+        const { incrementLoading, decrementLoading } = useLoadingActions();
+        const loadedRef = useRef(false);
+
+        useEffect(() => {
+            incrementLoading();
+            return () => {
+                if (!loadedRef.current) {
+                    decrementLoading();
+                }
+            };
+        }, [incrementLoading, decrementLoading]);
+
+        const handleImageLoad = () => {
+            if (!loadedRef.current) {
+                loadedRef.current = true;
+                decrementLoading();
+            }
+        };
+
+        // if (Math.abs(diff) > MAX_VISIBILITY) return null;
 
         const style = {
             "--active": isActive ? 1 : 0,
@@ -95,6 +115,7 @@ const CarouselCard = React.memo(
                             sizes="(max-width: 768px) 100vw, 320px"
                             priority={isActive}
                             draggable={false}
+                            onLoad={handleImageLoad}
                         />
                         <div
                             className="absolute inset-0 bg-black transition-opacity duration-500 pointer-events-none"
