@@ -80,6 +80,10 @@ export const projects: Project[] = [
                 light: "/project/vitbmess/8a.webp",
                 dark: "/project/vitbmess/8b.webp",
             },
+            {
+                light: "/project/vitbmess/9a.webp",
+                dark: "/project/vitbmess/9b.webp",
+            },
         ],
     },
     {
@@ -209,11 +213,17 @@ export const projects: Project[] = [
         timeline: "2024",
         image: "/project/stopwatch/banner.webp",
         logo: "/project/stopwatch/logo.webp",
-        accentColor: {
-            light: "#5D5D5D",
-            dark: "#DBDED6",
-        },
-        gallery: ["/project/stopwatch/1.webp", "/project/stopwatch/2.webp"],
+        accentColor: "#FC2B80",
+        gallery: [
+            {
+                light: "/project/stopwatch/1a.webp",
+                dark: "/project/stopwatch/1b.webp",
+            },
+            {
+                light: "/project/stopwatch/2a.webp",
+                dark: "/project/stopwatch/2b.webp",
+            },
+        ],
         links: {
             github: "https://github.com/shenmareparas/Stopwatch",
         },
@@ -223,7 +233,7 @@ export const projects: Project[] = [
         title: "Table Top",
         description: "Improves your dining experience.",
         fullDescription:
-            "Elevates your dining experience with TableTop, a restaurant ordering app that streamlines the ordering process and enhances your dining experience.",
+            "Elevates your dining experience with TableTop, a restaurant ordering software that streamlines the ordering process and enhances your dining experience.",
         tags: ["Flutter", "NextJS"],
         role: "Full Stack Developer",
         timeline: "2025 - 2026",
