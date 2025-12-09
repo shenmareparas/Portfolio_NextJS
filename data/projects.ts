@@ -116,7 +116,7 @@ export const projects: Project[] = [
         description: "Symptom checker & first-aid recommendation mobile app.",
         fullDescription:
             "Developed a health-tech mobile application that enables users to input symptoms and receive instant first-aid and over-the-counter medication suggestions. Focused on clean UI/UX and reliable medical data presentation. Reduced user-reported bugs by 25% through rigorous code audits.",
-        tags: ["Flutter", "Dart", "Android", "iOS", "Healthcare"],
+        tags: ["Flutter", "Dart", "Android", "iOS"],
         role: "Lead Mobile Developer",
         timeline: "2023",
         links: {
@@ -142,7 +142,7 @@ export const projects: Project[] = [
             "E-commerce platform connecting farmers directly to consumers.",
         fullDescription:
             "Dual-app system (User + Admin) built with Flutter and Firebase for real-time inventory, orders, and payments. Improved operational efficiency by 45%, reduced manual data entry by 50%, and increased transaction volume by 30%. Features separate dashboards for farmers and buyers.",
-        tags: ["Flutter", "Dart", "Firebase", "Android", "iOS", "E-commerce"],
+        tags: ["Flutter", "Dart", "Firebase", "Android", "iOS"],
         role: "Full Stack Mobile Developer",
         timeline: "2024",
         links: {
@@ -160,7 +160,7 @@ export const projects: Project[] = [
         description: "App UI design concept for Apple Vision Pro.",
         fullDescription:
             "A Flutter-based application showcasing UI design concepts for the Apple Vision Pro. Features immersive interfaces and spatial design elements, demonstrating the capabilities of Flutter for spatial computing.",
-        tags: ["Flutter", "Dart", "UI Design"],
+        tags: ["Flutter", "Dart", "UI Design", "Android", "iOS"],
         role: "Flutter Developer",
         timeline: "2024",
         links: {
@@ -180,7 +180,7 @@ export const projects: Project[] = [
         description: "Native Android music streaming app with adaptive UI.",
         fullDescription:
             "Native Android music streaming application built with Kotlin and Jetpack Compose. Features adaptive gradient backgrounds, REST API integration, tab views, playback controls, swipe gestures, and haptic feedback.",
-        tags: ["Kotlin", "Jetpack Compose", "Android Studio", "REST API"],
+        tags: ["Kotlin", "Jetpack Compose", "REST API", "Android"],
         role: "Android Developer",
         timeline: "2024",
         links: {
@@ -194,6 +194,26 @@ export const projects: Project[] = [
             "/project/music_player/2.webp",
             "/project/music_player/3.webp",
         ],
+    },
+    {
+        slug: "stopwatch",
+        title: "Stopwatch",
+        description: "Neumorphic Timer App",
+        fullDescription:
+            "A beautifully designed Flutter application featuring a stopwatch and analog clock with a modern neumorphic UI design.",
+        tags: ["Flutter", "Dart", "UI Design", "Android", "iOS"],
+        role: "Flutter Developer",
+        timeline: "2024",
+        image: "/project/stopwatch/banner.webp",
+        logo: "/project/stopwatch/logo.webp",
+        accentColor: {
+            light: "#5D5D5D",
+            dark: "#DBDED6",
+        },
+        gallery: ["/project/stopwatch/1.webp", "/project/stopwatch/2.webp"],
+        links: {
+            github: "https://github.com/shenmareparas/Stopwatch",
+        },
     },
     {
         slug: "tabletop",

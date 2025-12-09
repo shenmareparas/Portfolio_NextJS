@@ -74,7 +74,7 @@ const CursorInner = ({
     const mouseY = useMotionValue(initialY);
 
     // Smoother spring config: reduced mass for responsiveness, adjusted damping/stiffness
-    const springConfig = { damping: 20, stiffness: 300, mass: 0.2 };
+    const springConfig = { damping: 35, stiffness: 800, mass: 0.1 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
