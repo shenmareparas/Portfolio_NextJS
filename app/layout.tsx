@@ -12,6 +12,7 @@ import { CustomCursor } from "@/components/ui/custom-cursor";
 import { Preloader } from "@/components/ui/preloader";
 import { GoToTop } from "@/components/ui/go-to-top";
 import { siteConfig } from "@/data/config";
+import { PortraitLock } from "@/components/ui/portrait-lock";
 
 const inter = Inter({
     variable: "--font-sans",
@@ -96,6 +97,7 @@ export default function RootLayout({
                     </NavigationProvider>
                 </ThemeProvider>
                 <Analytics />
+                <PortraitLock />
             </body>
         </html>
     );

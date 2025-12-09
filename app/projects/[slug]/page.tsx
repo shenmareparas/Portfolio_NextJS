@@ -64,7 +64,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </BackButton>
             </FadeIn>
 
-            <div className="grid gap-8 md:grid-cols-2">
+            <div className="grid gap-8 xl:grid-cols-2">
                 <FadeIn className="space-y-6" delay={0.1}>
                     <Image
                         src={project.logo}
@@ -197,13 +197,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                 </FadeIn>
 
-                <div className="w-full mx-auto md:fixed md:top-16 md:right-0 md:h-[calc(100vh-8rem)] md:w-1/2 md:flex md:items-center md:justify-center pointer-events-none md:pointer-events-auto">
+                <div className="w-full mx-auto xl:fixed xl:top-16 xl:right-0 xl:h-[calc(100vh-8rem)] xl:w-1/2 xl:flex xl:items-center xl:justify-center pointer-events-none xl:pointer-events-auto">
                     <FadeIn
                         className="pointer-events-auto w-full h-full"
                         delay={0.1}
                     >
                         <CoverflowCarousel
-                            className="h-full md:py-0"
+                            className="h-full xl:py-0 w-[calc(100%+2rem)] -mx-4 xl:w-full xl:mx-0"
                             images={project.gallery || []}
                         />
                     </FadeIn>
