@@ -45,19 +45,6 @@ export const CustomCursor = () => {
         };
     }, [initialPos]);
 
-    // Toggle cursor class based on visibility
-    useEffect(() => {
-        if (isVisible) {
-            document.documentElement.classList.add("hide-default-cursor");
-        } else {
-            document.documentElement.classList.remove("hide-default-cursor");
-        }
-
-        return () => {
-            document.documentElement.classList.remove("hide-default-cursor");
-        };
-    }, [isVisible]);
-
     if (!isVisible || !initialPos) return null;
 
     return <CursorInner initialX={initialPos.x} initialY={initialPos.y} />;
