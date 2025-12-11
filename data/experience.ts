@@ -1,10 +1,4 @@
-export interface Experience {
-    company: string;
-    role: string;
-    dates: string;
-    description: string[];
-    tech: string[];
-}
+import { Experience } from "@/types/experience";
 
 export const experience: Experience[] = [
     {
