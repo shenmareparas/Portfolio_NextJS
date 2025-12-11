@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, FileText } from "lucide-react";
-import { FadeIn } from "@/components/fade-in";
+import { FadeIn } from "@/components/motion/fade-in";
 import { Metadata } from "next";
 import { profile } from "@/data/profile";
 import { siteConfig } from "@/data/config";
-import { RotatingTitle } from "@/components/rotating-title";
+import { RotatingTitle } from "@/components/motion/rotating-title";
 
 export const metadata: Metadata = {
     title: {

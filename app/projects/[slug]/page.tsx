@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { BackButton } from "@/components/ui/back-button";
 import { ArrowLeft, Github, Smartphone, Globe } from "lucide-react";
 import { siGoogleplay } from "simple-icons/icons";
-import { SimpleIconComponent } from "@/components/simple-icon";
+import { SimpleIconComponent } from "@/components/ui/simple-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CoverflowCarousel } from "@/components/coverflow-carousel";
-import { FadeIn } from "@/components/fade-in";
+import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
+import { FadeIn } from "@/components/motion/fade-in";
 import { projects as projectsData, Project } from "@/data/projects";
 
 interface ProjectPageProps {

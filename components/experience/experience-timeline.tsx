@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { experience as experienceData } from "@/data/experience";
@@ -9,13 +8,7 @@ export function ExperienceTimeline() {
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             {experienceData.map((job, index) => (
-                <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
+                <div key={index}>
                     <Card className="border-none shadow-none bg-transparent">
                         <CardContent className="p-0">
                             <div className="grid md:grid-cols-[300px_1fr] gap-8 md:gap-12">
@@ -65,7 +58,7 @@ export function ExperienceTimeline() {
                     {index < experienceData.length - 1 && (
                         <div className="h-px bg-border mt-8 md:mt-12" />
                     )}
-                </motion.div>
+                </div>
             ))}
         </div>
     );
