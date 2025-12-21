@@ -139,8 +139,12 @@ export function Header() {
                                 exit={{ opacity: 0, y: -20 }}
                                 transition={{ duration: 0.2 }}
                                 className="fixed inset-0 z-40 flex flex-col items-center justify-center bg-background/80 backdrop-blur-md md:hidden"
+                                onClick={() => setIsMobileMenuOpen(false)}
                             >
-                                <nav className="flex flex-col items-center gap-8 p-4">
+                                <nav
+                                    className="flex flex-col items-center gap-8 p-4"
+                                    onClick={(e) => e.stopPropagation()}
+                                >
                                     {navItems.map((item, index) => (
                                         <motion.div
                                             key={item.href}

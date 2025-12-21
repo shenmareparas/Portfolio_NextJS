@@ -69,6 +69,7 @@ export function ContactForm() {
                 title: "Message sent!",
                 description:
                     "Thank you for reaching out. I'll get back to you soon.",
+                variant: "success",
             });
             form.reset();
         } catch (error) {
