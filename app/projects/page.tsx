@@ -1,5 +1,5 @@
 import { projects as projectsData } from "@/data/projects";
-import { ProjectCard } from "@/components/project-card";
+import { ProjectCard } from "@/components/projects/project-card";
 
 export const metadata = {
     title: "Projects",

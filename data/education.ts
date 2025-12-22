@@ -1,4 +1,6 @@
-export const education = [
+import { Education, Certification } from "@/types/education";
+
+export const education: Education[] = [
     {
         institution: "Vellore Institute of Technology (VIT), Vellore",
         degree: "B.Tech in Computer Science Engineering",
@@ -14,7 +16,7 @@ export const education = [
     },
 ];
 
-export const certifications = [
+export const certifications: Certification[] = [
     {
         name: "AWS Certified Cloud Practitioner",
         issuer: "Amazon Web Services",

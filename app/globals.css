@@ -80,18 +80,9 @@ body {
     font-family: var(--font-sans);
 }
 
-/* Force hide default cursor on all elements */
-html.hide-default-cursor,
-html.hide-default-cursor *,
-html.hide-default-cursor body,
-html.hide-default-cursor a,
-html.hide-default-cursor button,
-html.hide-default-cursor input,
-html.hide-default-cursor textarea,
-html.hide-default-cursor select,
-html.hide-default-cursor [role="button"],
-html.hide-default-cursor [onclick] {
-    cursor: none !important;
+::selection {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
 }
 
 /* View Transition API */

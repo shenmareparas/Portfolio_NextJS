@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { FadeIn } from "@/components/fade-in";
+import { FadeIn } from "@/components/motion/fade-in";
 import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {

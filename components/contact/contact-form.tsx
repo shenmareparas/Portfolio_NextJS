@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
     name: z.string().min(2, {
@@ -69,6 +69,7 @@ export function ContactForm() {
                 title: "Message sent!",
                 description:
                     "Thank you for reaching out. I'll get back to you soon.",
+                variant: "success",
             });
             form.reset();
         } catch (error) {
@@ -163,7 +164,7 @@ export function ContactForm() {
                     ) : (
                         <>
                             <Send className="mr-2 h-4 w-4" />
-                            Send Message
+                            Submit
                         </>
                     )}
                 </Button>

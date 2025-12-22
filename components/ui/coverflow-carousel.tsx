@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Image from "next/image";
-import { GalleryItem } from "@/data/projects";
+import { GalleryItem } from "@/types/project";
 import { useLoadingActions } from "@/components/providers/loading-provider";
 
 interface CoverflowCarouselProps {

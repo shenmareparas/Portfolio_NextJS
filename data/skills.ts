@@ -1,4 +1,6 @@
-export const skills = {
+import { Skills } from "@/types/skill";
+
+export const skills: Skills = {
     mobile: [
         "Flutter",
         "Kotlin",

@@ -1,8 +1,8 @@
-import { ContactForm } from "@/components/contact-form";
+import { ContactForm } from "@/components/contact/contact-form";
 import { Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { socials } from "@/data/socials";
-import { FadeIn } from "@/components/fade-in";
+import { FadeIn } from "@/components/motion/fade-in";
 import {
     Tooltip,
     TooltipContent,
