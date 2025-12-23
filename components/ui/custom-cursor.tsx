@@ -60,8 +60,7 @@ const CursorInner = ({
     const mouseX = useMotionValue(initialX);
     const mouseY = useMotionValue(initialY);
 
-    // Smoother spring config: reduced mass for responsiveness, adjusted damping/stiffness
-    const springConfig = { damping: 35, stiffness: 800, mass: 0.1 };
+    const springConfig = { damping: 35, stiffness: 400, mass: 0.1 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
@@ -101,7 +100,7 @@ const CursorInner = ({
 
     return (
         <motion.div
-            className="fixed top-0 left-0 w-20 h-20 bg-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference will-change-transform"
+            className="fixed top-0 left-0 w-20 h-20 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
             style={{
                 x: cursorX,
                 y: cursorY,

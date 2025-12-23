@@ -1,5 +1,5 @@
 export const siteConfig = {
-    title: "Paras Shenmare | Mobile Developer",
+    title: "Paras Shenmare | Software Developer",
     description:
         "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
     keywords: [
@@ -13,8 +13,7 @@ export const siteConfig = {
     url: "https://parasnextjs.vercel.app",
     contactFormUrl: "https://formspree.io/f/manwypwk",
     footer: {
-        builtBy: "Paras",
-        githubLink: "https://github.com/shenmareparas/Portfolio_NextJS",
+        copyright: "© 2026 Paras Shenmare. All rights reserved.",
     },
     metadata: {
         title: {
