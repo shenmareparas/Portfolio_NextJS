@@ -25,11 +25,6 @@ export const socials = [
         icon: Linkedin,
     },
     {
-        name: "GitHub",
-        href: "https://github.com/shenmareparas",
-        icon: SimpleIconWrapper(siGithub),
-    },
-    {
         name: "Play Store",
         href: "https://play.google.com/store/apps/dev?id=5625933656259473047",
         icon: SimpleIconWrapper(siGoogleplay),
@@ -38,5 +33,10 @@ export const socials = [
         name: "X (Twitter)",
         href: "https://x.com/parasshenmare",
         icon: SimpleIconWrapper(siX),
+    },
+    {
+        name: "GitHub",
+        href: "https://github.com/shenmareparas",
+        icon: SimpleIconWrapper(siGithub),
     },
 ];

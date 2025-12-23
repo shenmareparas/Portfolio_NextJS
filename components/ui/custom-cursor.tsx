@@ -60,8 +60,7 @@ const CursorInner = ({
     const mouseX = useMotionValue(initialX);
     const mouseY = useMotionValue(initialY);
 
-    // Smoother spring config: reduced mass for responsiveness, adjusted damping/stiffness
-    const springConfig = { damping: 35, stiffness: 800, mass: 0.1 };
+    const springConfig = { damping: 35, stiffness: 400, mass: 0.1 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
@@ -69,26 +68,11 @@ const CursorInner = ({
     const cursorY = useTransform(springY, (y) => y - 40);
 
     const [isHovering, setIsHovering] = useState(false);
-    const hoveredEl = useRef<HTMLElement | null>(null);
-    const hoveredRect = useRef<DOMRect | null>(null);
 
     useEffect(() => {
         const updateMousePosition = (e: MouseEvent) => {
-            if (hoveredEl.current && hoveredRect.current) {
-                const rect = hoveredRect.current;
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-
-                const distanceX = e.clientX - centerX;
-                const distanceY = e.clientY - centerY;
-
-                // Magnetic pull factor (0.5 means cursor moves half the distance of mouse)
-                mouseX.set(centerX + distanceX * 0.5);
-                mouseY.set(centerY + distanceY * 0.5);
-            } else {
-                mouseX.set(e.clientX);
-                mouseY.set(e.clientY);
-            }
+            mouseX.set(e.clientX);
+            mouseY.set(e.clientY);
         };
 
         const handleMouseOver = (e: MouseEvent) => {
@@ -100,36 +84,23 @@ const CursorInner = ({
 
             if (interactive) {
                 setIsHovering(true);
-                hoveredEl.current = interactive as HTMLElement;
-                hoveredRect.current = interactive.getBoundingClientRect();
             } else {
                 setIsHovering(false);
-                hoveredEl.current = null;
-                hoveredRect.current = null;
-            }
-        };
-
-        // Update rect on scroll to keep magnetic effect accurate
-        const handleScroll = () => {
-            if (hoveredEl.current) {
-                hoveredRect.current = hoveredEl.current.getBoundingClientRect();
             }
         };
 
         window.addEventListener("mousemove", updateMousePosition);
         window.addEventListener("mouseover", handleMouseOver);
-        window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
             window.removeEventListener("mousemove", updateMousePosition);
             window.removeEventListener("mouseover", handleMouseOver);
-            window.removeEventListener("scroll", handleScroll);
         };
     }, [mouseX, mouseY]);
 
     return (
         <motion.div
-            className="fixed top-0 left-0 w-20 h-20 bg-white rounded-full pointer-events-none z-[2147483647] mix-blend-difference will-change-transform"
+            className="fixed top-0 left-0 w-20 h-20 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
             style={{
                 x: cursorX,
                 y: cursorY,

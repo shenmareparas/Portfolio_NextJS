@@ -8,7 +8,7 @@ import { Badge } from "lucide-react";
 import { FadeIn } from "@/components/motion/fade-in";
 
 export const metadata = {
-    title: "About Me",
+    title: "About",
     description: "Learn more about my background, skills, and education.",
 };
 
