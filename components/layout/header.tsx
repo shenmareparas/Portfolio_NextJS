@@ -167,13 +167,26 @@ export function Header() {
                                             <Link
                                                 href={item.href}
                                                 className={cn(
-                                                    "text-2xl font-medium transition-colors hover:text-primary",
+                                                    "relative px-4 py-2 text-2xl font-medium transition-colors hover:text-primary",
                                                     pathname === item.href
                                                         ? "text-foreground"
                                                         : "text-muted-foreground"
                                                 )}
                                             >
-                                                {item.name}
+                                                {pathname === item.href && (
+                                                    <motion.span
+                                                        layoutId="mobile-navbar-active"
+                                                        className="absolute inset-0 z-0 bg-secondary rounded-full"
+                                                        transition={{
+                                                            type: "spring",
+                                                            stiffness: 350,
+                                                            damping: 30,
+                                                        }}
+                                                    />
+                                                )}
+                                                <span className="relative z-10">
+                                                    {item.name}
+                                                </span>
                                             </Link>
                                         </motion.div>
                                     ))}

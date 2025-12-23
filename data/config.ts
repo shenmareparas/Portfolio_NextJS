@@ -1,7 +1,7 @@
 export const siteConfig = {
     title: "Paras Shenmare | Software Developer",
     description:
-        "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
+        "Passionate Mobile Developer specializing in Flutter, Android and iOS development.",
     keywords: [
         "Mobile Developer",
         "Flutter",
@@ -21,7 +21,7 @@ export const siteConfig = {
             template: "%s | Paras",
         },
         description:
-            "Portfolio of a passionate Mobile Developer specializing in Flutter, Android and iOS development.",
+            "Passionate Mobile Developer specializing in Flutter, Android and iOS development.",
         twitter: {
             card: "summary_large_image",
             creator: "@parasshenmare",
