@@ -137,7 +137,7 @@ export const projects: Project[] = [
         },
         image: "/project/cropshop/banner.webp",
         logo: "/project/cropshop/logo.webp",
-        accentColor: "#06D6A0",
+        accentColor: "#82b43c",
         gallery: [
             {
                 light: "/project/cropshop/1a.webp",

@@ -44,63 +44,74 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             }
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: index * 0.1 }}
-            whileHover={{ y: -5 }}
-            className="h-full"
+            whileHover={{ y: -8 }}
+            className="h-full group"
         >
-            <Card className="group relative flex h-full flex-col overflow-hidden border-primary/40 transition-colors hover:border-border hover:shadow-lg">
+            <Card
+                className="relative flex h-full flex-col overflow-hidden border-border/40 transition-all duration-300 hover:shadow-lg dark:hover:shadow-2xl"
+                style={
+                    {
+                        "--project-accent": accentLight,
+                        "--project-accent-dark": accentDark,
+                    } as React.CSSProperties
+                }
+            >
+                {/* Dynamic Border Glow */}
+                <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none z-20">
+                    <div className="absolute inset-0 border-2 border-[var(--project-accent)] dark:border-[var(--project-accent-dark)] rounded-xl opacity-50" />
+                    <div className="absolute inset-0 bg-[var(--project-accent)] dark:bg-[var(--project-accent-dark)] opacity-[0.03]" />
+                </div>
+
                 <Link
                     href={`/projects/${project.slug}`}
-                    className="absolute inset-0 z-10"
+                    className="absolute inset-0 z-10 focus:outline-none"
                 >
                     <span className="sr-only">View {project.title}</span>
                 </Link>
+
                 <div className="relative aspect-video w-full overflow-hidden bg-muted">
                     <Image
                         src={project.image}
                         alt={project.title}
                         fill
-                        className="object-cover transition-transform duration-300 hover:scale-105"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
+                    {/* Image Overlay which lightens on hover */}
+                    <div className="absolute inset-0 bg-black/10 transition-colors duration-300 group-hover:bg-transparent" />
                 </div>
+
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                        <span className="truncate">{project.title}</span>
-                        <ArrowUpRight className="h-4 w-4 translate-y-1 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100" />
+                    <CardTitle className="flex items-center justify-between gap-2">
+                        <span className="truncate text-lg group-hover:text-[var(--project-accent)] dark:group-hover:text-[var(--project-accent-dark)] transition-colors duration-300">
+                            {project.title}
+                        </span>
+                        <ArrowUpRight className="h-5 w-5 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 text-[var(--project-accent)] dark:text-[var(--project-accent-dark)]" />
                     </CardTitle>
-                    <CardDescription className="line-clamp-2">
+                    <CardDescription className="line-clamp-2 text-muted-foreground/80">
                         {project.description}
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="flex-1 pb-4">
+
+                <CardContent className="flex-1 flex items-end pb-6">
                     <div className="flex flex-wrap gap-2">
                         {project.tags.map((tag) => (
                             <Badge
                                 key={tag}
                                 variant="secondary"
-                                className={`font-normal transition-colors ${
-                                    project.accentColor
-                                        ? "bg-[var(--accent-light-bg)] dark:bg-[var(--accent-dark-bg)] hover:bg-[var(--accent-light-bg)] dark:hover:bg-[var(--accent-dark-bg)]"
-                                        : ""
-                                }`}
+                                className="bg-secondary/50 font-normal transition-colors duration-300 group-hover:bg-[var(--accent-light-bg)] dark:group-hover:bg-[var(--accent-dark-bg)]"
                                 style={
                                     project.accentColor
                                         ? ({
                                               "--accent-light": accentLight,
                                               "--accent-dark": accentDark,
                                               "--accent-light-bg": `${accentLight}15`,
-                                              "--accent-dark-bg": `${accentDark}15`,
+                                              "--accent-dark-bg": `${accentDark}20`,
                                           } as React.CSSProperties)
                                         : undefined
                                 }
                             >
-                                <span
-                                    className={
-                                        project.accentColor
-                                            ? "text-[var(--accent-light)] dark:text-[var(--accent-dark)]"
-                                            : ""
-                                    }
-                                >
+                                <span className="group-hover:text-[var(--accent-light)] dark:group-hover:text-[var(--accent-dark)] transition-colors">
                                     {tag}
                                 </span>
                             </Badge>

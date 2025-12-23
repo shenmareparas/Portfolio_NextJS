@@ -69,26 +69,11 @@ const CursorInner = ({
     const cursorY = useTransform(springY, (y) => y - 40);
 
     const [isHovering, setIsHovering] = useState(false);
-    const hoveredEl = useRef<HTMLElement | null>(null);
-    const hoveredRect = useRef<DOMRect | null>(null);
 
     useEffect(() => {
         const updateMousePosition = (e: MouseEvent) => {
-            if (hoveredEl.current && hoveredRect.current) {
-                const rect = hoveredRect.current;
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-
-                const distanceX = e.clientX - centerX;
-                const distanceY = e.clientY - centerY;
-
-                // Magnetic pull factor (0.5 means cursor moves half the distance of mouse)
-                mouseX.set(centerX + distanceX * 0.5);
-                mouseY.set(centerY + distanceY * 0.5);
-            } else {
-                mouseX.set(e.clientX);
-                mouseY.set(e.clientY);
-            }
+            mouseX.set(e.clientX);
+            mouseY.set(e.clientY);
         };
 
         const handleMouseOver = (e: MouseEvent) => {
@@ -100,30 +85,17 @@ const CursorInner = ({
 
             if (interactive) {
                 setIsHovering(true);
-                hoveredEl.current = interactive as HTMLElement;
-                hoveredRect.current = interactive.getBoundingClientRect();
             } else {
                 setIsHovering(false);
-                hoveredEl.current = null;
-                hoveredRect.current = null;
-            }
-        };
-
-        // Update rect on scroll to keep magnetic effect accurate
-        const handleScroll = () => {
-            if (hoveredEl.current) {
-                hoveredRect.current = hoveredEl.current.getBoundingClientRect();
             }
         };
 
         window.addEventListener("mousemove", updateMousePosition);
         window.addEventListener("mouseover", handleMouseOver);
-        window.addEventListener("scroll", handleScroll, { passive: true });
 
         return () => {
             window.removeEventListener("mousemove", updateMousePosition);
             window.removeEventListener("mouseover", handleMouseOver);
-            window.removeEventListener("scroll", handleScroll);
         };
     }, [mouseX, mouseY]);
 
