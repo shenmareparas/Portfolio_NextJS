@@ -135,10 +135,43 @@ export const projects: Project[] = [
             githubAdmin: "https://github.com/shenmareparas/CropShop-Admin",
             github: "https://github.com/shenmareparas/CropShop",
         },
-        image: "/project.svg",
-        logo: "/project.svg",
+        image: "/project/cropshop/banner.webp",
+        logo: "/project/cropshop/logo.webp",
         accentColor: "#06D6A0",
-        gallery: ["/project.svg", "/project.svg", "/project.svg"],
+        gallery: [
+            {
+                light: "/project/cropshop/1a.webp",
+                dark: "/project/cropshop/1b.webp",
+            },
+            {
+                light: "/project/cropshop/2a.webp",
+                dark: "/project/cropshop/2b.webp",
+            },
+            {
+                light: "/project/cropshop/3a.webp",
+                dark: "/project/cropshop/3b.webp",
+            },
+            {
+                light: "/project/cropshop/4a.webp",
+                dark: "/project/cropshop/4b.webp",
+            },
+            {
+                light: "/project/cropshop/5a.webp",
+                dark: "/project/cropshop/5b.webp",
+            },
+            {
+                light: "/project/cropshop/6a.webp",
+                dark: "/project/cropshop/6b.webp",
+            },
+            {
+                light: "/project/cropshop/7a.webp",
+                dark: "/project/cropshop/7b.webp",
+            },
+            {
+                light: "/project/cropshop/8a.webp",
+                dark: "/project/cropshop/8b.webp",
+            },
+        ],
     },
     {
         slug: "apple-vision-pro-ui",
