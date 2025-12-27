@@ -112,17 +112,18 @@ export function Header() {
                                     : "text-muted-foreground"
                             )}
                         >
-                            {pathname === item.href && (
-                                <motion.span
-                                    layoutId="navbar-active"
-                                    className="absolute inset-0 z-0 bg-secondary rounded-full"
-                                    transition={{
-                                        type: "spring",
-                                        stiffness: 350,
-                                        damping: 30,
-                                    }}
-                                />
-                            )}
+                            <AnimatePresence>
+                                {pathname === item.href && (
+                                    <motion.span
+                                        key="navbar-active"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        exit={{ opacity: 0 }}
+                                        transition={{ duration: 0.2 }}
+                                        className="absolute inset-0 z-0 bg-secondary rounded-full"
+                                    />
+                                )}
+                            </AnimatePresence>
                             <span className="relative z-10">{item.name}</span>
                         </Link>
                     ))}
@@ -173,17 +174,26 @@ export function Header() {
                                                         : "text-muted-foreground"
                                                 )}
                                             >
-                                                {pathname === item.href && (
-                                                    <motion.span
-                                                        layoutId="mobile-navbar-active"
-                                                        className="absolute inset-0 z-0 bg-secondary rounded-full"
-                                                        transition={{
-                                                            type: "spring",
-                                                            stiffness: 350,
-                                                            damping: 30,
-                                                        }}
-                                                    />
-                                                )}
+                                                <AnimatePresence>
+                                                    {pathname === item.href && (
+                                                        <motion.span
+                                                            key="mobile-navbar-active"
+                                                            initial={{
+                                                                opacity: 0,
+                                                            }}
+                                                            animate={{
+                                                                opacity: 1,
+                                                            }}
+                                                            exit={{
+                                                                opacity: 0,
+                                                            }}
+                                                            transition={{
+                                                                duration: 0.2,
+                                                            }}
+                                                            className="absolute inset-0 z-0 bg-secondary rounded-full"
+                                                        />
+                                                    )}
+                                                </AnimatePresence>
                                                 <span className="relative z-10">
                                                     {item.name}
                                                 </span>
