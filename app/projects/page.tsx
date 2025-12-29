@@ -8,7 +8,7 @@ export const metadata = {
 
 export default function ProjectsPage() {
     return (
-        <div className="container mx-auto py-12 px-4 space-y-8">
+        <div className="container mx-auto py-12 px-4 space-y-8 pb-24 md:pb-12">
             <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-bold tracking-tight">Projects</h1>
                 <p className="text-xl text-muted-foreground">

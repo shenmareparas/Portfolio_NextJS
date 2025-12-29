@@ -57,7 +57,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             : project.accentColor;
 
     return (
-        <div className="container mx-auto py-12 px-4 space-y-12">
+        <div className="container mx-auto py-12 px-4 space-y-12 pb-24 md:pb-12">
             {/* Back Button */}
             <FadeIn>
                 <BackButton className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover">

@@ -31,6 +31,7 @@ export function ExperienceTimeline() {
                                                 key={tech}
                                                 variant="secondary"
                                                 shape="pill"
+                                                size="default"
                                             >
                                                 {tech}
                                             </Badge>
