@@ -42,34 +42,49 @@ export function Header() {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center gap-2 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.href}
-                                href={item.href}
-                                className={cn(
-                                    "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary cursor-hover",
-                                    pathname === item.href
-                                        ? "text-foreground"
-                                        : "text-muted-foreground"
-                                )}
-                            >
-                                <AnimatePresence>
-                                    {pathname === item.href && (
-                                        <motion.span
-                                            key="navbar-active"
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            transition={{ duration: 0.2 }}
-                                            className="absolute inset-0 z-0 bg-secondary rounded-full"
-                                        />
+                        {navItems.map((item) => {
+                            const isActive = pathname === item.href;
+
+                            const handleClick = (e: React.MouseEvent) => {
+                                if (isActive) {
+                                    e.preventDefault();
+                                    window.scrollTo({
+                                        top: 0,
+                                        behavior: "smooth",
+                                    });
+                                }
+                            };
+
+                            return (
+                                <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={handleClick}
+                                    className={cn(
+                                        "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary cursor-hover",
+                                        isActive
+                                            ? "text-foreground"
+                                            : "text-muted-foreground"
                                     )}
-                                </AnimatePresence>
-                                <span className="relative z-10">
-                                    {item.name}
-                                </span>
-                            </Link>
-                        ))}
+                                >
+                                    <AnimatePresence>
+                                        {isActive && (
+                                            <motion.span
+                                                key="navbar-active"
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                transition={{ duration: 0.2 }}
+                                                className="absolute inset-0 z-0 bg-secondary rounded-full"
+                                            />
+                                        )}
+                                    </AnimatePresence>
+                                    <span className="relative z-10">
+                                        {item.name}
+                                    </span>
+                                </Link>
+                            );
+                        })}
                     </nav>
 
                     <div className="flex items-center gap-4 z-50">
@@ -87,10 +102,24 @@ export function Header() {
                                 {navItems.map((item) => {
                                     const Icon = item.icon;
                                     const isActive = pathname === item.href;
+
+                                    const handleClick = (
+                                        e: React.MouseEvent
+                                    ) => {
+                                        if (isActive) {
+                                            e.preventDefault();
+                                            window.scrollTo({
+                                                top: 0,
+                                                behavior: "smooth",
+                                            });
+                                        }
+                                    };
+
                                     return (
                                         <Link
                                             key={item.href}
                                             href={item.href}
+                                            onClick={handleClick}
                                             className={cn(
                                                 "relative flex flex-col items-center justify-center flex-1 h-full py-2 transition-colors",
                                                 isActive
