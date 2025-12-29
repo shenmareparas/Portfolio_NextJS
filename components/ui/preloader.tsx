@@ -7,24 +7,36 @@ export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
 
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const hasShown = sessionStorage.getItem("preloader_shown");
+            if (hasShown) {
+                setIsLoading(false);
+            }
+        }
+        setMounted(true);
+    }, []);
+
     const useIsomorphicLayoutEffect =
         typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
     useIsomorphicLayoutEffect(() => {
+        if (!mounted || !isLoading) return;
+
         const storageKey = "preloader_shown";
-        const hasShown = sessionStorage.getItem(storageKey);
-        if (hasShown) {
-            setIsLoading(false);
-            return;
-        }
 
         // Check if page is already loaded (cached/fast navigation)
         const isPageReady = document.readyState === "complete";
+
+        let trickleInterval: NodeJS.Timeout;
 
         // NProgress-style "Trickle" Logic
         const trickle = () => {
             setProgress((prev) => {
                 if (prev >= 100) {
+                    clearInterval(trickleInterval);
                     return 100;
                 }
 
@@ -58,9 +70,10 @@ export function Preloader() {
                 const next = prev + amount;
 
                 if (next >= 100) {
+                    clearInterval(trickleInterval);
+                    sessionStorage.setItem(storageKey, "true");
                     setTimeout(() => {
                         setIsLoading(false);
-                        sessionStorage.setItem(storageKey, "true");
                     }, 300);
                     return 100;
                 }
@@ -70,10 +83,12 @@ export function Preloader() {
         };
 
         const intervalMs = isPageReady ? 50 : 200;
-        const trickleInterval = setInterval(trickle, intervalMs);
+        trickleInterval = setInterval(trickle, intervalMs);
 
         return () => clearInterval(trickleInterval);
-    }, []);
+    }, [mounted]);
+
+    if (!mounted) return null;
 
     return (
         <AnimatePresence mode="wait">
