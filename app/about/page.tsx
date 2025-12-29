@@ -38,12 +38,16 @@ export default function AboutPage() {
                         <div className="flex flex-wrap gap-2">
                             {skills.mobile.map((skill) => (
                                 <Badge
-                                    key={skill}
-                                    variant="default"
+                                    key={skill.name}
+                                    variant="secondary"
                                     shape="pill"
                                     size="lg"
+                                    className="gap-2"
                                 >
-                                    {skill}
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
                                 </Badge>
                             ))}
                         </div>
@@ -55,12 +59,16 @@ export default function AboutPage() {
                         <div className="flex flex-wrap gap-2">
                             {skills.backend.map((skill) => (
                                 <Badge
-                                    key={skill}
+                                    key={skill.name}
                                     variant="secondary"
                                     shape="pill"
                                     size="lg"
+                                    className="gap-2"
                                 >
-                                    {skill}
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
                                 </Badge>
                             ))}
                         </div>
@@ -72,12 +80,16 @@ export default function AboutPage() {
                         <div className="flex flex-wrap gap-2">
                             {skills.tools.map((skill) => (
                                 <Badge
-                                    key={skill}
-                                    variant="outline"
+                                    key={skill.name}
+                                    variant="secondary"
                                     shape="pill"
                                     size="lg"
+                                    className="gap-2"
                                 >
-                                    {skill}
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
                                 </Badge>
                             ))}
                         </div>
