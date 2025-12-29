@@ -81,12 +81,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         {project.tags.map((tag) => (
                             <Badge
                                 key={tag}
-                                variant="secondary"
-                                className={`font-normal transition-colors ${
-                                    project.accentColor
-                                        ? "bg-[var(--accent-light-bg)] dark:bg-[var(--accent-dark-bg)] hover:bg-[var(--accent-light-bg)] dark:hover:bg-[var(--accent-dark-bg)]"
-                                        : ""
-                                }`}
+                                variant="accented"
+                                shape="pill"
                                 style={
                                     project.accentColor
                                         ? ({
@@ -98,15 +94,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                         : undefined
                                 }
                             >
-                                <span
-                                    className={
-                                        project.accentColor
-                                            ? "text-[var(--accent-light)] dark:text-[var(--accent-dark)]"
-                                            : ""
-                                    }
-                                >
-                                    {tag}
-                                </span>
+                                {tag}
                             </Badge>
                         ))}
                     </div>

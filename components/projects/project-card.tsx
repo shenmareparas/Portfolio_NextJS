@@ -98,8 +98,9 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                         {project.tags.map((tag) => (
                             <Badge
                                 key={tag}
-                                variant="secondary"
-                                className="bg-secondary/50 font-normal transition-colors duration-300 group-hover:bg-[var(--accent-light-bg)] dark:group-hover:bg-[var(--accent-dark-bg)]"
+                                variant="accented"
+                                shape="pill"
+                                className="transition-colors duration-300"
                                 style={
                                     project.accentColor
                                         ? ({
@@ -111,9 +112,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                                         : undefined
                                 }
                             >
-                                <span className="group-hover:text-[var(--accent-light)] dark:group-hover:text-[var(--accent-dark)] transition-colors">
-                                    {tag}
-                                </span>
+                                {tag}
                             </Badge>
                         ))}
                     </div>
