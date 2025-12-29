@@ -4,7 +4,7 @@ import { education, certifications, achievements } from "@/data/education";
 import { ExperienceTimeline } from "@/components/experience/experience-timeline";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import { Badge } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { FadeIn } from "@/components/motion/fade-in";
 
 export const metadata = {
@@ -37,12 +37,18 @@ export default function AboutPage() {
                         </h3>
                         <div className="flex flex-wrap gap-2">
                             {skills.mobile.map((skill) => (
-                                <div
-                                    key={skill}
-                                    className="inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-primary text-primary-foreground hover:bg-primary/80"
+                                <Badge
+                                    key={skill.name}
+                                    variant="secondary"
+                                    shape="pill"
+                                    size="lg"
+                                    className="gap-2"
                                 >
-                                    {skill}
-                                </div>
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
+                                </Badge>
                             ))}
                         </div>
                     </div>
@@ -52,12 +58,18 @@ export default function AboutPage() {
                         </h3>
                         <div className="flex flex-wrap gap-2">
                             {skills.backend.map((skill) => (
-                                <div
-                                    key={skill}
-                                    className="inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                                <Badge
+                                    key={skill.name}
+                                    variant="secondary"
+                                    shape="pill"
+                                    size="lg"
+                                    className="gap-2"
                                 >
-                                    {skill}
-                                </div>
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
+                                </Badge>
                             ))}
                         </div>
                     </div>
@@ -67,12 +79,18 @@ export default function AboutPage() {
                         </h3>
                         <div className="flex flex-wrap gap-2">
                             {skills.tools.map((skill) => (
-                                <div
-                                    key={skill}
-                                    className="inline-flex items-center rounded-full border px-3 py-1 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-input bg-background hover:bg-accent hover:text-accent-foreground"
+                                <Badge
+                                    key={skill.name}
+                                    variant="secondary"
+                                    shape="pill"
+                                    size="lg"
+                                    className="gap-2"
                                 >
-                                    {skill}
-                                </div>
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
+                                </Badge>
                             ))}
                         </div>
                     </div>
@@ -157,7 +175,7 @@ export default function AboutPage() {
                             key={index}
                             className="flex items-center gap-3 rounded-lg border bg-card text-card-foreground shadow-sm p-4"
                         >
-                            <Badge className="h-2 w-2 rounded-full bg-primary p-0" />
+                            <div className="h-2 w-2 rounded-full bg-primary" />
                             <span className="font-medium">{achievement}</span>
                         </div>
                     ))}

@@ -38,7 +38,10 @@ export function GoToTop() {
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
-                    className="fixed bottom-6 right-6 z-50 md:hidden"
+                    className="fixed right-6 z-50 md:hidden"
+                    style={{
+                        bottom: "calc(5rem + env(safe-area-inset-bottom, 0px))",
+                    }}
                 >
                     <Button
                         className="h-12 w-12 rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80"

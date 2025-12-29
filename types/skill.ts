@@ -1,5 +1,12 @@
+import { LucideIcon } from "lucide-react";
+
+export interface Skill {
+    name: string;
+    icon?: LucideIcon | React.ComponentType<{ className?: string }>;
+}
+
 export interface Skills {
-    mobile: string[];
-    backend: string[];
-    tools: string[];
+    mobile: Skill[];
+    backend: Skill[];
+    tools: Skill[];
 }

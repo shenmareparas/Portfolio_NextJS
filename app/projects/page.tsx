@@ -1,14 +1,25 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { projects as projectsData } from "@/data/projects";
 import { ProjectCard } from "@/components/projects/project-card";
 
-export const metadata = {
-    title: "Projects",
-    description: "A showcase of my mobile and web development projects.",
-};
-
 export default function ProjectsPage() {
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+    const [hasHover, setHasHover] = useState(false);
+
+    useEffect(() => {
+        setHasHover(window.matchMedia("(pointer: fine)").matches);
+    }, []);
+
+    const handleHover = (index: number) => {
+        if (hasHover) {
+            setHoveredIndex(index);
+        }
+    };
+
     return (
-        <div className="container mx-auto py-12 px-4 space-y-8">
+        <div className="container mx-auto py-12 px-4 space-y-8 pb-24 md:pb-12">
             <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-bold tracking-tight">Projects</h1>
                 <p className="text-xl text-muted-foreground">
@@ -21,6 +32,12 @@ export default function ProjectsPage() {
                         key={project.slug}
                         project={project}
                         index={index}
+                        isDimmed={
+                            hoveredIndex !== null && hoveredIndex !== index
+                        }
+                        onHover={() => handleHover(index)}
+                        onBlur={() => setHoveredIndex(null)}
+                        disabled={!hasHover}
                     />
                 ))}
             </div>

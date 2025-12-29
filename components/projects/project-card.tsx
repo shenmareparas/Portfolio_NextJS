@@ -20,9 +20,20 @@ import { Project } from "@/types/project";
 interface ProjectCardProps {
     project: Project;
     index: number;
+    isDimmed?: boolean;
+    onHover?: () => void;
+    onBlur?: () => void;
+    disabled?: boolean;
 }
 
-export function ProjectCard({ project, index }: ProjectCardProps) {
+export function ProjectCard({
+    project,
+    index,
+    isDimmed,
+    onHover,
+    onBlur,
+    disabled,
+}: ProjectCardProps) {
     const { previousPath } = useNavigation();
     const shouldAnimate = !(
         previousPath?.startsWith("/projects/") && previousPath !== "/projects"
@@ -42,13 +53,36 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
             initial={
                 shouldAnimate ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }
             }
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: index * 0.1 }}
-            whileHover={{ y: -8 }}
-            className="h-full group"
+            animate={{
+                opacity: isDimmed ? 0.5 : 1,
+                filter: isDimmed ? "brightness(0.8)" : "brightness(1)",
+                y: 0,
+            }}
+            onMouseEnter={onHover}
+            onMouseLeave={onBlur}
+            transition={{
+                duration: 0.4,
+                delay: shouldAnimate ? index * 0.1 : 0,
+                opacity: { duration: 0.2 },
+                filter: { duration: 0.2 },
+                scale: { duration: 0.2 },
+            }}
+            whileHover={
+                !disabled
+                    ? {
+                          y: -8,
+                          scale: 1.02,
+                          filter: "brightness(1.1)",
+                          transition: { duration: 0.2 },
+                      }
+                    : undefined
+            }
+            className={`h-full ${!disabled ? "group" : ""}`}
         >
             <Card
-                className="relative flex h-full flex-col overflow-hidden border-border/40 transition-all duration-300 hover:shadow-lg dark:hover:shadow-2xl"
+                className={`relative flex h-full flex-col overflow-hidden border-border/40 transition-all duration-300 ${
+                    !disabled ? "hover:shadow-lg dark:hover:shadow-2xl" : ""
+                }`}
                 style={
                     {
                         "--project-accent": accentLight,
@@ -74,6 +108,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                         src={project.image}
                         alt={project.title}
                         fill
+                        loading="lazy"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
@@ -98,8 +133,9 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                         {project.tags.map((tag) => (
                             <Badge
                                 key={tag}
-                                variant="secondary"
-                                className="bg-secondary/50 font-normal transition-colors duration-300 group-hover:bg-[var(--accent-light-bg)] dark:group-hover:bg-[var(--accent-dark-bg)]"
+                                variant="accented"
+                                shape="pill"
+                                className="transition-colors duration-300"
                                 style={
                                     project.accentColor
                                         ? ({
@@ -111,9 +147,7 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
                                         : undefined
                                 }
                             >
-                                <span className="group-hover:text-[var(--accent-light)] dark:group-hover:text-[var(--accent-dark)] transition-colors">
-                                    {tag}
-                                </span>
+                                {tag}
                             </Badge>
                         ))}
                     </div>

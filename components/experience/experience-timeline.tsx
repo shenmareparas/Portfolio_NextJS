@@ -30,7 +30,8 @@ export function ExperienceTimeline() {
                                             <Badge
                                                 key={tech}
                                                 variant="secondary"
-                                                className="px-2.5 py-0.5 text-xs font-medium"
+                                                shape="pill"
+                                                size="default"
                                             >
                                                 {tech}
                                             </Badge>

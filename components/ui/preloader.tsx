@@ -2,83 +2,121 @@
 
 import { useEffect, useState, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLoadingValue } from "@/components/providers/loading-provider";
 
 export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
-    const [shouldAnimate, setShouldAnimate] = useState(true);
-    const [counter, setCounter] = useState(0);
-    const loadingCount = useLoadingValue();
+    const [progress, setProgress] = useState(0);
+
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const hasShown = sessionStorage.getItem("preloader_shown");
+            if (hasShown) {
+                setIsLoading(false);
+            }
+        }
+        setMounted(true);
+    }, []);
 
     const useIsomorphicLayoutEffect =
         typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
     useIsomorphicLayoutEffect(() => {
-        const hasShown = sessionStorage.getItem("preloader_shown");
-        if (hasShown) {
-            setShouldAnimate(false);
-            setIsLoading(false);
-            return;
-        }
+        if (!mounted || !isLoading) return;
 
-        const interval = setInterval(() => {
-            setCounter((prev) => {
-                // If we're waiting for external assets and reached 99%, stay there
-                if (loadingCount > 0 && prev >= 99) {
-                    return 99;
-                }
+        const storageKey = "preloader_shown";
 
+        // Check if page is already loaded (cached/fast navigation)
+        const isPageReady = document.readyState === "complete";
+
+        let trickleInterval: NodeJS.Timeout;
+
+        // NProgress-style "Trickle" Logic
+        const trickle = () => {
+            setProgress((prev) => {
                 if (prev >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        setIsLoading(false);
-                        sessionStorage.setItem("preloader_shown", "true");
-                    }, 500); // Small delay after reaching 100%
+                    clearInterval(trickleInterval);
                     return 100;
                 }
-                // Random increment for more realistic feel
-                const increment = Math.floor(Math.random() * 15) + 5; // Faster increment
 
-                // If we are waiting for assets, don't go past 99 yet
-                const maxNext = loadingCount > 0 ? 99 : 100;
-                return Math.min(prev + increment, maxNext);
+                const random = Math.random();
+                let amount: number;
+
+                if (isPageReady) {
+                    // Fast mode: page already loaded
+                    if (prev < 50) {
+                        amount = 15 + random * 10;
+                    } else if (prev < 80) {
+                        amount = 10 + random * 5;
+                    } else {
+                        amount = 5 + random * 3;
+                    }
+                } else {
+                    // Normal trickle
+                    if (prev < 20) {
+                        amount = (random < 0.5 ? 3 : 5) + random * 5;
+                    } else if (prev < 50) {
+                        amount = random * 3;
+                    } else if (prev < 80) {
+                        amount = random * 2;
+                    } else if (prev < 95) {
+                        amount = random * 1;
+                    } else {
+                        amount = random * 0.3;
+                    }
+                }
+
+                const next = prev + amount;
+
+                if (next >= 100) {
+                    clearInterval(trickleInterval);
+                    sessionStorage.setItem(storageKey, "true");
+                    setTimeout(() => {
+                        setIsLoading(false);
+                    }, 300);
+                    return 100;
+                }
+
+                return next;
             });
-        }, 50); // Faster interval
+        };
 
-        return () => clearInterval(interval);
-    }, [loadingCount]);
+        const intervalMs = isPageReady ? 50 : 200;
+        trickleInterval = setInterval(trickle, intervalMs);
+
+        return () => clearInterval(trickleInterval);
+    }, [mounted]);
+
+    if (!mounted) return null;
 
     return (
         <AnimatePresence mode="wait">
             {isLoading && (
                 <motion.div
-                    className="fixed inset-0 z-50 flex h-screen w-screen items-center justify-center bg-background"
-                    initial={{ y: 0 }}
-                    exit={
-                        shouldAnimate
-                            ? {
-                                  y: "-100%",
-                                  transition: {
-                                      duration: 0.8,
-                                      ease: [0.76, 0, 0.24, 1],
-                                  },
-                              }
-                            : { opacity: 0, transition: { duration: 0 } }
-                    }
+                    className="fixed top-0 left-0 right-0 z-[100] h-1"
+                    initial={{ opacity: 1 }}
+                    exit={{
+                        opacity: 0,
+                        transition: {
+                            duration: 0.3,
+                            ease: "easeOut",
+                        },
+                    }}
                 >
-                    <div className="flex items-end overflow-hidden">
-                        <motion.span
-                            className="text-[15vw] font-bold leading-none text-foreground"
-                            initial={{ opacity: 0, y: 100 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            {counter}
-                        </motion.span>
-                        <span className="mb-4 text-4xl font-bold text-foreground">
-                            %
-                        </span>
-                    </div>
+                    {/* Background track */}
+                    <div className="h-full w-full bg-muted" />
+
+                    {/* Progress bar */}
+                    <motion.div
+                        className="absolute top-0 left-0 h-full bg-primary"
+                        initial={{ width: "0%" }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{
+                            duration: 0.1,
+                            ease: "easeOut",
+                        }}
+                    />
                 </motion.div>
             )}
         </AnimatePresence>

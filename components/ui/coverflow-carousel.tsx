@@ -113,6 +113,7 @@ const CarouselCard = React.memo(
                             fill
                             className="object-cover"
                             sizes="(max-width: 1280px) 100vw, 320px"
+                            loading={isActive ? "eager" : "lazy"}
                             priority={isActive}
                             draggable={false}
                             onLoad={handleImageLoad}
