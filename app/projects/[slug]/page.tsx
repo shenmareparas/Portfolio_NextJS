@@ -1,7 +1,8 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BackButton } from "@/components/ui/back-button";
-import { ArrowLeft, Github, Smartphone, Globe } from "lucide-react";
+import { ArrowLeft, ArrowRight, Github, Smartphone, Globe } from "lucide-react";
 import { siGoogleplay } from "simple-icons/icons";
 import { SimpleIconComponent } from "@/components/ui/simple-icon";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +11,7 @@ import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { FadeIn } from "@/components/motion/fade-in";
 import { projects as projectsData } from "@/data/projects";
 import { Project } from "@/types/project";
+import { cn } from "@/lib/utils";
 
 interface ProjectPageProps {
     params: Promise<{
@@ -47,6 +49,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         notFound();
     }
 
+    const currentIndex = projectsData.findIndex((p) => p.slug === slug);
+    const prevProject = projectsData[currentIndex - 1];
+    const nextProject = projectsData[currentIndex + 1];
+
     const accentLight =
         typeof project.accentColor === "object"
             ? project.accentColor.light
@@ -60,12 +66,16 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
         <div className="container mx-auto py-12 px-4 space-y-12 pb-24 md:pb-12">
             {/* Back Button */}
             <FadeIn>
-                <BackButton className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover">
+                <BackButton
+                    href="/projects"
+                    className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover"
+                >
                     <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
                 </BackButton>
             </FadeIn>
 
             <div className="grid gap-8 xl:grid-cols-2">
+                {/* Content Column */}
                 <FadeIn className="space-y-6" delay={0.1}>
                     <Image
                         src={project.logo}
@@ -120,7 +130,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         </div>
                     </div>
 
-                    <div className="flex flex-wrap gap-4">
+                    <div className="flex flex-wrap gap-4 underline-offset-4">
                         {project.links?.githubAdmin && (
                             <Button asChild variant="outline" className="gap-2">
                                 <a
@@ -187,6 +197,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                 </FadeIn>
 
+                {/* Carousel Column */}
                 <div className="w-full mx-auto xl:fixed xl:top-16 xl:right-0 xl:h-[calc(100vh-8rem)] xl:w-1/2 xl:flex xl:items-center xl:justify-center pointer-events-none xl:pointer-events-auto">
                     <FadeIn
                         className="pointer-events-auto w-full h-full"
@@ -198,6 +209,58 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         />
                     </FadeIn>
                 </div>
+            </div>
+
+            {/* Project Navigation - Stays on left in desktop, moves to bottom in mobile */}
+            <div className="xl:w-1/2">
+                <FadeIn delay={0.2}>
+                    <div className="flex flex-row justify-between items-start gap-4 pt-12 border-t border-border/40">
+                        {prevProject ? (
+                            <Button
+                                asChild
+                                variant="ghost"
+                                className="group h-auto p-0 hover:bg-transparent flex-1 justify-start max-w-[45%]"
+                            >
+                                <Link
+                                    href={`/projects/${prevProject.slug}`}
+                                    className="flex flex-col items-start gap-2"
+                                >
+                                    <span className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-2 uppercase tracking-wider font-semibold whitespace-nowrap">
+                                        <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
+                                        Previous
+                                    </span>
+                                    <span className="text-base sm:text-xl font-bold group-hover:text-primary transition-colors line-clamp-1">
+                                        {prevProject.title}
+                                    </span>
+                                </Link>
+                            </Button>
+                        ) : (
+                            <div className="flex-1" />
+                        )}
+                        {nextProject ? (
+                            <Button
+                                asChild
+                                variant="ghost"
+                                className="group h-auto p-0 hover:bg-transparent flex-1 justify-end max-w-[45%]"
+                            >
+                                <Link
+                                    href={`/projects/${nextProject.slug}`}
+                                    className="flex flex-col items-end gap-2"
+                                >
+                                    <span className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-2 uppercase tracking-wider font-semibold whitespace-nowrap">
+                                        Next
+                                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                                    </span>
+                                    <span className="text-base sm:text-xl font-bold group-hover:text-primary transition-colors text-right line-clamp-1">
+                                        {nextProject.title}
+                                    </span>
+                                </Link>
+                            </Button>
+                        ) : (
+                            <div className="flex-1" />
+                        )}
+                    </div>
+                </FadeIn>
             </div>
         </div>
     );
