@@ -2,62 +2,78 @@
 
 import { useEffect, useState, useLayoutEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLoadingValue } from "@/components/providers/loading-provider";
 
 export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
-    const loadingCount = useLoadingValue();
 
     const useIsomorphicLayoutEffect =
         typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
     useIsomorphicLayoutEffect(() => {
-        const hasShown = sessionStorage.getItem("preloader_shown");
+        const storageKey = "preloader_shown";
+        const hasShown = sessionStorage.getItem(storageKey);
         if (hasShown) {
             setIsLoading(false);
             return;
         }
 
-        // Standard NProgress-style logic: start fast, slow down approaching 100%
-        const interval = setInterval(() => {
-            setProgress((prev) => {
-                // If waiting for external assets and near completion, hold at 90%
-                if (loadingCount > 0 && prev >= 90) {
-                    return 90;
-                }
+        // Check if page is already loaded (cached/fast navigation)
+        const isPageReady = document.readyState === "complete";
 
+        // NProgress-style "Trickle" Logic
+        const trickle = () => {
+            setProgress((prev) => {
                 if (prev >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        setIsLoading(false);
-                        sessionStorage.setItem("preloader_shown", "true");
-                    }, 200);
                     return 100;
                 }
 
-                // Standard trickle logic: increment decreases as progress increases
-                // This creates the classic "fast start, slow finish" effect
-                let increment: number;
-                if (prev < 20) {
-                    increment = 10;
-                } else if (prev < 50) {
-                    increment = 4;
-                } else if (prev < 80) {
-                    increment = 2;
-                } else if (prev < 90) {
-                    increment = 0.5;
+                const random = Math.random();
+                let amount: number;
+
+                if (isPageReady) {
+                    // Fast mode: page already loaded
+                    if (prev < 50) {
+                        amount = 15 + random * 10;
+                    } else if (prev < 80) {
+                        amount = 10 + random * 5;
+                    } else {
+                        amount = 5 + random * 3;
+                    }
                 } else {
-                    increment = 0.1;
+                    // Normal trickle
+                    if (prev < 20) {
+                        amount = (random < 0.5 ? 3 : 5) + random * 5;
+                    } else if (prev < 50) {
+                        amount = random * 3;
+                    } else if (prev < 80) {
+                        amount = random * 2;
+                    } else if (prev < 95) {
+                        amount = random * 1;
+                    } else {
+                        amount = random * 0.3;
+                    }
                 }
 
-                const maxNext = loadingCount > 0 ? 90 : 100;
-                return Math.min(prev + increment, maxNext);
-            });
-        }, 100);
+                const next = prev + amount;
 
-        return () => clearInterval(interval);
-    }, [loadingCount]);
+                if (next >= 100) {
+                    setTimeout(() => {
+                        setIsLoading(false);
+                        sessionStorage.setItem(storageKey, "true");
+                    }, 300);
+                    return 100;
+                }
+
+                return next;
+            });
+        };
+
+        const intervalMs = isPageReady ? 50 : 200;
+        const trickleInterval = setInterval(trickle, intervalMs);
+
+        return () => clearInterval(trickleInterval);
+    }, []);
 
     return (
         <AnimatePresence mode="wait">
