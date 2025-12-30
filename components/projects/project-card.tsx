@@ -72,7 +72,6 @@ export function ProjectCard({
                     ? {
                           y: -8,
                           scale: 1.02,
-                          filter: "brightness(1.1)",
                           transition: { duration: 0.2 },
                       }
                     : undefined
@@ -113,7 +112,7 @@ export function ProjectCard({
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     {/* Image Overlay which lightens on hover */}
-                    <div className="absolute inset-0 bg-black/10 transition-colors duration-300 group-hover:bg-transparent" />
+                    <div className="absolute inset-0 bg-black/10 transition-colors duration-300" />
                 </div>
 
                 <CardHeader>
