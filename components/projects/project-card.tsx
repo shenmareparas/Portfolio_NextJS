@@ -77,6 +77,7 @@ export function ProjectCard({
                     : undefined
             }
             className={`h-full ${!disabled ? "group" : ""}`}
+            id={project.slug}
         >
             <Card
                 className={`relative flex h-full flex-col overflow-hidden border-border/40 transition-all duration-300 ${
