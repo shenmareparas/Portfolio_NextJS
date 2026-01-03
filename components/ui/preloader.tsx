@@ -30,6 +30,7 @@ export function Preloader() {
         // Check if page is already loaded (cached/fast navigation)
         const isPageReady = document.readyState === "complete";
 
+        // eslint-disable-next-line
         let trickleInterval: NodeJS.Timeout;
 
         // NProgress-style "Trickle" Logic

@@ -10,8 +10,6 @@ import { Button } from "@/components/ui/button";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { FadeIn } from "@/components/motion/fade-in";
 import { projects as projectsData } from "@/data/projects";
-import { Project } from "@/types/project";
-import { cn } from "@/lib/utils";
 
 interface ProjectPageProps {
     params: Promise<{

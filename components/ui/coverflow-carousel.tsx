@@ -163,12 +163,12 @@ export function CoverflowCarousel({
     );
 
     useEffect(() => {
-        setMounted(true);
+        setTimeout(() => setMounted(true), 0);
     }, []);
 
     // Reset forced theme when global theme changes to ensure synchronization
     useEffect(() => {
-        setForcedTheme(null);
+        setTimeout(() => setForcedTheme(null), 0);
     }, [resolvedTheme]);
 
     // Update forcedTheme when resolvedTheme changes, BUT only if the user hasn't manually overridden it yet?
@@ -551,7 +551,7 @@ export function CoverflowCarousel({
                         <Badge
                             variant="outline"
                             shape="pill"
-                            className="bg-background/60 backdrop-blur-md border-border/40 text-muted-foreground pointer-events-none select-none shadow-sm"
+                            className="bg-transparent border-none text-muted-foreground pointer-events-none select-none shadow-none"
                         >
                             App Theme
                         </Badge>

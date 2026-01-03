@@ -72,8 +72,7 @@ export function ContactForm() {
                 variant: "success",
             });
             form.reset();
-        } catch (error) {
-            console.error(error);
+        } catch {
             toast({
                 title: "Error",
                 description: "Something went wrong. Please try again later.",

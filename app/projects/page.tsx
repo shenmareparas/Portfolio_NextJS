@@ -14,7 +14,10 @@ export default function ProjectsPage() {
     );
 
     useEffect(() => {
-        setHasHover(window.matchMedia("(pointer: fine)").matches);
+        // Defer state update to avoid synchronous rendering warning
+        setTimeout(() => {
+            setHasHover(window.matchMedia("(pointer: fine)").matches);
+        }, 0);
 
         // Handle scrolling back to the previous project
         if (isRestoring) {
@@ -33,7 +36,7 @@ export default function ProjectsPage() {
                 }, 0);
                 return () => clearTimeout(timer);
             } else {
-                setIsRestoring(false);
+                setTimeout(() => setIsRestoring(false), 0);
             }
         }
     }, [previousPath, isRestoring]);

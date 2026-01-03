@@ -40,6 +40,7 @@ export function BackButton({
                 )}
                 onClick={handleBack}
             >
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 <Link href={href} scroll={false} {...(props as any)}>
                     {children}
                 </Link>

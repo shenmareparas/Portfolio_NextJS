@@ -13,7 +13,7 @@ export const siteConfig = {
     url: "https://parasnextjs.vercel.app",
     contactFormUrl: "https://formspree.io/f/manwypwk",
     footer: {
-        copyright: "© 2026 Paras Shenmare. All rights reserved.",
+        copyright: `© ${new Date().getFullYear()} Paras Shenmare. All rights reserved.`,
     },
     metadata: {
         title: {

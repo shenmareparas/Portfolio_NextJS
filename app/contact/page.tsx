@@ -1,4 +1,5 @@
 import { ContactForm } from "@/components/contact/contact-form";
+import { ContactCard } from "@/components/contact/contact-card";
 import { Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { socials } from "@/data/socials";
@@ -59,34 +60,27 @@ export default function ContactPage() {
                             </p>
                         </div>
                         <div className="space-y-4">
-                            <a
-                                href={`mailto:${profile.email}`}
-                                className="flex items-center gap-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
-                            >
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                    <Mail className="h-5 w-5 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="font-medium">Email</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        {profile.email}
-                                    </p>
-                                </div>
-                            </a>
-                            <a
-                                href={`tel:${profile.phone.replace(/\s/g, "")}`}
-                                className="flex items-center gap-4 p-4 rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
-                            >
-                                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                    <Phone className="h-5 w-5 text-primary" />
-                                </div>
-                                <div>
-                                    <p className="font-medium">Phone</p>
-                                    <p className="text-sm text-muted-foreground">
-                                        {profile.phone}
-                                    </p>
-                                </div>
-                            </a>
+                            <div className="space-y-4">
+                                <ContactCard
+                                    icon={
+                                        <Mail className="h-5 w-5 text-primary" />
+                                    }
+                                    label="Email"
+                                    value={profile.email}
+                                    href={`mailto:${profile.email}`}
+                                />
+                                <ContactCard
+                                    icon={
+                                        <Phone className="h-5 w-5 text-primary" />
+                                    }
+                                    label="Phone"
+                                    value={profile.phone}
+                                    href={`tel:${profile.phone.replace(
+                                        /\s/g,
+                                        ""
+                                    )}`}
+                                />
+                            </div>
                         </div>
                         <div className="space-y-4">
                             <h3 className="font-medium">Social Media</h3>
