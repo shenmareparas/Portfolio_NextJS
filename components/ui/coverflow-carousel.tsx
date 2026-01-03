@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { GalleryItem } from "@/types/project";
 import { useLoadingActions } from "@/components/providers/loading-provider";
+import { Badge } from "@/components/ui/badge";
 
 interface CoverflowCarouselProps {
     images: GalleryItem[];
@@ -157,16 +158,44 @@ export function CoverflowCarousel({
     const [dragOffset, setDragOffset] = useState(0); // In slide units
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const [forcedTheme, setForcedTheme] = useState<"light" | "dark" | null>(
+        null
+    );
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
+    // Reset forced theme when global theme changes to ensure synchronization
+    useEffect(() => {
+        setForcedTheme(null);
+    }, [resolvedTheme]);
+
+    // Update forcedTheme when resolvedTheme changes, BUT only if the user hasn't manually overridden it yet?
+    // Actually, usually users expect the app to sync with system until they touch it.
+    // But for a "preview" mode, maybe we just init it.
+    // The requirement is "tied to website theme" -> "add a button for changing images theme".
+    // Let's default to resolvedTheme, and allow override.
+
+    const currentTheme = forcedTheme || resolvedTheme || "light";
+
     const getImageUrl = (item: GalleryItem) => {
         if (typeof item === "string") return item;
         if (!mounted) return item.light; // Default to light during SSR/hydration
-        return resolvedTheme === "dark" ? item.dark : item.light;
+
+        return currentTheme === "dark" ? item.dark : item.light;
     };
+
+    const toggleTheme = useCallback(
+        (e: React.MouseEvent) => {
+            e.stopPropagation();
+            setForcedTheme((prev) => {
+                const current = prev || resolvedTheme || "light";
+                return current === "light" ? "dark" : "light";
+            });
+        },
+        [resolvedTheme]
+    );
 
     const [interactionPause, setInteractionPause] = useState(false);
     const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -516,6 +545,45 @@ export function CoverflowCarousel({
                 >
                     <ChevronRight className="w-8 h-8" />
                 </button>
+
+                {images.some((img) => typeof img !== "string") && (
+                    <div className="absolute bottom-4 left-4 xl:left-auto xl:right-4 z-50 flex flex-col items-center gap-2">
+                        <Badge
+                            variant="outline"
+                            shape="pill"
+                            className="bg-background/60 backdrop-blur-md border-border/40 text-muted-foreground pointer-events-none select-none shadow-sm"
+                        >
+                            App Theme
+                        </Badge>
+                        <button
+                            type="button"
+                            onClick={toggleTheme}
+                            className="flex items-center p-1 rounded-full shadow-lg backdrop-blur bg-background/60 border border-border/40 cursor-pointer outline-none hover:bg-background/80 transition-colors"
+                            aria-label="Toggle image theme"
+                        >
+                            <div
+                                className={cn(
+                                    "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
+                                    currentTheme === "light"
+                                        ? "bg-primary text-primary-foreground shadow-sm scale-110"
+                                        : "text-muted-foreground"
+                                )}
+                            >
+                                <Sun className="w-4 h-4" />
+                            </div>
+                            <div
+                                className={cn(
+                                    "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
+                                    currentTheme === "dark"
+                                        ? "bg-primary text-primary-foreground shadow-sm scale-110"
+                                        : "text-muted-foreground"
+                                )}
+                            >
+                                <Moon className="w-4 h-4" />
+                            </div>
+                        </button>
+                    </div>
+                )}
 
                 {/* Dots Navigation */}
                 <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-50">
