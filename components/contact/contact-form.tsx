@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Loader2, Send } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -72,8 +72,7 @@ export function ContactForm() {
                 variant: "success",
             });
             form.reset();
-        } catch (error) {
-            console.error(error);
+        } catch {
             toast({
                 title: "Error",
                 description: "Something went wrong. Please try again later.",
@@ -95,7 +94,12 @@ export function ContactForm() {
                             <FormItem>
                                 <FormLabel>Name</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="John Doe" {...field} />
+                                    <Input
+                                        id="name"
+                                        placeholder="Full Name"
+                                        autoComplete="name"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -109,7 +113,10 @@ export function ContactForm() {
                                 <FormLabel>Email</FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder="john@example.com"
+                                        id="email"
+                                        type="email"
+                                        placeholder="email@example.com"
+                                        autoComplete="email"
                                         {...field}
                                     />
                                 </FormControl>
@@ -126,6 +133,7 @@ export function ContactForm() {
                             <FormLabel>Subject</FormLabel>
                             <FormControl>
                                 <Input
+                                    id="subject"
                                     placeholder="Project Inquiry"
                                     {...field}
                                 />
@@ -142,6 +150,7 @@ export function ContactForm() {
                             <FormLabel>Message</FormLabel>
                             <FormControl>
                                 <Textarea
+                                    id="message"
                                     placeholder="Tell me about your project..."
                                     className="min-h-[150px]"
                                     {...field}
@@ -162,10 +171,7 @@ export function ContactForm() {
                             Sending...
                         </>
                     ) : (
-                        <>
-                            <Send className="mr-2 h-4 w-4" />
-                            Submit
-                        </>
+                        <>Submit</>
                     )}
                 </Button>
             </form>

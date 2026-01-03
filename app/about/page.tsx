@@ -31,6 +31,28 @@ export default function AboutPage() {
                     Skills & Tools
                 </h2>
                 <div className="grid gap-8 md:grid-cols-2">
+                    {/* Languages */}
+                    <div className="space-y-4">
+                        <h3 className="text-xl font-semibold">Languages</h3>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.languages.map((skill) => (
+                                <Badge
+                                    key={skill.name}
+                                    variant="secondary"
+                                    shape="pill"
+                                    size="lg"
+                                    className="gap-2"
+                                >
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Mobile Development */}
                     <div className="space-y-4">
                         <h3 className="text-xl font-semibold">
                             Mobile Development
@@ -52,6 +74,31 @@ export default function AboutPage() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Web Development */}
+                    <div className="space-y-4">
+                        <h3 className="text-xl font-semibold">
+                            Web Development
+                        </h3>
+                        <div className="flex flex-wrap gap-2">
+                            {skills.web.map((skill) => (
+                                <Badge
+                                    key={skill.name}
+                                    variant="secondary"
+                                    shape="pill"
+                                    size="lg"
+                                    className="gap-2"
+                                >
+                                    {skill.icon && (
+                                        <skill.icon className="h-4 w-4" />
+                                    )}
+                                    {skill.name}
+                                </Badge>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Backend & Services */}
                     <div className="space-y-4">
                         <h3 className="text-xl font-semibold">
                             Backend & Services
@@ -73,6 +120,8 @@ export default function AboutPage() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Tools & Technologies */}
                     <div className="space-y-4 md:col-span-2">
                         <h3 className="text-xl font-semibold">
                             Tools & Technologies
@@ -149,7 +198,7 @@ export default function AboutPage() {
                             className="block group"
                         >
                             <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 transition-colors hover:bg-accent/50 h-full relative">
-                                <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <div className="absolute top-6 right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                                     <ExternalLink className="h-4 w-4 text-muted-foreground" />
                                 </div>
                                 <h3 className="font-semibold leading-none tracking-tight mb-2 pr-6">

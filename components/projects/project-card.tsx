@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useNavigation } from "@/components/providers/navigation-provider";
-import { Github, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+
 import {
     Card,
     CardContent,
@@ -72,12 +72,12 @@ export function ProjectCard({
                     ? {
                           y: -8,
                           scale: 1.02,
-                          filter: "brightness(1.1)",
                           transition: { duration: 0.2 },
                       }
                     : undefined
             }
             className={`h-full ${!disabled ? "group" : ""}`}
+            id={project.slug}
         >
             <Card
                 className={`relative flex h-full flex-col overflow-hidden border-border/40 transition-all duration-300 ${
@@ -113,7 +113,7 @@ export function ProjectCard({
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                     {/* Image Overlay which lightens on hover */}
-                    <div className="absolute inset-0 bg-black/10 transition-colors duration-300 group-hover:bg-transparent" />
+                    <div className="absolute inset-0 bg-black/10 transition-colors duration-300" />
                 </div>
 
                 <CardHeader>

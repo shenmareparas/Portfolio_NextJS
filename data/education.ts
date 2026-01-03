@@ -2,17 +2,23 @@ import { Education, Certification } from "@/types/education";
 
 export const education: Education[] = [
     {
-        institution: "Vellore Institute of Technology (VIT), Vellore",
+        institution: "Vellore Institute of Technology (VIT)",
         degree: "B.Tech in Computer Science Engineering",
         year: "Sep 2021 – Sep 2025",
         description:
-            "Relevant coursework: Data Structures & Algorithms, Operating Systems, Database Management, Mobile Application Development, Cloud Computing, Full-Stack Web Development. Active participant in hackathons and open-source contributions.",
+            "Data Structures & Algorithms, Operating Systems, Database Management, Mobile Application Development, Cloud Computing, Full-Stack Web Development.",
     },
     {
-        institution: "Jagdamba Junior Science College, Nagpur",
+        institution: "Jagdamba Junior Science College",
         degree: "Higher Secondary Certificate (HSC) – Science Stream",
-        year: "Mar 2020 – Mar 2021",
+        year: "Mar 2019 – Mar 2021",
         description: "Secured 93% in Maharashtra State Board examinations.",
+    },
+    {
+        institution: "Susanskar Vidya Mandir English Medium School",
+        degree: "Secondary School Certificate (SSC)",
+        year: "Mar 2018 – Mar 2019",
+        description: "Secured 92 in Maths and Science.",
     },
 ];
 

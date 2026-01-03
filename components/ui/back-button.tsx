@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useNavigation } from "@/components/providers/navigation-provider";
 
 interface BackButtonProps
     extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,6 +20,14 @@ export function BackButton({
     ...props
 }: BackButtonProps) {
     const router = useRouter();
+    const { previousPath } = useNavigation();
+
+    const handleBack = (e: React.MouseEvent) => {
+        if (href && previousPath === href) {
+            e.preventDefault();
+            router.back();
+        }
+    };
 
     if (href) {
         return (
@@ -29,8 +38,10 @@ export function BackButton({
                     "pl-0 hover:bg-transparent hover:text-primary",
                     className
                 )}
+                onClick={handleBack}
             >
-                <Link href={href} {...(props as any)}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                <Link href={href} scroll={false} {...(props as any)}>
                     {children}
                 </Link>
             </Button>

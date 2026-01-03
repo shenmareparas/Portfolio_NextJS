@@ -3,14 +3,43 @@
 import { useState, useEffect } from "react";
 import { projects as projectsData } from "@/data/projects";
 import { ProjectCard } from "@/components/projects/project-card";
+import { useNavigation } from "@/components/providers/navigation-provider";
 
 export default function ProjectsPage() {
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [hasHover, setHasHover] = useState(false);
+    const { previousPath } = useNavigation();
+    const [isRestoring, setIsRestoring] = useState(
+        previousPath?.startsWith("/projects/") && previousPath !== "/projects"
+    );
 
     useEffect(() => {
-        setHasHover(window.matchMedia("(pointer: fine)").matches);
-    }, []);
+        // Defer state update to avoid synchronous rendering warning
+        setTimeout(() => {
+            setHasHover(window.matchMedia("(pointer: fine)").matches);
+        }, 0);
+
+        // Handle scrolling back to the previous project
+        if (isRestoring) {
+            const slug = previousPath?.split(/[?#]/)[0].split("/").pop();
+            if (slug) {
+                // Use 0ms to run immediately after mount/paint but allow DOM to be ready
+                const timer = setTimeout(() => {
+                    const element = document.getElementById(slug);
+                    if (element) {
+                        element.scrollIntoView({
+                            behavior: "instant",
+                            block: "center",
+                        });
+                    }
+                    setIsRestoring(false);
+                }, 0);
+                return () => clearTimeout(timer);
+            } else {
+                setTimeout(() => setIsRestoring(false), 0);
+            }
+        }
+    }, [previousPath, isRestoring]);
 
     const handleHover = (index: number) => {
         if (hasHover) {
@@ -19,7 +48,11 @@ export default function ProjectsPage() {
     };
 
     return (
-        <div className="container mx-auto py-12 px-4 space-y-8 pb-24 md:pb-12">
+        <div
+            className={`container mx-auto py-12 px-4 space-y-8 pb-24 md:pb-12 transition-opacity duration-300 ${
+                isRestoring ? "opacity-0" : "opacity-100"
+            }`}
+        >
             <div className="flex flex-col gap-4">
                 <h1 className="text-4xl font-bold tracking-tight">Projects</h1>
                 <p className="text-xl text-muted-foreground">
