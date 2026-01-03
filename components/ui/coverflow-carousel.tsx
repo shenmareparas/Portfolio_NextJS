@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { flushSync } from "react-dom";
 import { ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
@@ -189,9 +190,34 @@ export function CoverflowCarousel({
     const toggleTheme = useCallback(
         (e: React.MouseEvent) => {
             e.stopPropagation();
-            setForcedTheme((prev) => {
-                const current = prev || resolvedTheme || "light";
-                return current === "light" ? "dark" : "light";
+
+            const switchTheme = () => {
+                flushSync(() => {
+                    setForcedTheme((prev) => {
+                        const current = prev || resolvedTheme || "light";
+                        return current === "light" ? "dark" : "light";
+                    });
+                });
+            };
+
+            if (!document.startViewTransition) {
+                switchTheme();
+                return;
+            }
+
+            const transition = document.startViewTransition(switchTheme);
+
+            transition.ready.then(() => {
+                document.documentElement.animate(
+                    {
+                        clipPath: ["inset(0 0 100% 0)", "inset(0 0 0 0)"],
+                    },
+                    {
+                        duration: 700,
+                        easing: "ease-in-out",
+                        pseudoElement: "::view-transition-new(root)",
+                    }
+                );
             });
         },
         [resolvedTheme]
@@ -560,6 +586,11 @@ export function CoverflowCarousel({
                             onClick={toggleTheme}
                             className="flex items-center p-1 rounded-full shadow-lg backdrop-blur bg-background/60 border border-border/40 cursor-pointer outline-none hover:bg-background/80 transition-colors"
                             aria-label="Toggle image theme"
+                            style={
+                                {
+                                    viewTransitionName: "theme-toggle-button",
+                                } as React.CSSProperties
+                            }
                         >
                             <div
                                 className={cn(

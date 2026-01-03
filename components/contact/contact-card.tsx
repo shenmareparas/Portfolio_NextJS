@@ -2,6 +2,12 @@
 
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
 
@@ -75,21 +81,30 @@ export function ContactCard({
                     </p>
                 </div>
             </a>
-            <button
-                onClick={(e) => {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    onCopy();
-                }}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-md hover:bg-background/50 text-muted-foreground transition-colors z-10 touch-manipulation"
-                aria-label="Copy to clipboard"
-            >
-                {hasCopied ? (
-                    <Check className="h-4 w-4" />
-                ) : (
-                    <Copy className="h-4 w-4" />
-                )}
-            </button>
+            <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                onCopy();
+                            }}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-md hover:bg-background/50 text-muted-foreground transition-colors z-10 touch-manipulation"
+                            aria-label="Copy to clipboard"
+                        >
+                            {hasCopied ? (
+                                <Check className="h-4 w-4" />
+                            ) : (
+                                <Copy className="h-4 w-4" />
+                            )}
+                        </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Copy to clipboard</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
         </div>
     );
 }
