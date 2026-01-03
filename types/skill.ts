@@ -6,7 +6,9 @@ export interface Skill {
 }
 
 export interface Skills {
+    languages: Skill[];
     mobile: Skill[];
+    web: Skill[];
     backend: Skill[];
     tools: Skill[];
 }

@@ -32,7 +32,7 @@ const CarouselCard = React.memo(
         index: number;
         active: number;
         total: number;
-        onClick: () => void;
+        onClick: (index: number) => void;
         isDragging?: boolean;
         className?: string;
     }) => {
@@ -65,8 +65,6 @@ const CarouselCard = React.memo(
             }
         };
 
-        // if (Math.abs(diff) > MAX_VISIBILITY) return null;
-
         const style = {
             "--active": isActive ? 1 : 0,
             "--offset": offset,
@@ -93,13 +91,13 @@ const CarouselCard = React.memo(
                         : "transition-all duration-500"
                 )}
                 style={style}
-                onClick={onClick}
+                onClick={() => onClick(index)}
                 role="button"
                 tabIndex={isActive ? 0 : -1}
                 aria-label={`View slide ${index + 1}`}
                 onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                        onClick();
+                        onClick(index);
                     }
                 }}
             >
@@ -550,7 +548,7 @@ export function CoverflowCarousel({
                         index={i}
                         active={effectiveActive}
                         total={images.length}
-                        onClick={() => handleCardClick(i)}
+                        onClick={handleCardClick}
                         // We want transitions enabled so they animate to the new snapped position
                         isDragging={false}
                         className="w-[260px] xl:w-auto xl:h-[80%] aspect-[1320/2868]"

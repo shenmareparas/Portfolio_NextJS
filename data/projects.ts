@@ -17,7 +17,7 @@ export const projects: Project[] = [
             "iOS",
             "Web",
         ],
-        role: "Full Stack Flutter Developer",
+        role: "Full Stack Developer",
         timeline: "2023 - 2024",
         links: {
             github: "https://github.com/shenmareparas/VIT_Bhopal_Mess",
@@ -73,7 +73,7 @@ export const projects: Project[] = [
         fullDescription:
             "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Includes Stockfish-level AI, online multiplayer, puzzles, and educational content. Gained 150,000+ downloads and 35,000 active users in the first quarter. Maintained 4+ star rating on Play Store.",
         tags: ["Flutter", "Dart", "Flame Engine", "Chess AI", "Android", "iOS"],
-        role: "Lead Flutter Developer",
+        role: "Lead Developer",
         timeline: "2023 - 2024",
         links: {
             github: "https://github.com/shenmareparas/Chess",
@@ -103,7 +103,7 @@ export const projects: Project[] = [
         fullDescription:
             "Developed a health-tech mobile application that enables users to input symptoms and receive instant first-aid and over-the-counter medication suggestions. Focused on clean UI/UX and reliable medical data presentation. Reduced user-reported bugs by 25% through rigorous code audits.",
         tags: ["Flutter", "Dart", "Android", "iOS"],
-        role: "Lead Mobile Developer",
+        role: "Lead Developer",
         timeline: "2023",
         links: {
             github: "https://github.com/shenmareparas/yodoc",
@@ -129,7 +129,7 @@ export const projects: Project[] = [
         fullDescription:
             "Dual-app system (User + Admin) built with Flutter and Firebase for real-time inventory, orders, and payments. Improved operational efficiency by 45%, reduced manual data entry by 50%, and increased transaction volume by 30%. Features separate dashboards for farmers and buyers.",
         tags: ["Flutter", "Dart", "Firebase", "Android", "iOS"],
-        role: "Full Stack Mobile Developer",
+        role: "Full Stack Developer",
         timeline: "2024",
         links: {
             githubAdmin: "https://github.com/shenmareparas/CropShop-Admin",
@@ -180,7 +180,7 @@ export const projects: Project[] = [
         fullDescription:
             "A Flutter-based application showcasing UI design concepts for the Apple Vision Pro. Features immersive interfaces and spatial design elements, demonstrating the capabilities of Flutter for spatial computing.",
         tags: ["Flutter", "Dart", "UI Design", "Android", "iOS"],
-        role: "Flutter Developer",
+        role: "Developer",
         timeline: "2024",
         links: {
             github: "https://github.com/shenmareparas/Apple_Vision_Pro_UI",
@@ -200,7 +200,7 @@ export const projects: Project[] = [
         fullDescription:
             "Native Android music streaming application built with Kotlin and Jetpack Compose. Features adaptive gradient backgrounds, REST API integration, tab views, playback controls, swipe gestures, and haptic feedback.",
         tags: ["Kotlin", "Jetpack Compose", "REST API", "Android"],
-        role: "Android Developer",
+        role: "Developer",
         timeline: "2024",
         links: {
             github: "https://github.com/shenmareparas/music_player",
@@ -221,7 +221,7 @@ export const projects: Project[] = [
         fullDescription:
             "A beautifully designed Flutter application featuring a stopwatch and analog clock with a modern neumorphic UI design.",
         tags: ["Flutter", "Dart", "UI Design", "Android", "iOS"],
-        role: "Flutter Developer",
+        role: "Developer",
         timeline: "2024",
         image: "/project/stopwatch/banner.webp",
         logo: "/project/stopwatch/logo.webp",
