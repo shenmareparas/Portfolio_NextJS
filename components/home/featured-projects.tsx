@@ -12,10 +12,15 @@ export function FeaturedProjects() {
     const [hasHover, setHasHover] = useState(false);
 
     useEffect(() => {
-        // Defer state update to avoid synchronous rendering warning
-        setTimeout(() => {
-            setHasHover(window.matchMedia("(pointer: fine)").matches);
-        }, 0);
+        const mediaQuery = window.matchMedia("(pointer: fine)");
+        setHasHover(mediaQuery.matches);
+
+        const handleChange = (e: MediaQueryListEvent) => {
+            setHasHover(e.matches);
+        };
+
+        mediaQuery.addEventListener("change", handleChange);
+        return () => mediaQuery.removeEventListener("change", handleChange);
     }, []);
 
     const handleHover = (index: number) => {

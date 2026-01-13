@@ -1,7 +1,7 @@
 export interface Testimonial {
     name: string;
-    role: string;
-    company: string;
+    project: string;
+    platform?: string;
     image?: string;
     content: string;
 }
