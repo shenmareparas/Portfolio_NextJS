@@ -31,7 +31,7 @@ export function FeaturedProjects() {
                     Featured Projects
                 </h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                    Here's a curated selection showcasing my expertise
+                    Here&apos;s a curated selection showcasing my expertise
                 </p>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
