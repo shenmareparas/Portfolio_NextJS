@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
-import { Quote, Star } from "lucide-react";
+import { Star } from "lucide-react";
 
 const StarRating = ({
     stars = 5,
@@ -41,10 +41,8 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
-    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
         if (testimonials.length > 1) {
             const shuffled = [...testimonials];
             // Fisher-Yates shuffle
@@ -98,7 +96,10 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
         return Math.abs(offset) * velocity;
     };
 
-    const handleDragEnd = (e: any, { offset, velocity }: any) => {
+    const handleDragEnd = (
+        _e: MouseEvent | TouchEvent | PointerEvent,
+        { offset, velocity }: { offset: { x: number }; velocity: { x: number } }
+    ) => {
         const swipe = swipePower(offset.x, velocity.x);
 
         if (swipe < -swipeConfidenceThreshold) {
