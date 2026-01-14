@@ -2,24 +2,72 @@ import { Testimonial } from "@/types/testimonial";
 
 export const testimonials: Testimonial[] = [
     {
-        name: "Sarah Johnson",
-        project: "E-Commerce Platform Redesign",
-        platform: "Upwork",
+        name: "Diwanshu Randive",
+        project: "VIT Bhopal Mess",
+        platform: "Google Play Store",
         content:
-            "An exceptional developer who consistently delivers high-quality code. Their ability to understand complex requirements and turn them into user-friendly solutions is impressive.",
+            "It really helps me, great uses of colours and easily understandable, it reduces my efforts of searching mess timetable everytime, really loving it, I use this app daily now 🤩.",
     },
     {
-        name: "Michael Chen",
-        project: "Health & Fitness App",
-        platform: "Direct Client",
+        name: "Mohit Sharma",
+        project: "VIT Bhopal Mess",
+        platform: "Google Play Store",
         content:
-            "Working with them was a pleasure. They bring not just technical expertise but also creative problem-solving skills to the table. Highly recommended!",
+            "It really helps to decide when it's the time to skip a meal and avoid suprises, Thanks 🫶.",
     },
     {
-        name: "Emily Davis",
-        project: "Portfolio Website",
-        platform: "Fiverr",
+        name: "Om Gawande",
+        project: "VIT Bhopal Mess",
+        platform: "Google Play Store",
         content:
-            "Great attention to detail and design aesthetics. They perfectly captured our vision and implemented it with pixel-perfect precision.",
+            "Nice app, ease my evary day hustle to check mess menu every time.",
+    },
+    {
+        name: "Han 1970",
+        project: "AI Chess",
+        platform: "Google Play Store",
+        content:
+            "User-friendly settings, great no fuss game just you & the computer. Just like the good old days",
+    },
+    {
+        name: "Siddhesh Gadewar",
+        project: "AI Chess",
+        platform: "Google Play Store",
+        content:
+            "Wonderful app, loved the functions of customization themes, also includes various practising modes, this game is crafted with brilliance, it is an elegant masterpiece.",
+    },
+    {
+        name: "Sarwagya Agarwal",
+        project: "VIT Bhopal Mess",
+        platform: "Google Play Store",
+        content: "The UI is quite good and easy to use.",
+    },
+    {
+        name: "Trish Young",
+        project: "AI Chess",
+        platform: "Google Play Store",
+        content:
+            "Really fun I like to play against my fiance we get very competitive.",
+    },
+    {
+        name: "Rhyan Cadornigara",
+        project: "AI Chess",
+        platform: "Google Play Store",
+        content:
+            "It's a good chess app, the AI sacrifice pieces just to defeat you is not in my bingo card LOL.",
+    },
+    {
+        name: "Ezio 1544",
+        project: "AI Chess",
+        platform: "Google Play Store",
+        content:
+            "A wonderful chess app. Playing against a second player or against the AI is possible. The design is functional. I find it very positive that this app dosen't collect any data. Five Stars ⭐️ for that alone. The app was also very easy to use, unlike some 3D competitors.",
+    },
+    {
+        name: "Dr. Sanjay Shenmare",
+        project: "YoDoc",
+        platform: "Google Play Store",
+        content:
+            "Very helpful app, easy to use and provides great information.",
     },
 ];

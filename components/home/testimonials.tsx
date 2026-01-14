@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,124 +14,58 @@ interface TestimonialsProps {
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [direction, setDirection] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
-    const x = useMotionValue(0);
-    const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (isPaused) return;
         const timer = setInterval(() => {
-            const width =
-                containerRef.current?.offsetWidth || window.innerWidth;
-            animate(x, -width, {
-                type: "spring",
-                stiffness: 260,
-                damping: 20,
-                onComplete: () => {
-                    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-                    x.set(0);
-                },
-            });
+            setDirection(1);
+            setCurrentIndex((prev) => (prev + 1) % testimonials.length);
         }, 5000);
 
         return () => clearInterval(timer);
-    }, [testimonials.length, isPaused, x]);
+    }, [testimonials.length, isPaused]);
 
-    // Calculate indices for the 3-card window
-    const prevIndex =
-        (currentIndex - 1 + testimonials.length) % testimonials.length;
-    const nextIndex = (currentIndex + 1) % testimonials.length;
-
-    // We map -1 (prev), 0 (current), 1 (next) relative positions
-    const renderCard = (index: number, position: number) => {
-        const testimonial = testimonials[index];
-        return (
-            <div
-                className="absolute top-0 w-full h-full p-2"
-                style={{
-                    left: `${position * 100}%`,
-                }}
-            >
-                <Card className="w-full border border-white/10 bg-white/5 backdrop-blur-sm h-full mx-auto shadow-lg hover:bg-white/10 transition-colors">
-                    <CardHeader className="pb-2">
-                        <Quote className="h-6 w-6 text-primary/40 mb-2" />
-                        <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10 border-2 border-primary/20">
-                                <AvatarImage
-                                    src={testimonial.image}
-                                    alt={testimonial.name}
-                                />
-                                <AvatarFallback className="bg-primary/10 text-primary">
-                                    {testimonial.name
-                                        .split(" ")
-                                        .map((n) => n[0])
-                                        .join("")}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <h3 className="font-semibold text-base">
-                                    {testimonial.name}
-                                </h3>
-                                <p className="text-xs text-muted-foreground">
-                                    {testimonial.project}
-                                    {testimonial.platform && (
-                                        <>
-                                            {" via "}
-                                            <span className="text-primary/80">
-                                                {testimonial.platform}
-                                            </span>
-                                        </>
-                                    )}
-                                </p>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent className="pt-2">
-                        <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-4">
-                            &quot;{testimonial.content}&quot;
-                        </p>
-                    </CardContent>
-                </Card>
-            </div>
-        );
+    const slideVariants = {
+        enter: (direction: number) => ({
+            x: direction > 0 ? "100%" : "-100%",
+            opacity: 0,
+        }),
+        center: {
+            zIndex: 1,
+            x: 0,
+            opacity: 1,
+        },
+        exit: (direction: number) => ({
+            zIndex: 0,
+            x: direction < 0 ? "100%" : "-100%",
+            opacity: 0,
+        }),
     };
 
-    const handleDragEnd = () => {
-        const currentX = x.get();
-        const width = containerRef.current?.offsetWidth || window.innerWidth;
-        const threshold = width * 0.25;
+    const swipeConfidenceThreshold = 10000;
+    const swipePower = (offset: number, velocity: number) => {
+        return Math.abs(offset) * velocity;
+    };
 
-        if (currentX < -threshold) {
-            // Swipe Left -> Next
-            animate(x, -width, {
-                duration: 0.2,
-                ease: "easeOut",
-                onComplete: () => {
-                    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-                    x.set(0);
-                },
-            });
-        } else if (currentX > threshold) {
-            // Swipe Right -> Prev
-            animate(x, width, {
-                duration: 0.2,
-                ease: "easeOut",
-                onComplete: () => {
-                    setCurrentIndex(
-                        (prev) =>
-                            (prev - 1 + testimonials.length) %
-                            testimonials.length
-                    );
-                    x.set(0);
-                },
-            });
-        } else {
-            // Snap back
-            animate(x, 0, { type: "spring", stiffness: 300, damping: 30 });
+    const handleDragEnd = (e: any, { offset, velocity }: any) => {
+        const swipe = swipePower(offset.x, velocity.x);
+
+        if (swipe < -swipeConfidenceThreshold) {
+            setDirection(1);
+            setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+        } else if (swipe > swipeConfidenceThreshold) {
+            setDirection(-1);
+            setCurrentIndex(
+                (prev) => (prev - 1 + testimonials.length) % testimonials.length
+            );
         }
     };
 
     if (testimonials.length === 0) return null;
+
+    const testimonial = testimonials[currentIndex];
 
     return (
         <section className="py-12 md:py-24 lg:py-32 overflow-hidden">
@@ -144,31 +78,89 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 </p>
             </div>
 
-            {/* Mobile View - Auto Carousel */}
+            {/* Mobile View - AnimatePresence Carousel */}
             <div
-                ref={containerRef}
-                className="md:hidden container mx-auto px-4 relative flex w-full flex-col items-center justify-center min-h-[300px] overflow-hidden touch-none"
+                className="md:hidden container mx-auto px-4 relative flex w-full flex-col items-center justify-center min-h-[300px] overflow-hidden"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
                 onTouchStart={() => setIsPaused(true)}
                 onTouchEnd={() => setIsPaused(false)}
             >
-                <motion.div
-                    className="relative w-full h-[250px] flex items-center justify-center cursor-grab active:cursor-grabbing"
-                    drag="x"
-                    // Free drag
-                    style={{ x }}
-                    dragElastic={1}
-                    onDragEnd={handleDragEnd}
-                >
-                    {/* Render Prev, Current, Next */}
-                    {renderCard(prevIndex, -1)}
-                    {renderCard(currentIndex, 0)}
-                    {renderCard(nextIndex, 1)}
-                </motion.div>
+                <div className="relative w-full h-[250px] flex items-center justify-center">
+                    <AnimatePresence
+                        initial={false}
+                        custom={direction}
+                        mode="popLayout"
+                    >
+                        <motion.div
+                            key={currentIndex}
+                            custom={direction}
+                            variants={slideVariants}
+                            initial="enter"
+                            animate="center"
+                            exit="exit"
+                            transition={{
+                                x: {
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 30,
+                                },
+                                opacity: { duration: 0.2 },
+                            }}
+                            drag="x"
+                            dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={1}
+                            onDragEnd={handleDragEnd}
+                            className="absolute w-full h-full cursor-grab active:cursor-grabbing px-2"
+                        >
+                            <Card className="w-full h-full border border-white/10 bg-white/5 backdrop-blur-sm shadow-lg">
+                                <CardHeader className="pb-2">
+                                    <Quote className="h-6 w-6 text-primary/40 mb-2" />
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-10 w-10 border-2 border-primary/20">
+                                            <AvatarImage
+                                                src={testimonial.image}
+                                                alt={testimonial.name}
+                                            />
+                                            <AvatarFallback className="bg-primary/10 text-primary">
+                                                {testimonial.name
+                                                    .split(" ")
+                                                    .map((n) => n[0])
+                                                    .join("")}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <h3 className="font-semibold text-base">
+                                                {testimonial.name}
+                                            </h3>
+                                            <p className="text-xs text-muted-foreground">
+                                                {testimonial.project}
+                                                {testimonial.platform && (
+                                                    <>
+                                                        {" via "}
+                                                        <span className="text-primary/80">
+                                                            {
+                                                                testimonial.platform
+                                                            }
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </CardHeader>
+                                <CardContent className="pt-2">
+                                    <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-4">
+                                        &quot;{testimonial.content}&quot;
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    </AnimatePresence>
+                </div>
 
                 {/* Indicators */}
-                <div className="flex gap-2 mt-6">
+                <div className="flex gap-2 mt-6 z-10">
                     {testimonials.map((_, index) => (
                         <div
                             key={index}
