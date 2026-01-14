@@ -3,5 +3,6 @@ export interface Testimonial {
     project: string;
     platform?: string;
     image?: string;
+    stars?: number;
     content: string;
 }

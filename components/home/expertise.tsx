@@ -43,7 +43,7 @@ export function Expertise() {
                     return (
                         <div
                             key={item.id}
-                            className="border rounded-lg bg-card text-card-foreground shadow-sm overflow-hidden"
+                            className="border border-zinc-200 dark:border-white/10 rounded-xl bg-card text-card-foreground shadow-sm overflow-hidden"
                         >
                             <button
                                 onClick={() => toggleItem(item.id)}

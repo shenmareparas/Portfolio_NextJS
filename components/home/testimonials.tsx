@@ -6,26 +6,75 @@ import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
-import { Quote } from "lucide-react";
+import { Quote, Star } from "lucide-react";
+
+const StarRating = ({
+    stars = 5,
+    className,
+}: {
+    stars?: number;
+    className?: string;
+}) => {
+    return (
+        <div className={`flex gap-0.5 ${className}`}>
+            {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                    key={i}
+                    className={`h-3.5 w-3.5 ${
+                        i < stars
+                            ? "fill-foreground text-foreground"
+                            : "fill-muted text-muted-foreground/20"
+                    }`}
+                />
+            ))}
+        </div>
+    );
+};
 
 interface TestimonialsProps {
     testimonials: Testimonial[];
 }
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
+    const [randomizedTestimonials, setRandomizedTestimonials] =
+        useState<Testimonial[]>(testimonials);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+        if (testimonials.length > 1) {
+            const shuffled = [...testimonials];
+            // Fisher-Yates shuffle
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+
+            // Ensure first and last items are different to avoid repetition in loop
+            // Compare by content or some unique identifier (assuming name is unique enough here)
+            if (shuffled[0].name === shuffled[shuffled.length - 1].name) {
+                // If they are the same, swap the first item with the middle item
+                const mid = Math.floor(shuffled.length / 2);
+                [shuffled[0], shuffled[mid]] = [shuffled[mid], shuffled[0]];
+            }
+            setRandomizedTestimonials(shuffled);
+        }
+    }, [testimonials]);
 
     useEffect(() => {
         if (isPaused) return;
         const timer = setInterval(() => {
             setDirection(1);
-            setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+            setCurrentIndex(
+                (prev) => (prev + 1) % randomizedTestimonials.length
+            );
         }, 5000);
 
         return () => clearInterval(timer);
-    }, [testimonials.length, isPaused]);
+    }, [randomizedTestimonials.length, isPaused]);
 
     const slideVariants = {
         enter: (direction: number) => ({
@@ -54,22 +103,26 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
         if (swipe < -swipeConfidenceThreshold) {
             setDirection(1);
-            setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+            setCurrentIndex(
+                (prev) => (prev + 1) % randomizedTestimonials.length
+            );
         } else if (swipe > swipeConfidenceThreshold) {
             setDirection(-1);
             setCurrentIndex(
-                (prev) => (prev - 1 + testimonials.length) % testimonials.length
+                (prev) =>
+                    (prev - 1 + randomizedTestimonials.length) %
+                    randomizedTestimonials.length
             );
         }
     };
 
-    if (testimonials.length === 0) return null;
+    if (randomizedTestimonials.length === 0) return null;
 
-    const testimonial = testimonials[currentIndex];
+    const testimonial = randomizedTestimonials[currentIndex];
 
     return (
         <section className="py-12 md:py-24 lg:py-32 overflow-hidden">
-            <div className="container mx-auto px-4 flex flex-col items-center justify-center space-y-4 text-center mb-12">
+            <div className="container mx-auto px-4 flex flex-col items-center justify-center space-y-4 text-center mb-6">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                     Testimonials
                 </h2>
@@ -80,13 +133,13 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
             {/* Mobile View - AnimatePresence Carousel */}
             <div
-                className="md:hidden container mx-auto px-4 relative flex w-full flex-col items-center justify-center min-h-[300px] overflow-hidden"
+                className="md:hidden container mx-auto px-4 relative flex w-full flex-col items-center justify-center min-h-[400px] overflow-hidden"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
                 onTouchStart={() => setIsPaused(true)}
                 onTouchEnd={() => setIsPaused(false)}
             >
-                <div className="relative w-full h-[250px] flex items-center justify-center">
+                <div className="relative w-full h-[300px] flex items-center justify-center">
                     <AnimatePresence
                         initial={false}
                         custom={direction}
@@ -113,45 +166,55 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                             onDragEnd={handleDragEnd}
                             className="absolute w-full h-full cursor-grab active:cursor-grabbing px-2"
                         >
-                            <Card className="w-full h-full border border-white/10 bg-white/5 backdrop-blur-sm shadow-lg">
-                                <CardHeader className="pb-2">
-                                    <Quote className="h-6 w-6 text-primary/40 mb-2" />
-                                    <div className="flex items-center gap-3">
-                                        <Avatar className="h-10 w-10 border-2 border-primary/20">
-                                            <AvatarImage
-                                                src={testimonial.image}
-                                                alt={testimonial.name}
+                            <Card className="w-full h-full border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl shadow-2xl">
+                                <CardHeader className="pb-4">
+                                    <div className="flex items-start justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <Avatar className="h-10 w-10 border border-zinc-200 dark:border-white/10">
+                                                <AvatarImage
+                                                    src={testimonial.image}
+                                                    alt={testimonial.name}
+                                                />
+                                                <AvatarFallback className="bg-primary/5 text-primary text-xs font-medium">
+                                                    {testimonial.name
+                                                        .split(" ")
+                                                        .map((n) => n[0])
+                                                        .join("")}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div>
+                                                <h3 className="font-semibold text-sm leading-none mb-1.5">
+                                                    {testimonial.name}
+                                                </h3>
+                                                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
+                                                    <span>
+                                                        {testimonial.project}
+                                                    </span>
+                                                    {testimonial.platform && (
+                                                        <>
+                                                            <span className="text-border">
+                                                                •
+                                                            </span>
+                                                            <span className="text-foreground/60">
+                                                                {
+                                                                    testimonial.platform
+                                                                }
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-col items-end gap-1.5">
+                                            <StarRating
+                                                stars={testimonial.stars}
                                             />
-                                            <AvatarFallback className="bg-primary/10 text-primary">
-                                                {testimonial.name
-                                                    .split(" ")
-                                                    .map((n) => n[0])
-                                                    .join("")}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div>
-                                            <h3 className="font-semibold text-base">
-                                                {testimonial.name}
-                                            </h3>
-                                            <p className="text-xs text-muted-foreground">
-                                                {testimonial.project}
-                                                {testimonial.platform && (
-                                                    <>
-                                                        {" via "}
-                                                        <span className="text-primary/80">
-                                                            {
-                                                                testimonial.platform
-                                                            }
-                                                        </span>
-                                                    </>
-                                                )}
-                                            </p>
                                         </div>
                                     </div>
                                 </CardHeader>
-                                <CardContent className="pt-2">
-                                    <p className="text-sm text-muted-foreground italic leading-relaxed line-clamp-4">
-                                        &quot;{testimonial.content}&quot;
+                                <CardContent className="pt-0">
+                                    <p className="text-[15px] text-foreground/90 leading-relaxed font-normal">
+                                        {testimonial.content}
                                     </p>
                                 </CardContent>
                             </Card>
@@ -160,14 +223,14 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 </div>
 
                 {/* Indicators */}
-                <div className="flex gap-2 mt-6 z-10">
-                    {testimonials.map((_, index) => (
+                <div className="flex gap-2 mt-8 z-10">
+                    {randomizedTestimonials.map((_, index) => (
                         <div
                             key={index}
-                            className={`h-2 w-2 rounded-full transition-colors duration-300 ${
+                            className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
                                 index === currentIndex
-                                    ? "bg-primary"
-                                    : "bg-primary/20"
+                                    ? "bg-foreground w-4"
+                                    : "bg-foreground/20"
                             }`}
                         />
                     ))}
@@ -176,48 +239,58 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
             {/* Desktop View - Marquee */}
             <div className="hidden md:flex relative w-full flex-col items-center justify-center overflow-hidden">
-                <Marquee pauseOnHover className="[--duration:20s]">
-                    {testimonials.map((testimonial, index) => (
+                <Marquee pauseOnHover className="[--duration:40s] py-12">
+                    {randomizedTestimonials.map((testimonial, index) => (
                         <Card
                             key={index}
-                            className="w-[400px] flex-none border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300 hover:border-primary/20 mx-4"
+                            className="w-[450px] flex-none border border-zinc-200/50 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md transition-all duration-300 hover:border-zinc-300/50 dark:hover:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/60 mx-6 shadow-xl"
                         >
-                            <CardHeader className="pb-2">
-                                <Quote className="h-8 w-8 text-primary/40 mb-2" />
-                                <div className="flex items-center gap-4">
-                                    <Avatar className="h-12 w-12 border-2 border-primary/20">
-                                        <AvatarImage
-                                            src={testimonial.image}
-                                            alt={testimonial.name}
-                                        />
-                                        <AvatarFallback className="bg-primary/10 text-primary">
-                                            {testimonial.name
-                                                .split(" ")
-                                                .map((n) => n[0])
-                                                .join("")}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <h3 className="font-semibold text-lg">
-                                            {testimonial.name}
-                                        </h3>
-                                        <p className="text-sm text-muted-foreground">
-                                            {testimonial.project}
-                                            {testimonial.platform && (
-                                                <>
-                                                    {" via "}
-                                                    <span className="text-primary/80">
-                                                        {testimonial.platform}
-                                                    </span>
-                                                </>
-                                            )}
-                                        </p>
+                            <CardHeader className="pb-5">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex items-center gap-4">
+                                        <Avatar className="h-11 w-11 border border-zinc-200 dark:border-white/10">
+                                            <AvatarImage
+                                                src={testimonial.image}
+                                                alt={testimonial.name}
+                                            />
+                                            <AvatarFallback className="bg-primary/5 text-primary text-sm font-medium">
+                                                {testimonial.name
+                                                    .split(" ")
+                                                    .map((n) => n[0])
+                                                    .join("")}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <h3 className="font-semibold text-base leading-none mb-1.5">
+                                                {testimonial.name}
+                                            </h3>
+                                            <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
+                                                <span>
+                                                    {testimonial.project}
+                                                </span>
+                                                {testimonial.platform && (
+                                                    <>
+                                                        <span className="text-border">
+                                                            •
+                                                        </span>
+                                                        <span className="text-foreground/60">
+                                                            {
+                                                                testimonial.platform
+                                                            }
+                                                        </span>
+                                                    </>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex flex-col items-end gap-2">
+                                        <StarRating stars={testimonial.stars} />
                                     </div>
                                 </div>
                             </CardHeader>
-                            <CardContent className="pt-4">
-                                <p className="text-foreground/80 italic leading-relaxed">
-                                    &quot;{testimonial.content}&quot;
+                            <CardContent className="pt-0 pb-6">
+                                <p className="text-[15px] text-foreground/80 leading-7 font-normal tracking-wide">
+                                    {testimonial.content}
                                 </p>
                             </CardContent>
                         </Card>
