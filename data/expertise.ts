@@ -11,7 +11,7 @@ export const expertise: ExpertiseItem[] = [
         title: "Cross-Platform Mobile Development",
         icon: "smartphone",
         description:
-            "I build high-performance, feature-rich mobile applications using Flutter and Dart. From complex state management to integrating native device features, I ensure seamless experiences on both Android and iOS platforms. My work includes AI-powered games and real-time utility apps used by thousands.",
+            "I build high-performance, feature-rich mobile applications using Flutter and Dart. From complex state management to integrating native device features, I ensure seamless experiences on both Android and iOS platforms. My work includes AI-powered real-time utility apps used by thousands.",
     },
     {
         id: "mobile-native",

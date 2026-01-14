@@ -68,6 +68,7 @@ const CursorInner = ({
     const cursorY = useTransform(springY, (y) => y - 40);
 
     const [isHovering, setIsHovering] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
     useEffect(() => {
         const updateMousePosition = (e: MouseEvent) => {
@@ -89,12 +90,33 @@ const CursorInner = ({
             }
         };
 
+        const handleMouseDown = (e: MouseEvent) => {
+            // Only hide cursor when clicking near the scrollbar area
+            const scrollbarThreshold = 20;
+            const isNearRightEdge =
+                e.clientX >= window.innerWidth - scrollbarThreshold;
+            const isNearBottomEdge =
+                e.clientY >= window.innerHeight - scrollbarThreshold;
+
+            if (isNearRightEdge || isNearBottomEdge) {
+                setIsDragging(true);
+            }
+        };
+
+        const handleMouseUp = () => {
+            setIsDragging(false);
+        };
+
         window.addEventListener("mousemove", updateMousePosition);
         window.addEventListener("mouseover", handleMouseOver);
+        window.addEventListener("mousedown", handleMouseDown);
+        window.addEventListener("mouseup", handleMouseUp);
 
         return () => {
             window.removeEventListener("mousemove", updateMousePosition);
             window.removeEventListener("mouseover", handleMouseOver);
+            window.removeEventListener("mousedown", handleMouseDown);
+            window.removeEventListener("mouseup", handleMouseUp);
         };
     }, [mouseX, mouseY]);
 
@@ -107,7 +129,7 @@ const CursorInner = ({
             }}
             initial={{ opacity: 0, scale: 0.2 }}
             animate={{
-                opacity: 1,
+                opacity: isDragging ? 0 : 1,
                 scale: isHovering ? 1 : 0.4,
             }}
             exit={{ opacity: 0, scale: 0 }}
