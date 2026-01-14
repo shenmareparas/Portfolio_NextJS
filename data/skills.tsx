@@ -23,13 +23,7 @@ import {
     siFramer,
     siLinux,
 } from "simple-icons/icons";
-import {
-    Globe,
-    Terminal,
-    Sparkles,
-    Cloud,
-    Code,
-} from "lucide-react";
+import { Globe, Terminal, Sparkles, Cloud, Code } from "lucide-react";
 import type { SimpleIcon } from "simple-icons";
 
 const SimpleIconWrapper = (icon: SimpleIcon) => {
