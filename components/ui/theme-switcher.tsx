@@ -4,6 +4,7 @@ import * as React from "react";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 import {
     Tooltip,
     TooltipContent,
@@ -14,12 +15,14 @@ import {
 export function ThemeSwitcher({ className }: { className?: string }) {
     const { setTheme, resolvedTheme } = useTheme();
     const [mounted, setMounted] = React.useState(false);
+    const haptic = useMobileHaptics();
 
     React.useEffect(() => {
         setMounted(true);
     }, []);
 
     const toggleTheme = () => {
+        haptic.trigger("light");
         const newTheme = resolvedTheme === "dark" ? "light" : "dark";
 
         if (!document.startViewTransition) {
@@ -40,7 +43,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
                     duration: 500,
                     easing: "ease-in-out",
                     pseudoElement: "::view-transition-new(root)",
-                }
+                },
             );
         });
     };
@@ -56,7 +59,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
                         onClick={toggleTheme}
                         className={cn(
                             "flex items-center justify-center rounded-full p-2 transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary/20",
-                            className
+                            className,
                         )}
                         aria-label="Toggle theme"
                     >

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Loader2 } from "lucide-react";
-import { useWebHaptics } from "web-haptics/react";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,7 @@ import { siteConfig } from "@/data/config";
 export function ContactForm() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const { toast } = useToast();
-    const haptic = useWebHaptics();
+    const haptic = useMobileHaptics();
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -87,9 +87,16 @@ export function ContactForm() {
         }
     }
 
+    function onError() {
+        haptic.trigger("error");
+    }
+
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form
+                onSubmit={form.handleSubmit(onSubmit, onError)}
+                className="space-y-6"
+            >
                 <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                         control={form.control}

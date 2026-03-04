@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { cn } from "@/lib/utils";
 import { Home, FolderCode, User, Send } from "lucide-react";
-import { useWebHaptics } from "web-haptics/react";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,7 +20,7 @@ const navItems = [
 
 export function Header() {
     const pathname = usePathname();
-    const haptic = useWebHaptics();
+    const haptic = useMobileHaptics();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -108,9 +108,7 @@ export function Header() {
                                     const handleClick = (
                                         e: React.MouseEvent,
                                     ) => {
-                                        haptic.trigger([{ duration: 35 }], {
-                                            intensity: 1,
-                                        });
+                                        haptic.trigger("selection");
                                         if (isActive) {
                                             e.preventDefault();
                                             window.scrollTo({
