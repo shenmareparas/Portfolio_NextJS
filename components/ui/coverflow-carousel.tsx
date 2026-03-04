@@ -9,6 +9,7 @@ import Image from "next/image";
 import { GalleryItem } from "@/types/project";
 import { useLoadingActions } from "@/components/providers/loading-provider";
 import { Badge } from "@/components/ui/badge";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 interface CoverflowCarouselProps {
     images: GalleryItem[];
@@ -88,7 +89,7 @@ const CarouselCard = React.memo(
                     className,
                     isDragging
                         ? "transition-none"
-                        : "transition-all duration-500"
+                        : "transition-all duration-500",
                 )}
                 style={style}
                 onClick={() => onClick(index)}
@@ -142,7 +143,7 @@ const CarouselCard = React.memo(
                 </div>
             </div>
         );
-    }
+    },
 );
 
 CarouselCard.displayName = "CarouselCard";
@@ -158,8 +159,9 @@ export function CoverflowCarousel({
     const { resolvedTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const [forcedTheme, setForcedTheme] = useState<"light" | "dark" | null>(
-        null
+        null,
     );
+    const haptic = useMobileHaptics();
 
     useEffect(() => {
         setTimeout(() => setMounted(true), 0);
@@ -188,6 +190,7 @@ export function CoverflowCarousel({
     const toggleTheme = useCallback(
         (e: React.MouseEvent) => {
             e.stopPropagation();
+            haptic.trigger("light");
 
             const switchTheme = () => {
                 flushSync(() => {
@@ -214,11 +217,11 @@ export function CoverflowCarousel({
                         duration: 700,
                         easing: "ease-in-out",
                         pseudoElement: "::view-transition-new(root)",
-                    }
+                    },
                 );
             });
         },
-        [resolvedTheme]
+        [resolvedTheme],
     );
 
     const [interactionPause, setInteractionPause] = useState(false);
@@ -280,6 +283,10 @@ export function CoverflowCarousel({
         const distance = touchStart.current - touchEnd.current;
         const isLeftSwipe = distance > minSwipeDistance;
         const isRightSwipe = distance < -minSwipeDistance;
+
+        if (isLeftSwipe || isRightSwipe) {
+            haptic.trigger("selection");
+        }
 
         if (isLeftSwipe) {
             triggerInteractionPause();
@@ -353,7 +360,8 @@ export function CoverflowCarousel({
                         setActive((prev) => (prev + 1) % images.length);
                     } else {
                         setActive(
-                            (prev) => (prev - 1 + images.length) % images.length
+                            (prev) =>
+                                (prev - 1 + images.length) % images.length,
                         );
                     }
                     lastWheelTime.current = now;
@@ -387,7 +395,7 @@ export function CoverflowCarousel({
 
             setDragOffset(offset);
         },
-        [setDragOffset, active, images.length]
+        [setDragOffset, active, images.length],
     );
 
     useEffect(() => {
@@ -437,7 +445,7 @@ export function CoverflowCarousel({
             pillDragStart.current = e.clientX;
             setDragOffset(0);
         },
-        [setDragOffset]
+        [setDragOffset],
     );
 
     const onPillTouchStart = useCallback(
@@ -446,7 +454,7 @@ export function CoverflowCarousel({
             pillDragStart.current = e.touches[0].clientX;
             setDragOffset(0);
         },
-        [setDragOffset]
+        [setDragOffset],
     );
 
     const onPillTouchMove = useCallback(
@@ -454,7 +462,7 @@ export function CoverflowCarousel({
             e.stopPropagation();
             handlePillDrag(e.touches[0].clientX);
         },
-        [handlePillDrag]
+        [handlePillDrag],
     );
 
     const onPillTouchEnd = useCallback(() => {
@@ -478,6 +486,8 @@ export function CoverflowCarousel({
 
             if (index === active) return;
 
+            haptic.trigger("selection");
+
             // Calculate circular distance
             let diff = index - active;
             if (diff > images.length / 2) diff -= images.length;
@@ -489,7 +499,7 @@ export function CoverflowCarousel({
                 setActive((prev) => (prev - 1 + images.length) % images.length);
             }
         },
-        [triggerInteractionPause, active, images.length]
+        [triggerInteractionPause, active, images.length],
     );
 
     // Calculate effective active state for rendering
@@ -508,7 +518,7 @@ export function CoverflowCarousel({
             ref={containerRef}
             className={cn(
                 "relative w-full max-w-6xl mx-auto py-12 xl:flex xl:flex-col",
-                className
+                className,
             )}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => {
@@ -532,7 +542,8 @@ export function CoverflowCarousel({
                         e.stopPropagation();
                         triggerInteractionPause();
                         setActive(
-                            (prev) => (prev - 1 + images.length) % images.length
+                            (prev) =>
+                                (prev - 1 + images.length) % images.length,
                         );
                     }}
                     aria-label="Previous slide"
@@ -595,7 +606,7 @@ export function CoverflowCarousel({
                                     "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
                                     currentTheme === "light"
                                         ? "bg-primary text-primary-foreground shadow-sm scale-110"
-                                        : "text-muted-foreground"
+                                        : "text-muted-foreground",
                                 )}
                             >
                                 <Sun className="w-4 h-4" />
@@ -605,7 +616,7 @@ export function CoverflowCarousel({
                                     "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
                                     currentTheme === "dark"
                                         ? "bg-primary text-primary-foreground shadow-sm scale-110"
-                                        : "text-muted-foreground"
+                                        : "text-muted-foreground",
                                 )}
                             >
                                 <Moon className="w-4 h-4" />
@@ -629,7 +640,7 @@ export function CoverflowCarousel({
                                 "h-2 rounded-full transition-all duration-300",
                                 idx === normalizedActive
                                     ? "bg-primary w-8 cursor-grab active:cursor-grabbing"
-                                    : "bg-primary/20 w-2 hover:bg-primary/40"
+                                    : "bg-primary/20 w-2 hover:bg-primary/40",
                             )}
                             aria-label={`Go to slide ${idx + 1}`}
                             onMouseDown={

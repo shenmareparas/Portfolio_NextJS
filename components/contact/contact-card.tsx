@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 interface ContactCardProps {
     icon: React.ReactNode;
@@ -27,8 +28,10 @@ export function ContactCard({
     className,
 }: ContactCardProps) {
     const [hasCopied, setHasCopied] = useState(false);
+    const haptic = useMobileHaptics();
 
     const onCopy = async () => {
+        haptic.trigger("success");
         try {
             if (navigator?.clipboard?.writeText) {
                 await navigator.clipboard.writeText(value);
@@ -63,7 +66,7 @@ export function ContactCard({
         <div
             className={cn(
                 "group relative rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:bg-accent hover:text-accent-foreground",
-                className
+                className,
             )}
         >
             <a

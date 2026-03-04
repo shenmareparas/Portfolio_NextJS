@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { cn } from "@/lib/utils";
 import { Home, FolderCode, User, Send } from "lucide-react";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -19,6 +20,7 @@ const navItems = [
 
 export function Header() {
     const pathname = usePathname();
+    const haptic = useMobileHaptics();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -64,7 +66,7 @@ export function Header() {
                                         "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary cursor-hover",
                                         isActive
                                             ? "text-foreground"
-                                            : "text-muted-foreground"
+                                            : "text-muted-foreground",
                                     )}
                                 >
                                     <AnimatePresence>
@@ -104,8 +106,9 @@ export function Header() {
                                     const isActive = pathname === item.href;
 
                                     const handleClick = (
-                                        e: React.MouseEvent
+                                        e: React.MouseEvent,
                                     ) => {
+                                        haptic.trigger("selection");
                                         if (isActive) {
                                             e.preventDefault();
                                             window.scrollTo({
@@ -124,7 +127,7 @@ export function Header() {
                                                 "relative flex flex-col items-center justify-center flex-1 h-full py-2 transition-colors",
                                                 isActive
                                                     ? "text-primary"
-                                                    : "text-muted-foreground"
+                                                    : "text-muted-foreground",
                                             )}
                                         >
                                             <AnimatePresence>
@@ -144,13 +147,13 @@ export function Header() {
                                             <Icon
                                                 className={cn(
                                                     "relative z-10 w-5 h-5 mb-1 transition-transform",
-                                                    isActive && "scale-110"
+                                                    isActive && "scale-110",
                                                 )}
                                             />
                                             <span
                                                 className={cn(
                                                     "relative z-10 text-xs font-medium transition-all",
-                                                    isActive && "font-semibold"
+                                                    isActive && "font-semibold",
                                                 )}
                                             >
                                                 {item.name}
@@ -163,7 +166,7 @@ export function Header() {
                             <div className="h-[env(safe-area-inset-bottom)]" />
                         </div>
                     </nav>,
-                    document.body
+                    document.body,
                 )}
         </>
     );

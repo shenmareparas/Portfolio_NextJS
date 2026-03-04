@@ -12,6 +12,7 @@ import {
     LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 const iconMap: Record<string, LucideIcon> = {
     smartphone: Smartphone,
@@ -22,8 +23,10 @@ const iconMap: Record<string, LucideIcon> = {
 
 export function Expertise() {
     const [openItem, setOpenItem] = useState<string | null>(null);
+    const haptic = useMobileHaptics();
 
     const toggleItem = (id: string) => {
+        haptic.trigger("selection");
         setOpenItem(openItem === id ? null : id);
     };
 
@@ -62,7 +65,7 @@ export function Expertise() {
                                 <ChevronDown
                                     className={cn(
                                         "h-5 w-5 text-muted-foreground transition-transform duration-200",
-                                        openItem === item.id && "rotate-180"
+                                        openItem === item.id && "rotate-180",
                                     )}
                                 />
                             </button>

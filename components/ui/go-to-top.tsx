@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 export function GoToTop() {
     const [isVisible, setIsVisible] = useState(false);
+    const haptic = useMobileHaptics();
 
     useEffect(() => {
         const toggleVisibility = () => {
@@ -25,6 +27,7 @@ export function GoToTop() {
     }, []);
 
     const scrollToTop = () => {
+        haptic.trigger("medium");
         window.scrollTo({
             top: 0,
             behavior: "smooth",
