@@ -7,9 +7,13 @@ import { cn } from "@/lib/utils";
 import { Home, FolderCode, User, Send } from "lucide-react";
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore, useReducer } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { createPortal } from "react-dom";
+
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
 
 const navItems = [
     { name: "Home", href: "/", icon: Home },
@@ -21,11 +25,7 @@ const navItems = [
 export function Header() {
     const pathname = usePathname();
     const haptic = useMobileHaptics();
-    const [mounted, setMounted] = useState(false);
-
-    useEffect(() => {
-        setTimeout(() => setMounted(true), 0);
-    }, []);
+    const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
     return (
         <>

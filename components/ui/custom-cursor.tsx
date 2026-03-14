@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import { m, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 export const CustomCursor = () => {
-    const [isVisible, setIsVisible] = useState(false);
-    const [initialPos, setInitialPos] = useState<{
-        x: number;
-        y: number;
-    } | null>(null);
+    const [cursorState, setCursorState] = useState<{
+        isVisible: boolean;
+        initialPos: { x: number; y: number } | null;
+    }>({
+        isVisible: false,
+        initialPos: null,
+    });
 
     useEffect(() => {
         // Only show custom cursor on devices with fine pointer (mouse)
@@ -16,8 +18,7 @@ export const CustomCursor = () => {
 
         const handleMediaChange = (e: MediaQueryListEvent) => {
             if (!e.matches) {
-                setIsVisible(false);
-                setInitialPos(null);
+                setCursorState({ isVisible: false, initialPos: null });
             } else {
                 window.addEventListener("mousemove", handleFirstMove, {
                     once: true,
@@ -26,14 +27,16 @@ export const CustomCursor = () => {
         };
 
         const handleFirstMove = (e: MouseEvent) => {
-            if (mediaQuery.matches && !initialPos) {
-                setInitialPos({ x: e.clientX, y: e.clientY });
-                setIsVisible(true);
+            if (mediaQuery.matches && !cursorState.initialPos) {
+                setCursorState({
+                    isVisible: true,
+                    initialPos: { x: e.clientX, y: e.clientY },
+                });
             }
         };
 
         mediaQuery.addEventListener("change", handleMediaChange);
-        if (!initialPos) {
+        if (!cursorState.initialPos) {
             window.addEventListener("mousemove", handleFirstMove, {
                 once: true,
             });
@@ -43,11 +46,16 @@ export const CustomCursor = () => {
             mediaQuery.removeEventListener("change", handleMediaChange);
             window.removeEventListener("mousemove", handleFirstMove);
         };
-    }, [initialPos]);
+    }, [cursorState.initialPos]);
 
-    if (!isVisible || !initialPos) return null;
+    if (!cursorState.isVisible || !cursorState.initialPos) return null;
 
-    return <CursorInner initialX={initialPos.x} initialY={initialPos.y} />;
+    return (
+        <CursorInner
+            initialX={cursorState.initialPos.x}
+            initialY={cursorState.initialPos.y}
+        />
+    );
 };
 
 const CursorInner = ({
@@ -67,8 +75,10 @@ const CursorInner = ({
     const cursorX = useTransform(springX, (x) => x - 40);
     const cursorY = useTransform(springY, (y) => y - 40);
 
-    const [isHovering, setIsHovering] = useState(false);
-    const [isDragging, setIsDragging] = useState(false);
+    const [interactState, dispatchInteract] = useReducer(
+        (state: any, action: any) => ({ ...state, ...action }),
+        { isHovering: false, isDragging: false }
+    );
 
     useEffect(() => {
         const updateMousePosition = (e: MouseEvent) => {
@@ -83,15 +93,10 @@ const CursorInner = ({
                 target.closest("button") ||
                 target.closest(".cursor-hover");
 
-            if (interactive) {
-                setIsHovering(true);
-            } else {
-                setIsHovering(false);
-            }
+            dispatchInteract({ isHovering: !!interactive });
         };
 
         const handleMouseDown = (e: MouseEvent) => {
-            // Only hide cursor when clicking near the scrollbar area
             const scrollbarThreshold = 20;
             const isNearRightEdge =
                 e.clientX >= window.innerWidth - scrollbarThreshold;
@@ -99,12 +104,12 @@ const CursorInner = ({
                 e.clientY >= window.innerHeight - scrollbarThreshold;
 
             if (isNearRightEdge || isNearBottomEdge) {
-                setIsDragging(true);
+                dispatchInteract({ isDragging: true });
             }
         };
 
         const handleMouseUp = () => {
-            setIsDragging(false);
+            dispatchInteract({ isDragging: false });
         };
 
         window.addEventListener("mousemove", updateMousePosition);
@@ -129,8 +134,8 @@ const CursorInner = ({
             }}
             initial={{ opacity: 0, scale: 0.4 }}
             animate={{
-                opacity: isDragging ? 0 : 1,
-                scale: isHovering ? 1 : 0.4,
+                opacity: interactState.isDragging ? 0 : 1,
+                scale: interactState.isHovering ? 1 : 0.4,
             }}
             exit={{ opacity: 0, scale: 0.4 }}
             transition={{

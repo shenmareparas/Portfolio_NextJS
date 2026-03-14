@@ -20,8 +20,8 @@ export default function AboutPage() {
             <section className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight">About Me</h1>
                 <div className="prose dark:prose-invert max-w-none text-muted-foreground text-lg leading-relaxed">
-                    {profile.bio.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
+                    {profile.bio.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
                     ))}
                 </div>
             </section>
