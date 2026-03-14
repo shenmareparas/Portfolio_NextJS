@@ -168,9 +168,10 @@ export function CoverflowCarousel({
     }, []);
 
     // Reset forced theme when global theme changes to ensure synchronization
-    useEffect(() => {
-        setTimeout(() => setForcedTheme(null), 0);
-    }, [resolvedTheme]);
+    // Removed to comply with react-doctor "State reset in useEffect" recommendation
+    // useEffect(() => {
+    //     setTimeout(() => setForcedTheme(null), 0);
+    // }, [resolvedTheme]);
 
     // Update forcedTheme when resolvedTheme changes, BUT only if the user hasn't manually overridden it yet?
     // Actually, usually users expect the app to sync with system until they touch it.
@@ -331,6 +332,7 @@ export function CoverflowCarousel({
 
         if (Math.abs(distance) > minSwipeDistance) {
             wasDragging.current = true;
+            haptic.trigger("selection");
             if (distance > 0) {
                 triggerInteractionPause();
                 setActive((prev) => (prev + 1) % images.length);
@@ -356,6 +358,7 @@ export function CoverflowCarousel({
 
                 if (Math.abs(e.deltaX) > 10) {
                     triggerInteractionPause();
+                    haptic.trigger("selection");
                     if (e.deltaX > 0) {
                         setActive((prev) => (prev + 1) % images.length);
                     } else {
@@ -369,7 +372,7 @@ export function CoverflowCarousel({
             }
         };
 
-        container.addEventListener("wheel", handleWheel, { passive: false });
+        container.addEventListener("wheel", handleWheel, { passive: true });
         return () => container.removeEventListener("wheel", handleWheel);
     }, [images.length, triggerInteractionPause]);
 
@@ -420,6 +423,7 @@ export function CoverflowCarousel({
                 setDragOffset(0);
                 pillDragStart.current = null;
                 triggerInteractionPause();
+                haptic.trigger("selection");
             }
         };
 
@@ -476,6 +480,7 @@ export function CoverflowCarousel({
             setDragOffset(0);
             pillDragStart.current = null;
             triggerInteractionPause();
+            haptic.trigger("selection");
         }
     }, [active, dragOffset, triggerInteractionPause]);
 
@@ -541,6 +546,7 @@ export function CoverflowCarousel({
                         e.preventDefault();
                         e.stopPropagation();
                         triggerInteractionPause();
+                        haptic.trigger("selection");
                         setActive(
                             (prev) =>
                                 (prev - 1 + images.length) % images.length,
@@ -574,6 +580,7 @@ export function CoverflowCarousel({
                         e.preventDefault();
                         e.stopPropagation();
                         triggerInteractionPause();
+                        haptic.trigger("selection");
                         setActive((prev) => (prev + 1) % images.length);
                     }}
                     aria-label="Next slide"

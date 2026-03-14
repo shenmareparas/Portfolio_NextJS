@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -146,7 +146,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                         custom={direction}
                         mode="popLayout"
                     >
-                        <motion.div
+                        <m.div
                             key={currentIndex}
                             custom={direction}
                             variants={slideVariants}
@@ -219,7 +219,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                                     </p>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                        </m.div>
                     </AnimatePresence>
                 </div>
 

@@ -10,6 +10,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { RenderedIcon } from "@/components/ui/rendered-icon";
 
 export function Footer() {
     const pathname = usePathname();
@@ -52,7 +53,10 @@ export function Footer() {
                                         className="inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-foreground cursor-hover"
                                         aria-label={social.name}
                                     >
-                                        <social.icon className="h-5 w-5" />
+                                        <RenderedIcon
+                                            icon={social.icon}
+                                            className="h-5 w-5"
+                                        />
                                     </a>
                                 </TooltipTrigger>
                                 <TooltipContent>

@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { LazyMotion, domAnimation } from "framer-motion";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
@@ -83,19 +84,21 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <NavigationProvider>
-                        <LoadingProvider>
-                            <Preloader />
-                            <CustomCursor />
-                            <Header />
-                            <GoToTop />
-                            <main className="flex-1 flex flex-col pt-16 pb-20 md:pb-16">
-                                {children}
-                            </main>
-                            <Footer />
-                            <Toaster />
-                        </LoadingProvider>
-                    </NavigationProvider>
+                    <LazyMotion features={domAnimation} strict>
+                        <NavigationProvider>
+                            <LoadingProvider>
+                                <Preloader />
+                                <CustomCursor />
+                                <Header />
+                                <GoToTop />
+                                <main className="flex-1 flex flex-col pt-16 pb-20 md:pb-16">
+                                    {children}
+                                </main>
+                                <Footer />
+                                <Toaster />
+                            </LoadingProvider>
+                        </NavigationProvider>
+                    </LazyMotion>
                 </ThemeProvider>
                 <Analytics />
                 <SpeedInsights />

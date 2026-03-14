@@ -8,7 +8,7 @@ import { Home, FolderCode, User, Send } from "lucide-react";
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 import { useState, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { createPortal } from "react-dom";
 
 const navItems = [
@@ -29,7 +29,7 @@ export function Header() {
 
     return (
         <>
-            <motion.header className="fixed top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/95 border-border/40">
+            <m.header className="fixed top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/95 border-border/40">
                 <div className="container mx-auto flex h-16 items-center justify-between px-4 relative">
                     <div className="flex items-center gap-2 z-50">
                         <Link
@@ -71,7 +71,7 @@ export function Header() {
                                 >
                                     <AnimatePresence>
                                         {isActive && (
-                                            <motion.span
+                                            <m.span
                                                 key="navbar-active"
                                                 initial={{ opacity: 0 }}
                                                 animate={{ opacity: 1 }}
@@ -93,7 +93,7 @@ export function Header() {
                         <ThemeSwitcher />
                     </div>
                 </div>
-            </motion.header>
+            </m.header>
 
             {/* Mobile Bottom Tab Bar */}
             {mounted &&
@@ -132,7 +132,7 @@ export function Header() {
                                         >
                                             <AnimatePresence>
                                                 {isActive && (
-                                                    <motion.span
+                                                    <m.span
                                                         key="bottom-tab-active"
                                                         initial={{ opacity: 0 }}
                                                         animate={{ opacity: 1 }}

@@ -11,6 +11,7 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { profile } from "@/data/profile";
+import { RenderedIcon } from "@/components/ui/rendered-icon";
 
 export const metadata = {
     title: "Contact",
@@ -86,7 +87,6 @@ export default function ContactPage() {
                             <h3 className="font-medium">Social Media</h3>
                             <div className="flex flex-wrap gap-4">
                                 {socials.map((social) => {
-                                    const Icon = social.icon;
                                     return (
                                         <TooltipProvider key={social.name}>
                                             <Tooltip>
@@ -105,7 +105,10 @@ export default function ContactPage() {
                                                                 social.name
                                                             }
                                                         >
-                                                            <Icon className="h-5 w-5" />
+                                                            <RenderedIcon
+                                                                icon={social.icon}
+                                                                className="h-5 w-5"
+                                                            />
                                                         </a>
                                                     </Button>
                                                 </TooltipTrigger>

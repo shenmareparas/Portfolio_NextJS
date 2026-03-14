@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { m, useMotionValue, useSpring, useTransform } from "framer-motion";
 
 export const CustomCursor = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -121,18 +121,18 @@ const CursorInner = ({
     }, [mouseX, mouseY]);
 
     return (
-        <motion.div
+        <m.div
             className="fixed top-0 left-0 w-20 h-20 bg-white rounded-full pointer-events-none z-[9999] mix-blend-difference will-change-transform"
             style={{
                 x: cursorX,
                 y: cursorY,
             }}
-            initial={{ opacity: 0, scale: 0.2 }}
+            initial={{ opacity: 0, scale: 0.4 }}
             animate={{
                 opacity: isDragging ? 0 : 1,
                 scale: isHovering ? 1 : 0.4,
             }}
-            exit={{ opacity: 0, scale: 0 }}
+            exit={{ opacity: 0, scale: 0.4 }}
             transition={{
                 opacity: { duration: 0.2 },
                 scale: {
