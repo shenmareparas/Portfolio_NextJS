@@ -172,8 +172,11 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                                             <AvatarFallback className="bg-primary/5 text-primary text-xs font-medium">
                                                 {testimonial.name
                                                     .split(" ")
+                                                    .filter((word) => !/^(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?|Sir|Sr\.?|Jr\.?)$/i.test(word))
                                                     .map((n) => n[0])
-                                                    .join("")}
+                                                    .join("")
+                                                    .slice(0, 2)
+                                                    .toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
@@ -233,8 +236,11 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                                             <AvatarFallback className="bg-primary/5 text-primary text-sm font-medium">
                                                 {testimonial.name
                                                     .split(" ")
+                                                    .filter((word) => !/^(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?|Sir|Sr\.?|Jr\.?)$/i.test(word))
                                                     .map((n) => n[0])
-                                                    .join("")}
+                                                    .join("")
+                                                    .slice(0, 2)
+                                                    .toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
