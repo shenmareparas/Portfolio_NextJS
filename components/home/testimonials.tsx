@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useReducer, useRef } from "react";
+import { m, AnimatePresence } from "framer-motion";
 import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,91 +35,103 @@ interface TestimonialsProps {
     testimonials: Testimonial[];
 }
 
-export function Testimonials({ testimonials }: TestimonialsProps) {
-    const [randomizedTestimonials, setRandomizedTestimonials] =
-        useState<Testimonial[]>(testimonials);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [direction, setDirection] = useState(0);
-    const [isPaused, setIsPaused] = useState(false);
+interface TestimonialsState {
+    randomized: Testimonial[];
+    currentIndex: number;
+    direction: number;
+}
 
-    useEffect(() => {
-        if (testimonials.length > 1) {
-            const shuffled = [...testimonials];
-            // Fisher-Yates shuffle
+type TestimonialsAction =
+    | { type: "SHUFFLE"; testimonials: Testimonial[] }
+    | { type: "SET_INDEX"; index: number; direction: number }
+    | { type: "NEXT_SLIDE"; length: number }
+    | { type: "PREV_SLIDE"; length: number };
+
+function testimonialsReducer(
+    state: TestimonialsState,
+    action: TestimonialsAction,
+): TestimonialsState {
+    switch (action.type) {
+        case "SHUFFLE":
+            const shuffled = [...action.testimonials];
             for (let i = shuffled.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
-
-            // Ensure first and last items are different to avoid repetition in loop
-            // Compare by content or some unique identifier (assuming name is unique enough here)
-            if (shuffled[0].name === shuffled[shuffled.length - 1].name) {
-                // If they are the same, swap the first item with the middle item
+            if (
+                shuffled.length > 1 &&
+                shuffled[0].name === shuffled[shuffled.length - 1].name
+            ) {
                 const mid = Math.floor(shuffled.length / 2);
                 [shuffled[0], shuffled[mid]] = [shuffled[mid], shuffled[0]];
             }
-            setRandomizedTestimonials(shuffled);
-        }
-    }, [testimonials]);
+            return {
+                randomized: shuffled,
+                currentIndex: 0,
+                direction: 0,
+            };
+        case "SET_INDEX":
+            return {
+                ...state,
+                currentIndex: action.index,
+                direction: action.direction,
+            };
+        case "NEXT_SLIDE":
+            return {
+                ...state,
+                direction: 1,
+                currentIndex: (state.currentIndex + 1) % action.length,
+            };
+        case "PREV_SLIDE":
+            return {
+                ...state,
+                direction: -1,
+                currentIndex:
+                    (state.currentIndex - 1 + action.length) % action.length,
+            };
+        default:
+            return state;
+    }
+}
+
+export function Testimonials({ testimonials }: TestimonialsProps) {
+    const [state, dispatch] = useReducer(testimonialsReducer, {
+        randomized: testimonials,
+        currentIndex: 0,
+        direction: 0,
+    });
+    const [isPaused, setIsPaused] = useState(false);
+
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (isPaused) return;
+        if (isPaused || state.randomized.length <= 1) return;
         const timer = setInterval(() => {
-            setDirection(1);
-            setCurrentIndex(
-                (prev) => (prev + 1) % randomizedTestimonials.length
-            );
-        }, 5000);
+            if (scrollRef.current && window.innerWidth < 768) {
+                const { scrollLeft, scrollWidth, clientWidth } =
+                    scrollRef.current;
+                if (Math.ceil(scrollLeft + clientWidth) >= scrollWidth - 20) {
+                    scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+                } else {
+                    const firstChild = scrollRef.current
+                        .children[0] as HTMLElement;
+                    const itemWidth = firstChild
+                        ? firstChild.offsetWidth + 16
+                        : clientWidth * 0.85;
+                    scrollRef.current.scrollBy({
+                        left: itemWidth,
+                        behavior: "smooth",
+                    });
+                }
+            }
+        }, 3500);
 
         return () => clearInterval(timer);
-    }, [randomizedTestimonials.length, isPaused]);
+    }, [state.randomized.length, isPaused]);
 
-    const slideVariants = {
-        enter: (direction: number) => ({
-            x: direction > 0 ? "100%" : "-100%",
-            opacity: 0,
-        }),
-        center: {
-            zIndex: 1,
-            x: 0,
-            opacity: 1,
-        },
-        exit: (direction: number) => ({
-            zIndex: 0,
-            x: direction < 0 ? "100%" : "-100%",
-            opacity: 0,
-        }),
-    };
+    if (state.randomized.length === 0) return null;
 
-    const swipeConfidenceThreshold = 10000;
-    const swipePower = (offset: number, velocity: number) => {
-        return Math.abs(offset) * velocity;
-    };
-
-    const handleDragEnd = (
-        _e: MouseEvent | TouchEvent | PointerEvent,
-        { offset, velocity }: { offset: { x: number }; velocity: { x: number } }
-    ) => {
-        const swipe = swipePower(offset.x, velocity.x);
-
-        if (swipe < -swipeConfidenceThreshold) {
-            setDirection(1);
-            setCurrentIndex(
-                (prev) => (prev + 1) % randomizedTestimonials.length
-            );
-        } else if (swipe > swipeConfidenceThreshold) {
-            setDirection(-1);
-            setCurrentIndex(
-                (prev) =>
-                    (prev - 1 + randomizedTestimonials.length) %
-                    randomizedTestimonials.length
-            );
-        }
-    };
-
-    if (randomizedTestimonials.length === 0) return null;
-
-    const testimonial = randomizedTestimonials[currentIndex];
+    const testimonial = state.randomized[state.currentIndex];
 
     return (
         <section className="py-12 md:py-24 lg:py-32 overflow-hidden">
@@ -132,108 +144,75 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 </p>
             </div>
 
-            {/* Mobile View - AnimatePresence Carousel */}
+            {/* Mobile View - Native Auto/Manual Scroll Container */}
             <div
-                className="md:hidden container mx-auto px-4 relative flex w-full flex-col items-center justify-center min-h-[400px] overflow-hidden"
+                className="md:hidden w-full relative"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
                 onTouchStart={() => setIsPaused(true)}
                 onTouchEnd={() => setIsPaused(false)}
             >
-                <div className="relative w-full h-[300px] flex items-center justify-center">
-                    <AnimatePresence
-                        initial={false}
-                        custom={direction}
-                        mode="popLayout"
-                    >
-                        <motion.div
-                            key={currentIndex}
-                            custom={direction}
-                            variants={slideVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                                x: {
-                                    type: "spring",
-                                    stiffness: 300,
-                                    damping: 30,
-                                },
-                                opacity: { duration: 0.2 },
-                            }}
-                            drag="x"
-                            dragConstraints={{ left: 0, right: 0 }}
-                            dragElastic={1}
-                            onDragEnd={handleDragEnd}
-                            className="absolute w-full h-full cursor-grab active:cursor-grabbing px-2"
+                <div
+                    ref={scrollRef}
+                    className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 py-8 scroll-smooth no-scrollbar"
+                >
+                    {state.randomized.map((testimonial) => (
+                        <Card
+                            key={testimonial.name}
+                            className="w-[85vw] max-w-[350px] flex-none snap-center snap-always border border-zinc-200/50 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md shadow-xl"
                         >
-                            <Card className="w-full h-full border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl shadow-2xl">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-10 w-10 border border-zinc-200 dark:border-white/10">
-                                                <AvatarImage
-                                                    src={testimonial.image}
-                                                    alt={testimonial.name}
-                                                />
-                                                <AvatarFallback className="bg-primary/5 text-primary text-xs font-medium">
-                                                    {testimonial.name
-                                                        .split(" ")
-                                                        .map((n) => n[0])
-                                                        .join("")}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <h3 className="font-semibold text-sm leading-none mb-1.5">
-                                                    {testimonial.name}
-                                                </h3>
-                                                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
-                                                    <span>
-                                                        {testimonial.project}
-                                                    </span>
-                                                    {testimonial.platform && (
-                                                        <>
-                                                            <span className="text-border">
-                                                                •
-                                                            </span>
-                                                            <span className="text-foreground/60">
-                                                                {
-                                                                    testimonial.platform
-                                                                }
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                </div>
+                            <CardHeader className="pb-4">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-10 w-10 border border-zinc-200 dark:border-white/10">
+                                            <AvatarImage
+                                                src={testimonial.image}
+                                                alt={testimonial.name}
+                                            />
+                                            <AvatarFallback className="bg-primary/5 text-primary text-xs font-medium">
+                                                {testimonial.name
+                                                    .split(" ")
+                                                    .filter((word) => !/^(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?|Sir|Sr\.?|Jr\.?)$/i.test(word))
+                                                    .map((n) => n[0])
+                                                    .join("")
+                                                    .slice(0, 2)
+                                                    .toUpperCase()}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <h3 className="font-semibold text-sm leading-none mb-1.5">
+                                                {testimonial.name}
+                                            </h3>
+                                            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
+                                                <span>
+                                                    {testimonial.project}
+                                                </span>
+                                                {testimonial.platform && (
+                                                    <>
+                                                        <span className="text-border">
+                                                            •
+                                                        </span>
+                                                        <span className="text-foreground/60">
+                                                            {
+                                                                testimonial.platform
+                                                            }
+                                                        </span>
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-1.5">
-                                            <StarRating
-                                                stars={testimonial.stars}
-                                            />
-                                        </div>
                                     </div>
-                                </CardHeader>
-                                <CardContent className="pt-0">
-                                    <p className="text-[15px] text-foreground/90 leading-relaxed font-normal">
-                                        {testimonial.content}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
-
-                {/* Indicators */}
-                <div className="flex gap-2 mt-8 z-10">
-                    {randomizedTestimonials.map((_, index) => (
-                        <div
-                            key={index}
-                            className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
-                                index === currentIndex
-                                    ? "bg-foreground w-4"
-                                    : "bg-foreground/20"
-                            }`}
-                        />
+                                    <div className="flex flex-col items-end gap-1.5">
+                                        <StarRating stars={testimonial.stars} />
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                                <p className="text-[15px] text-foreground/90 leading-relaxed font-normal">
+                                    {testimonial.content}
+                                </p>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             </div>
@@ -241,9 +220,9 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             {/* Desktop View - Marquee */}
             <div className="hidden md:flex relative w-full flex-col items-center justify-center overflow-hidden">
                 <Marquee pauseOnHover className="[--duration:40s] py-12">
-                    {randomizedTestimonials.map((testimonial, index) => (
+                    {state.randomized.map((testimonial) => (
                         <Card
-                            key={index}
+                            key={testimonial.name}
                             className="w-[450px] flex-none border border-zinc-200/50 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md transition-all duration-300 hover:border-zinc-300/50 dark:hover:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/60 mx-6 shadow-xl"
                         >
                             <CardHeader className="pb-5">
@@ -257,8 +236,11 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                                             <AvatarFallback className="bg-primary/5 text-primary text-sm font-medium">
                                                 {testimonial.name
                                                     .split(" ")
+                                                    .filter((word) => !/^(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?|Sir|Sr\.?|Jr\.?)$/i.test(word))
                                                     .map((n) => n[0])
-                                                    .join("")}
+                                                    .join("")
+                                                    .slice(0, 2)
+                                                    .toUpperCase()}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>

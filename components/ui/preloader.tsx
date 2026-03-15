@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useLayoutEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 
 export function Preloader() {
     const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +94,7 @@ export function Preloader() {
     return (
         <AnimatePresence mode="wait">
             {isLoading && (
-                <motion.div
+                <m.div
                     className="fixed top-0 left-0 right-0 z-[100] h-1"
                     initial={{ opacity: 1 }}
                     exit={{
@@ -109,7 +109,7 @@ export function Preloader() {
                     <div className="h-full w-full bg-muted" />
 
                     {/* Progress bar */}
-                    <motion.div
+                    <m.div
                         className="absolute top-0 left-0 h-full bg-primary"
                         initial={{ width: "0%" }}
                         animate={{ width: `${progress}%` }}
@@ -118,7 +118,7 @@ export function Preloader() {
                             ease: "easeOut",
                         }}
                     />
-                </motion.div>
+                </m.div>
             )}
         </AnimatePresence>
     );

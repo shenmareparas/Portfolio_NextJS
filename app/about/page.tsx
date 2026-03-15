@@ -6,6 +6,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { FadeIn } from "@/components/motion/fade-in";
+import { RenderedIcon } from "@/components/ui/rendered-icon";
 
 export const metadata = {
     title: "About",
@@ -19,8 +20,8 @@ export default function AboutPage() {
             <section className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight">About Me</h1>
                 <div className="prose dark:prose-invert max-w-none text-muted-foreground text-lg leading-relaxed">
-                    {profile.bio.map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
+                    {profile.bio.map((paragraph) => (
+                        <p key={paragraph}>{paragraph}</p>
                     ))}
                 </div>
             </section>
@@ -44,7 +45,10 @@ export default function AboutPage() {
                                     className="gap-2"
                                 >
                                     {skill.icon && (
-                                        <skill.icon className="h-4 w-4" />
+                                        <RenderedIcon
+                                            icon={skill.icon}
+                                            className="h-4 w-4"
+                                        />
                                     )}
                                     {skill.name}
                                 </Badge>
@@ -67,7 +71,10 @@ export default function AboutPage() {
                                     className="gap-2"
                                 >
                                     {skill.icon && (
-                                        <skill.icon className="h-4 w-4" />
+                                        <RenderedIcon
+                                            icon={skill.icon}
+                                            className="h-4 w-4"
+                                        />
                                     )}
                                     {skill.name}
                                 </Badge>
@@ -90,7 +97,10 @@ export default function AboutPage() {
                                     className="gap-2"
                                 >
                                     {skill.icon && (
-                                        <skill.icon className="h-4 w-4" />
+                                        <RenderedIcon
+                                            icon={skill.icon}
+                                            className="h-4 w-4"
+                                        />
                                     )}
                                     {skill.name}
                                 </Badge>
@@ -113,7 +123,10 @@ export default function AboutPage() {
                                     className="gap-2"
                                 >
                                     {skill.icon && (
-                                        <skill.icon className="h-4 w-4" />
+                                        <RenderedIcon
+                                            icon={skill.icon}
+                                            className="h-4 w-4"
+                                        />
                                     )}
                                     {skill.name}
                                 </Badge>
@@ -136,7 +149,10 @@ export default function AboutPage() {
                                     className="gap-2"
                                 >
                                     {skill.icon && (
-                                        <skill.icon className="h-4 w-4" />
+                                        <RenderedIcon
+                                            icon={skill.icon}
+                                            className="h-4 w-4"
+                                        />
                                     )}
                                     {skill.name}
                                 </Badge>
@@ -158,9 +174,9 @@ export default function AboutPage() {
             <section className="space-y-6">
                 <h2 className="text-3xl font-bold tracking-tight">Education</h2>
                 <div className="space-y-8">
-                    {education.map((edu, index) => (
+                    {education.map((edu) => (
                         <div
-                            key={index}
+                            key={edu.institution}
                             className="relative border-l border-muted-foreground/20 pl-6 pb-2"
                         >
                             <div className="absolute -left-[5px] top-0 h-2.5 w-2.5 rounded-full bg-primary" />
@@ -189,9 +205,9 @@ export default function AboutPage() {
                     Certifications
                 </h2>
                 <div className="grid gap-4 sm:grid-cols-2">
-                    {certifications.map((cert, index) => (
+                    {certifications.map((cert) => (
                         <Link
-                            key={index}
+                            key={cert.name}
                             href={cert.link}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -219,9 +235,9 @@ export default function AboutPage() {
                     Achievements
                 </h2>
                 <div className="space-y-4">
-                    {achievements.map((achievement, index) => (
+                    {achievements.map((achievement) => (
                         <div
-                            key={index}
+                            key={achievement}
                             className="flex items-center gap-3 rounded-lg border bg-card text-card-foreground shadow-sm p-4"
                         >
                             <div className="h-2 w-2 rounded-full bg-primary" />

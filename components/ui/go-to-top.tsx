@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
@@ -19,7 +19,7 @@ export function GoToTop() {
             }
         };
 
-        window.addEventListener("scroll", toggleVisibility);
+        window.addEventListener("scroll", toggleVisibility, { passive: true });
 
         return () => {
             window.removeEventListener("scroll", toggleVisibility);
@@ -37,7 +37,7 @@ export function GoToTop() {
     return (
         <AnimatePresence>
             {isVisible && (
-                <motion.div
+                <m.div
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
@@ -53,7 +53,7 @@ export function GoToTop() {
                     >
                         <ArrowUp className="h-6 w-6" />
                     </Button>
-                </motion.div>
+                </m.div>
             )}
         </AnimatePresence>
     );

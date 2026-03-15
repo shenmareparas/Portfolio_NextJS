@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useNavigation } from "@/components/providers/navigation-provider";
 import { ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -49,7 +49,7 @@ export function ProjectCard({
             : project.accentColor;
 
     return (
-        <motion.div
+        <m.div
             initial={
                 shouldAnimate ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }
             }
@@ -153,6 +153,6 @@ export function ProjectCard({
                     </div>
                 </CardContent>
             </Card>
-        </motion.div>
+        </m.div>
     );
 }

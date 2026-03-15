@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { expertise } from "@/data/expertise";
 import {
     ChevronDown,
@@ -71,7 +71,7 @@ export function Expertise() {
                             </button>
                             <AnimatePresence initial={false}>
                                 {openItem === item.id && (
-                                    <motion.div
+                                    <m.div
                                         initial={{ height: 0, opacity: 0 }}
                                         animate={{ height: "auto", opacity: 1 }}
                                         exit={{ height: 0, opacity: 0 }}
@@ -83,7 +83,7 @@ export function Expertise() {
                                         <div className="px-6 pb-6 pt-0 text-muted-foreground leading-relaxed pl-[4.5rem]">
                                             {item.description}
                                         </div>
-                                    </motion.div>
+                                    </m.div>
                                 )}
                             </AnimatePresence>
                         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useNavigation } from "@/components/providers/navigation-provider";
 
@@ -15,7 +15,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
         previousPath !== "/projects";
 
     return (
-        <motion.div
+        <m.div
             initial={
                 isBackFromProjectDetails
                     ? { opacity: 1 }
@@ -28,6 +28,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
             className="flex-1 flex flex-col"
         >
             {children}
-        </motion.div>
+        </m.div>
     );
 }
