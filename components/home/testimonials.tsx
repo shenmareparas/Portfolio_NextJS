@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -58,7 +58,10 @@ function testimonialsReducer(
                 const j = Math.floor(Math.random() * (i + 1));
                 [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
             }
-            if (shuffled.length > 1 && shuffled[0].name === shuffled[shuffled.length - 1].name) {
+            if (
+                shuffled.length > 1 &&
+                shuffled[0].name === shuffled[shuffled.length - 1].name
+            ) {
                 const mid = Math.floor(shuffled.length / 2);
                 [shuffled[0], shuffled[mid]] = [shuffled[mid], shuffled[0]];
             }
@@ -68,7 +71,11 @@ function testimonialsReducer(
                 direction: 0,
             };
         case "SET_INDEX":
-            return { ...state, currentIndex: action.index, direction: action.direction };
+            return {
+                ...state,
+                currentIndex: action.index,
+                direction: action.direction,
+            };
         case "NEXT_SLIDE":
             return {
                 ...state,
@@ -79,7 +86,8 @@ function testimonialsReducer(
             return {
                 ...state,
                 direction: -1,
-                currentIndex: (state.currentIndex - 1 + action.length) % action.length,
+                currentIndex:
+                    (state.currentIndex - 1 + action.length) % action.length,
             };
         default:
             return state;
@@ -94,53 +102,32 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
     });
     const [isPaused, setIsPaused] = useState(false);
 
-    useEffect(() => {
-        dispatch({ type: "SHUFFLE", testimonials });
-    }, [testimonials]);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (isPaused || state.randomized.length <= 1) return;
         const timer = setInterval(() => {
-            dispatch({ type: "NEXT_SLIDE", length: state.randomized.length });
-        }, 5000);
+            if (scrollRef.current && window.innerWidth < 768) {
+                const { scrollLeft, scrollWidth, clientWidth } =
+                    scrollRef.current;
+                if (Math.ceil(scrollLeft + clientWidth) >= scrollWidth - 20) {
+                    scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+                } else {
+                    const firstChild = scrollRef.current
+                        .children[0] as HTMLElement;
+                    const itemWidth = firstChild
+                        ? firstChild.offsetWidth + 16
+                        : clientWidth * 0.85;
+                    scrollRef.current.scrollBy({
+                        left: itemWidth,
+                        behavior: "smooth",
+                    });
+                }
+            }
+        }, 3500);
 
         return () => clearInterval(timer);
     }, [state.randomized.length, isPaused]);
-
-    const slideVariants = {
-        enter: (direction: number) => ({
-            x: direction > 0 ? "100%" : "-100%",
-            opacity: 0,
-        }),
-        center: {
-            zIndex: 1,
-            x: 0,
-            opacity: 1,
-        },
-        exit: (direction: number) => ({
-            zIndex: 0,
-            x: direction < 0 ? "100%" : "-100%",
-            opacity: 0,
-        }),
-    };
-
-    const swipeConfidenceThreshold = 10000;
-    const swipePower = (offset: number, velocity: number) => {
-        return Math.abs(offset) * velocity;
-    };
-
-    const handleDragEnd = (
-        _e: MouseEvent | TouchEvent | PointerEvent,
-        { offset, velocity }: { offset: { x: number }; velocity: { x: number } }
-    ) => {
-        const swipe = swipePower(offset.x, velocity.x);
-
-        if (swipe < -swipeConfidenceThreshold) {
-            dispatch({ type: "NEXT_SLIDE", length: state.randomized.length });
-        } else if (swipe > swipeConfidenceThreshold) {
-            dispatch({ type: "PREV_SLIDE", length: state.randomized.length });
-        }
-    };
 
     if (state.randomized.length === 0) return null;
 
@@ -157,108 +144,72 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                 </p>
             </div>
 
-            {/* Mobile View - AnimatePresence Carousel */}
+            {/* Mobile View - Native Auto/Manual Scroll Container */}
             <div
-                className="md:hidden container mx-auto px-4 relative flex w-full flex-col items-center justify-center min-h-[400px] overflow-hidden"
+                className="md:hidden w-full relative"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
                 onTouchStart={() => setIsPaused(true)}
                 onTouchEnd={() => setIsPaused(false)}
             >
-                <div className="relative w-full h-[300px] flex items-center justify-center">
-                    <AnimatePresence
-                        initial={false}
-                        custom={state.direction}
-                        mode="popLayout"
-                    >
-                        <m.div
-                            key={state.currentIndex}
-                            custom={state.direction}
-                            variants={slideVariants}
-                            initial="enter"
-                            animate="center"
-                            exit="exit"
-                            transition={{
-                                x: {
-                                    type: "spring",
-                                    stiffness: 300,
-                                    damping: 30,
-                                },
-                                opacity: { duration: 0.2 },
-                            }}
-                            drag="x"
-                            dragConstraints={{ left: 0, right: 0 }}
-                            dragElastic={1}
-                            onDragEnd={handleDragEnd}
-                            className="absolute w-full h-full cursor-grab active:cursor-grabbing px-2"
+                <div
+                    ref={scrollRef}
+                    className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 py-8 scroll-smooth no-scrollbar"
+                >
+                    {state.randomized.map((testimonial) => (
+                        <Card
+                            key={testimonial.name}
+                            className="w-[85vw] max-w-[350px] flex-none snap-center snap-always border border-zinc-200/50 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md shadow-xl"
                         >
-                            <Card className="w-full h-full border border-zinc-200 dark:border-white/10 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl shadow-2xl">
-                                <CardHeader className="pb-4">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-10 w-10 border border-zinc-200 dark:border-white/10">
-                                                <AvatarImage
-                                                    src={testimonial.image}
-                                                    alt={testimonial.name}
-                                                />
-                                                <AvatarFallback className="bg-primary/5 text-primary text-xs font-medium">
-                                                    {testimonial.name
-                                                        .split(" ")
-                                                        .map((n) => n[0])
-                                                        .join("")}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <h3 className="font-semibold text-sm leading-none mb-1.5">
-                                                    {testimonial.name}
-                                                </h3>
-                                                <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
-                                                    <span>
-                                                        {testimonial.project}
-                                                    </span>
-                                                    {testimonial.platform && (
-                                                        <>
-                                                            <span className="text-border">
-                                                                •
-                                                            </span>
-                                                            <span className="text-foreground/60">
-                                                                {
-                                                                    testimonial.platform
-                                                                }
-                                                            </span>
-                                                        </>
-                                                    )}
-                                                </div>
+                            <CardHeader className="pb-4">
+                                <div className="flex items-start justify-between">
+                                    <div className="flex items-center gap-3">
+                                        <Avatar className="h-10 w-10 border border-zinc-200 dark:border-white/10">
+                                            <AvatarImage
+                                                src={testimonial.image}
+                                                alt={testimonial.name}
+                                            />
+                                            <AvatarFallback className="bg-primary/5 text-primary text-xs font-medium">
+                                                {testimonial.name
+                                                    .split(" ")
+                                                    .map((n) => n[0])
+                                                    .join("")}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                            <h3 className="font-semibold text-sm leading-none mb-1.5">
+                                                {testimonial.name}
+                                            </h3>
+                                            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground font-medium">
+                                                <span>
+                                                    {testimonial.project}
+                                                </span>
+                                                {testimonial.platform && (
+                                                    <>
+                                                        <span className="text-border">
+                                                            •
+                                                        </span>
+                                                        <span className="text-foreground/60">
+                                                            {
+                                                                testimonial.platform
+                                                            }
+                                                        </span>
+                                                    </>
+                                                )}
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-end gap-1.5">
-                                            <StarRating
-                                                stars={testimonial.stars}
-                                            />
-                                        </div>
                                     </div>
-                                </CardHeader>
-                                <CardContent className="pt-0">
-                                    <p className="text-[15px] text-foreground/90 leading-relaxed font-normal">
-                                        {testimonial.content}
-                                    </p>
-                                </CardContent>
-                            </Card>
-                        </m.div>
-                    </AnimatePresence>
-                </div>
-
-                {/* Indicators */}
-                <div className="flex gap-2 mt-8 z-10">
-                    {state.randomized.map((t, index) => (
-                        <div
-                            key={t.name}
-                            className={`h-1.5 w-1.5 rounded-full transition-all duration-300 ${
-                                index === state.currentIndex
-                                    ? "bg-foreground w-4"
-                                    : "bg-foreground/20"
-                            }`}
-                        />
+                                    <div className="flex flex-col items-end gap-1.5">
+                                        <StarRating stars={testimonial.stars} />
+                                    </div>
+                                </div>
+                            </CardHeader>
+                            <CardContent className="pt-0">
+                                <p className="text-[15px] text-foreground/90 leading-relaxed font-normal">
+                                    {testimonial.content}
+                                </p>
+                            </CardContent>
+                        </Card>
                     ))}
                 </div>
             </div>
