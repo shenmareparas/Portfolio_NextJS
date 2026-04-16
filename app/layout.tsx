@@ -7,12 +7,10 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { NavigationProvider } from "@/components/providers/navigation-provider";
 import { LoadingProvider } from "@/components/providers/loading-provider";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import { ClientLayout } from "@/components/layout/client-layout";
 import { Toaster } from "@/components/ui/toaster";
 import { CustomCursor } from "@/components/ui/custom-cursor";
 import { Preloader } from "@/components/ui/preloader";
-import { GoToTop } from "@/components/ui/go-to-top";
 import { siteConfig } from "@/data/config";
 import { PortraitLock } from "@/components/ui/portrait-lock";
 
@@ -89,12 +87,7 @@ export default function RootLayout({
                             <LoadingProvider>
                                 <Preloader />
                                 <CustomCursor />
-                                <Header />
-                                <GoToTop />
-                                <main className="flex-1 flex flex-col pt-16 pb-20 md:pb-16">
-                                    {children}
-                                </main>
-                                <Footer />
+                                <ClientLayout>{children}</ClientLayout>
                                 <Toaster />
                             </LoadingProvider>
                         </NavigationProvider>

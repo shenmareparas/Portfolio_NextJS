@@ -21,6 +21,8 @@ export const siteConfig = {
         "Portfolio",
         "Creative Developer",
         "UI/UX Design",
+        "Digital Business Card",
+        "QR Contact Card",
     ],
     url: "https://parasnextjs.vercel.app",
     contactFormUrl: "https://formspree.io/f/manwypwk",
