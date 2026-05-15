@@ -71,7 +71,7 @@ export const projects: Project[] = [
         description:
             "Feature-rich chess app with AI opponent and online multiplayer.",
         fullDescription:
-            "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Includes Stockfish-level AI, online multiplayer, puzzles, and educational content. Gained 150,000+ downloads and 35,000 active users in the first quarter. Maintained 4+ star rating on Play Store.",
+            "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Includes Stockfish-level AI, online multiplayer, puzzles, and educational content. Gained 750,000+ downloads and 35,000 active users in the first quarter. Maintained 4+ star rating on Play Store.",
         tags: ["Flutter", "Dart", "Flame Engine", "Chess AI", "Android", "iOS"],
         role: "Lead Developer",
         timeline: "2023 - 2024",

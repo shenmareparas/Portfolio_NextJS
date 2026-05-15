@@ -2,8 +2,26 @@ import { Experience } from "@/types/experience";
 
 export const experience: Experience[] = [
     {
+        company: "IBSS Group of Institutions",
+        role: "Software Developer Team Lead",
+        dates: "Jan 2026 – Feb 2026",
+        description: [
+            "Build and developed an app.",
+        ],
+        tech: [
+            "Flutter",
+            "Dart",
+            "Firebase",
+            "Provider",
+            "Git",
+            "Android",
+            "iOS",
+            "Javascript"
+        ],
+    },
+    {
         company: "ShoppCard",
-        role: "App Dev Project Lead",
+        role: "Mobile Application Developer Project Team Lead",
         dates: "Aug 2025 – Nov 2025",
         description: [
             "Led a team of 5 developers to successfully build and deliver a Flutter-based Office Management mobile application on time with 100% deadline adherence.",
