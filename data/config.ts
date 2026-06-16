@@ -24,7 +24,7 @@ export const siteConfig = {
         "Digital Business Card",
         "QR Contact Card",
     ],
-    url: "https://parasnextjs.vercel.app",
+    url: "https://shenmareparas.vercel.app",
     contactFormUrl: "https://formspree.io/f/manwypwk",
     footer: {
         copyright: `© ${new Date().getFullYear()} Paras Shenmare. All rights reserved.`,
