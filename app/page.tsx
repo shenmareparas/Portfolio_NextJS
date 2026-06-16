@@ -18,6 +18,9 @@ export const metadata: Metadata = {
         absolute: profile.fullName,
     },
     description: siteConfig.description,
+    verification: {
+        google: "BL8qYWOaDd-2ODnXJxJU1Zr0LjTdtjPBvde1lJnhje0",
+    },
 };
 
 export default function Home() {
