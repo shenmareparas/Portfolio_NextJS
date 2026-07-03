@@ -13,9 +13,14 @@ import {
 import { profile } from "@/data/profile";
 import { RenderedIcon } from "@/components/ui/rendered-icon";
 
-export const metadata = {
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
     title: "Contact",
     description: "Get in touch with me for opportunities or collaborations.",
+    alternates: {
+        canonical: "/contact",
+    },
 };
 
 export default function ContactPage() {

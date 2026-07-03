@@ -36,6 +36,9 @@ export async function generateMetadata({ params }: ProjectPageProps) {
     return {
         title: project.title,
         description: project.description,
+        alternates: {
+            canonical: `/projects/${slug}`,
+        },
     };
 }
 

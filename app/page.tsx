@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     verification: {
         google: "BL8qYWOaDd-2ODnXJxJU1Zr0LjTdtjPBvde1lJnhje0",
     },
+    alternates: {
+        canonical: "/",
+    },
 };
 
 export default function Home() {

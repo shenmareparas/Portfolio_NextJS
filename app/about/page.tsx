@@ -8,9 +8,14 @@ import { Badge } from "@/components/ui/badge";
 import { FadeIn } from "@/components/motion/fade-in";
 import { RenderedIcon } from "@/components/ui/rendered-icon";
 
-export const metadata = {
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
     title: "About",
     description: "Learn more about my background, skills, and education.",
+    alternates: {
+        canonical: "/about",
+    },
 };
 
 export default function AboutPage() {

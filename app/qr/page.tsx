@@ -15,6 +15,9 @@ export const metadata: Metadata = {
         title: `Connect with ${profile.fullName}`,
         description: `Digital business card for ${profile.fullName}`,
     },
+    alternates: {
+        canonical: "/qr",
+    },
 };
 
 export default function QrPage() {
