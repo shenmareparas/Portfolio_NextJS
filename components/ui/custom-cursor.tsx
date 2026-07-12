@@ -58,6 +58,8 @@ export const CustomCursor = () => {
     );
 };
 
+const springConfig = { damping: 35, stiffness: 400, mass: 0.1 };
+
 const CursorInner = ({
     initialX,
     initialY,
@@ -68,7 +70,6 @@ const CursorInner = ({
     const mouseX = useMotionValue(initialX);
     const mouseY = useMotionValue(initialY);
 
-    const springConfig = { damping: 35, stiffness: 400, mass: 0.1 };
     const springX = useSpring(mouseX, springConfig);
     const springY = useSpring(mouseY, springConfig);
 
@@ -76,7 +77,7 @@ const CursorInner = ({
     const cursorY = useTransform(springY, (y) => y - 40);
 
     const [interactState, dispatchInteract] = useReducer(
-        (state: any, action: any) => ({ ...state, ...action }),
+        (state: { isHovering: boolean; isDragging: boolean }, action: Partial<{ isHovering: boolean; isDragging: boolean }>) => ({ ...state, ...action }),
         { isHovering: false, isDragging: false }
     );
 

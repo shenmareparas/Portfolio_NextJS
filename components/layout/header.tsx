@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { Home, FolderCode, User, Send } from "lucide-react";
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
-import { useState, useEffect, useSyncExternalStore, useReducer } from "react";
+import { useSyncExternalStore } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import { createPortal } from "react-dom";
 
@@ -95,8 +95,7 @@ export function Header() {
                 </div>
             </m.header>
 
-            {/* Mobile Bottom Tab Bar */}
-            {mounted &&
+            {mounted && typeof window !== "undefined" &&
                 createPortal(
                     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
                         <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-border/40">

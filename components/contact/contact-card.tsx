@@ -88,6 +88,7 @@ export function ContactCard({
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <button
+                            type="button"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 e.preventDefault();

@@ -10,12 +10,16 @@ export function ProjectsClient() {
     const [hasHover, setHasHover] = useState(false);
     const { previousPath } = useNavigation();
     const [isRestoring, setIsRestoring] = useState(
-        previousPath?.startsWith("/projects/") && previousPath !== "/projects"
+        () => previousPath?.startsWith("/projects/") && previousPath !== "/projects"
     );
 
     useEffect(() => {
+        let hoverTimer: NodeJS.Timeout | null = null;
+        let restoreTimer: NodeJS.Timeout | null = null;
+        let resetTimer: NodeJS.Timeout | null = null;
+
         // Defer state update to avoid synchronous rendering warning
-        setTimeout(() => {
+        hoverTimer = setTimeout(() => {
             setHasHover(window.matchMedia("(pointer: fine)").matches);
         }, 0);
 
@@ -24,7 +28,7 @@ export function ProjectsClient() {
             const slug = previousPath?.split(/[?#]/)[0].split("/").pop();
             if (slug) {
                 // Use 0ms to run immediately after mount/paint but allow DOM to be ready
-                const timer = setTimeout(() => {
+                restoreTimer = setTimeout(() => {
                     const element = document.getElementById(slug);
                     if (element) {
                         element.scrollIntoView({
@@ -34,11 +38,16 @@ export function ProjectsClient() {
                     }
                     setIsRestoring(false);
                 }, 0);
-                return () => clearTimeout(timer);
             } else {
-                setTimeout(() => setIsRestoring(false), 0);
+                resetTimer = setTimeout(() => setIsRestoring(false), 0);
             }
         }
+
+        return () => {
+            if (hoverTimer) clearTimeout(hoverTimer);
+            if (restoreTimer) clearTimeout(restoreTimer);
+            if (resetTimer) clearTimeout(resetTimer);
+        };
     }, [previousPath, isRestoring]);
 
     const handleHover = (index: number) => {

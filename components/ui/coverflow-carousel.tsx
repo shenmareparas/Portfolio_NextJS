@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback, useReducer, useMemo, useSyncExternalStore } from "react";
-import { flushSync } from "react-dom";
+import React, { useState, useEffect, useRef, useCallback, useReducer } from "react";
+import ReactDOM from "react-dom";
 import { ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
@@ -124,13 +124,11 @@ CarouselCard.displayName = "CarouselCard";
 const NavigationButton = ({
     direction,
     onClick,
-    imagesLength,
     haptic,
 }: {
     direction: "left" | "right";
     onClick: () => void;
-    imagesLength: number;
-    haptic: any;
+    haptic: { trigger: (type?: string) => void };
 }) => {
     const isLeft = direction === "left";
     return (
@@ -251,11 +249,9 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
     const haptic = useMobileHaptics();
     const interactionTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    const subscribe = useCallback(() => () => {}, []);
-    const getSnapshot = useCallback(() => true, []);
-    const getServerSnapshot = useCallback(() => false, []);
-    const mounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
+
+    const containerRef = useRef<HTMLDivElement>(null);
     const [lastTheme, setLastTheme] = useState(resolvedTheme);
     if (resolvedTheme !== lastTheme) {
         setLastTheme(resolvedTheme);
@@ -263,13 +259,15 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
     }
 
     const currentTheme = state.forcedTheme || resolvedTheme || "light";
+    const isDark = currentTheme === "dark";
+    const themeToSet = currentTheme === "light" ? "dark" : "light";
 
     const getImageUrl = useCallback((item: GalleryItem) => {
         if (typeof item === "string") return item;
         // Fallback to light if not mounted or theme not resolved yet
         if (!state.mounted || !resolvedTheme) return item.light;
-        return currentTheme === "dark" ? item.dark : item.light;
-    }, [state.mounted, resolvedTheme, currentTheme]);
+        return isDark ? item.dark : item.light;
+    }, [state.mounted, resolvedTheme, isDark]);
 
     useEffect(() => {
         dispatch({ type: "SET_MOUNTED" });
@@ -317,55 +315,72 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
     const touchEnd = useRef<number | null>(null);
     const minSwipeDistance = 50;
 
-    const onTouchStart = useCallback((e: React.TouchEvent) => {
-        touchEnd.current = null;
-        touchStart.current = e.targetTouches[0].clientX;
-    }, []);
-
-    const onTouchMove = useCallback((e: React.TouchEvent) => {
-        touchEnd.current = e.targetTouches[0].clientX;
-    }, []);
-
-    const onTouchEnd = useCallback(() => {
-        if (!touchStart.current || !touchEnd.current) return;
-        const distance = touchStart.current - touchEnd.current;
-        if (Math.abs(distance) > minSwipeDistance) {
-            haptic.trigger("selection");
-            triggerInteractionPause();
-            if (distance > 0) dispatch({ type: "NEXT_SLIDE", total: images.length });
-            else dispatch({ type: "PREV_SLIDE", total: images.length });
-        }
-    }, [images.length, triggerInteractionPause, haptic]);
-
     const isDraggingRef = useRef(false);
     const mouseStart = useRef<number | null>(null);
 
-    const onMouseDown = useCallback((e: React.MouseEvent) => {
-        isDraggingRef.current = true;
-        mouseStart.current = e.clientX;
-    }, []);
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container) return;
 
-    const onMouseUp = useCallback((e: React.MouseEvent) => {
-        if (!isDraggingRef.current) return;
-        isDraggingRef.current = false;
-        if (mouseStart.current === null) return;
-        const distance = mouseStart.current - e.clientX;
-        if (Math.abs(distance) > minSwipeDistance) {
-            haptic.trigger("selection");
-            triggerInteractionPause();
-            if (distance > 0) dispatch({ type: "NEXT_SLIDE", total: images.length });
-            else dispatch({ type: "PREV_SLIDE", total: images.length });
-        }
+        const handleMouseEnter = () => dispatch({ type: "SET_PAUSED", payload: true });
+        const handleMouseLeave = () => dispatch({ type: "SET_PAUSED", payload: false });
+
+        const handleMouseDown = (e: MouseEvent) => {
+            isDraggingRef.current = true;
+            mouseStart.current = e.clientX;
+        };
+
+        const handleMouseUp = (e: MouseEvent) => {
+            if (!isDraggingRef.current) return;
+            isDraggingRef.current = false;
+            if (mouseStart.current === null) return;
+            const distance = mouseStart.current - e.clientX;
+            if (Math.abs(distance) > minSwipeDistance) {
+                haptic.trigger("selection");
+                triggerInteractionPause();
+                if (distance > 0) dispatch({ type: "NEXT_SLIDE", total: images.length });
+                else dispatch({ type: "PREV_SLIDE", total: images.length });
+            }
+        };
+
+        const handleTouchStart = (e: TouchEvent) => {
+            touchEnd.current = null;
+            touchStart.current = e.targetTouches[0].clientX;
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            touchEnd.current = e.targetTouches[0].clientX;
+        };
+
+        const handleTouchEnd = () => {
+            if (!touchStart.current || !touchEnd.current) return;
+            const distance = touchStart.current - touchEnd.current;
+            if (Math.abs(distance) > minSwipeDistance) {
+                haptic.trigger("selection");
+                triggerInteractionPause();
+                if (distance > 0) dispatch({ type: "NEXT_SLIDE", total: images.length });
+                else dispatch({ type: "PREV_SLIDE", total: images.length });
+            }
+        };
+
+        container.addEventListener("mouseenter", handleMouseEnter);
+        container.addEventListener("mouseleave", handleMouseLeave);
+        container.addEventListener("mousedown", handleMouseDown);
+        window.addEventListener("mouseup", handleMouseUp);
+        container.addEventListener("touchstart", handleTouchStart, { passive: true });
+        container.addEventListener("touchmove", handleTouchMove, { passive: true });
+        container.addEventListener("touchend", handleTouchEnd, { passive: true });
+
+        return () => {
+            container.removeEventListener("mouseenter", handleMouseEnter);
+            container.removeEventListener("mouseleave", handleMouseLeave);
+            container.removeEventListener("mousedown", handleMouseDown);
+            window.removeEventListener("mouseup", handleMouseUp);
+            container.removeEventListener("touchstart", handleTouchStart);
+            container.removeEventListener("touchmove", handleTouchMove);
+            container.removeEventListener("touchend", handleTouchEnd);
+        };
     }, [images.length, triggerInteractionPause, haptic]);
-
-    const onPillDrag = useCallback((currentX: number, pillDragStart: number) => {
-        const containerWidth = 1000; // Simplified for this example
-        const totalSlides = Math.max(1, images.length - 1);
-        const pixelsPerSlide = containerWidth / totalSlides;
-        const offset = (currentX - pillDragStart) / pixelsPerSlide;
-        const clampedOffset = Math.max(-state.active, Math.min(images.length - 1 - state.active, offset));
-        dispatch({ type: "SET_DRAG_OFFSET", payload: clampedOffset });
-    }, [images.length, state.active]);
 
     const handleCardClick = useCallback((index: number) => {
         if (index === state.active) return;
@@ -378,10 +393,10 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
         e.stopPropagation();
         haptic.trigger("light");
         const switchTheme = () => {
-            flushSync(() => {
+            ReactDOM.flushSync(() => {
                 dispatch({
                     type: "SET_FORCED_THEME",
-                    payload: currentTheme === "light" ? "dark" : "light"
+                    payload: themeToSet
                 });
             });
         };
@@ -401,26 +416,19 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
                 }
             );
         });
-    }, [currentTheme, haptic]);
+    }, [themeToSet, haptic, dispatch]);
 
     const effectiveActive = Math.round(state.active + state.dragOffset);
     const normalizedActive = ((effectiveActive % images.length) + images.length) % images.length;
 
     return (
-        <section
-            role="region"
+        <div
+            ref={containerRef}
             aria-label="Image Carousel"
             className={cn("relative w-full max-w-6xl mx-auto py-12 xl:flex xl:flex-col", className)}
-            onMouseEnter={() => dispatch({ type: "SET_PAUSED", payload: true })}
-            onMouseLeave={() => dispatch({ type: "SET_PAUSED", payload: false })}
-            onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}
-            onTouchStart={onTouchStart}
-            onTouchMove={onTouchMove}
-            onTouchEnd={onTouchEnd}
         >
             <div className="relative w-full h-[800px] xl:h-auto xl:flex-1 xl:min-h-0 flex items-center justify-center [perspective:500px] [transform-style:preserve-3d] overflow-hidden">
-                <NavigationButton direction="left" imagesLength={images.length} haptic={haptic} onClick={() => { triggerInteractionPause(); dispatch({ type: "PREV_SLIDE", total: images.length }); }} />
+                <NavigationButton direction="left" haptic={haptic} onClick={() => { triggerInteractionPause(); dispatch({ type: "PREV_SLIDE", total: images.length }); }} />
                 
                 {images.map((item, i) => {
                     const itemKey = typeof item === "string" ? item : item.light;
@@ -437,7 +445,7 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
                     );
                 })}
 
-                <NavigationButton direction="right" imagesLength={images.length} haptic={haptic} onClick={() => { triggerInteractionPause(); dispatch({ type: "NEXT_SLIDE", total: images.length }); }} />
+                <NavigationButton direction="right" haptic={haptic} onClick={() => { triggerInteractionPause(); dispatch({ type: "NEXT_SLIDE", total: images.length }); }} />
 
                 {images.some((img) => typeof img !== "string") && (
                     <ThemeToggle currentTheme={currentTheme} toggleTheme={toggleTheme} />
@@ -461,6 +469,6 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
                     })}
                 </div>
             </div>
-        </section>
+        </div>
     );
 }

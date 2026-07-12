@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { m, AnimatePresence } from "framer-motion";
 import { expertise } from "@/data/expertise";
 import {
     ChevronDown,
@@ -49,6 +48,7 @@ export function Expertise() {
                             className="border border-zinc-200 dark:border-white/10 rounded-xl bg-card text-card-foreground shadow-sm overflow-hidden"
                         >
                             <button
+                                type="button"
                                 onClick={() => toggleItem(item.id)}
                                 className="flex w-full items-center justify-between p-6 text-left font-medium transition-all hover:bg-muted/50"
                             >
@@ -69,23 +69,18 @@ export function Expertise() {
                                     )}
                                 />
                             </button>
-                            <AnimatePresence initial={false}>
-                                {openItem === item.id && (
-                                    <m.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: "auto", opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{
-                                            duration: 0.3,
-                                            ease: "easeInOut",
-                                        }}
-                                    >
-                                        <div className="px-6 pb-6 pt-0 text-muted-foreground leading-relaxed pl-[4.5rem]">
-                                            {item.description}
-                                        </div>
-                                    </m.div>
+                            <div
+                                className={cn(
+                                    "grid transition-[grid-template-rows,opacity] duration-300 ease-in-out",
+                                    openItem === item.id ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                                 )}
-                            </AnimatePresence>
+                            >
+                                <div className="overflow-hidden">
+                                    <div className="px-6 pb-6 pt-0 text-muted-foreground leading-relaxed pl-[4.5rem]">
+                                        {item.description}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     );
                 })}

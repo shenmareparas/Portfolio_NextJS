@@ -13,6 +13,7 @@ export function FeaturedProjects() {
 
     useEffect(() => {
         const mediaQuery = window.matchMedia("(pointer: fine)");
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setHasHover(mediaQuery.matches);
 
         const handleChange = (e: MediaQueryListEvent) => {

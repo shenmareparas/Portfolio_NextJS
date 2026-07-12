@@ -112,6 +112,7 @@ END:VCARD`;
                             <span className="text-[10px] sm:text-xs font-semibold">Email</span>
                         </a>
                         <button
+                            type="button"
                             onClick={generateVCard}
                             className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-all hover:bg-primary/20 active:scale-95"
                         >

@@ -8,7 +8,7 @@ export function ExperienceTimeline() {
     return (
         <div className="max-w-4xl mx-auto space-y-8">
             {experienceData.map((job, index) => (
-                <div key={index}>
+                <div key={`${job.company}-${job.role}`}>
                     <Card className="border-none shadow-none bg-transparent">
                         <CardContent className="p-0">
                             <div className="grid md:grid-cols-[300px_1fr] gap-8 md:gap-12">
@@ -42,9 +42,9 @@ export function ExperienceTimeline() {
                                 {/* Right Column: Details */}
                                 <div className="space-y-4">
                                     <ul className="list-disc list-outside ml-4 space-y-3 text-muted-foreground">
-                                        {job.description.map((point, i) => (
+                                        {job.description.map((point) => (
                                             <li
-                                                key={i}
+                                                key={point}
                                                 className="leading-relaxed pl-1"
                                             >
                                                 {point}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useMemo } from "react";
 import { usePathname } from "next/navigation";
 
 const NavigationContext = createContext<{ previousPath: string | null }>({
@@ -21,8 +21,10 @@ export function NavigationProvider({
         setCurrentPath(pathname);
     }
 
+    const contextValue = useMemo(() => ({ previousPath }), [previousPath]);
+
     return (
-        <NavigationContext.Provider value={{ previousPath }}>
+        <NavigationContext.Provider value={contextValue}>
             {children}
         </NavigationContext.Provider>
     );

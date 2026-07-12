@@ -27,60 +27,57 @@ export function Preloader() {
 
         const storageKey = "preloader_shown";
 
-        // Check if page is already loaded (cached/fast navigation)
-        const isPageReady = document.readyState === "complete";
-
+        const isPageReady = typeof document !== "undefined" ? document.readyState === "complete" : false;
+        const progressRef = { current: 0 };
         // eslint-disable-next-line
         let trickleInterval: NodeJS.Timeout;
 
         // NProgress-style "Trickle" Logic
         const trickle = () => {
-            setProgress((prev) => {
-                if (prev >= 100) {
-                    clearInterval(trickleInterval);
-                    return 100;
-                }
+            const current = progressRef.current;
+            if (current >= 100) {
+                clearInterval(trickleInterval);
+                return;
+            }
 
-                const random = Math.random();
-                let amount: number;
+            const random = Math.random();
+            let amount: number;
 
-                if (isPageReady) {
-                    // Fast mode: page already loaded
-                    if (prev < 50) {
-                        amount = 15 + random * 10;
-                    } else if (prev < 80) {
-                        amount = 10 + random * 5;
-                    } else {
-                        amount = 5 + random * 3;
-                    }
+            if (isPageReady) {
+                // Fast mode: page already loaded
+                if (current < 50) {
+                    amount = 15 + random * 10;
+                } else if (current < 80) {
+                    amount = 10 + random * 5;
                 } else {
-                    // Normal trickle
-                    if (prev < 20) {
-                        amount = (random < 0.5 ? 3 : 5) + random * 5;
-                    } else if (prev < 50) {
-                        amount = random * 3;
-                    } else if (prev < 80) {
-                        amount = random * 2;
-                    } else if (prev < 95) {
-                        amount = random * 1;
-                    } else {
-                        amount = random * 0.3;
-                    }
+                    amount = 5 + random * 3;
                 }
-
-                const next = prev + amount;
-
-                if (next >= 100) {
-                    clearInterval(trickleInterval);
-                    sessionStorage.setItem(storageKey, "true");
-                    setTimeout(() => {
-                        setIsLoading(false);
-                    }, 300);
-                    return 100;
+            } else {
+                // Normal trickle
+                if (current < 20) {
+                    amount = (random < 0.5 ? 3 : 5) + random * 5;
+                } else if (current < 50) {
+                    amount = random * 3;
+                } else if (current < 80) {
+                    amount = random * 2;
+                } else if (current < 95) {
+                    amount = random * 1;
+                } else {
+                    amount = random * 0.3;
                 }
+            }
 
-                return next;
-            });
+            const next = Math.min(100, current + amount);
+            progressRef.current = next;
+            setProgress(next);
+
+            if (next >= 100) {
+                clearInterval(trickleInterval);
+                sessionStorage.setItem(storageKey, "true");
+                setTimeout(() => {
+                    setIsLoading(false);
+                }, 300);
+            }
         };
 
         const intervalMs = isPageReady ? 50 : 200;
@@ -110,9 +107,9 @@ export function Preloader() {
 
                     {/* Progress bar */}
                     <m.div
-                        className="absolute top-0 left-0 h-full bg-primary"
-                        initial={{ width: "0%" }}
-                        animate={{ width: `${progress}%` }}
+                        className="absolute top-0 left-0 h-full w-full bg-primary origin-left"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: progress / 100 }}
                         transition={{
                             duration: 0.1,
                             ease: "easeOut",

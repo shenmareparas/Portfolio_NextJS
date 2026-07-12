@@ -12,14 +12,14 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+const subscribe = () => () => {};
+const getSnapshot = () => true;
+const getServerSnapshot = () => false;
+
 export function ThemeSwitcher({ className }: { className?: string }) {
     const { setTheme, resolvedTheme } = useTheme();
-    const [mounted, setMounted] = React.useState(false);
+    const mounted = React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
     const haptic = useMobileHaptics();
-
-    React.useEffect(() => {
-        setMounted(true);
-    }, []);
 
     const toggleTheme = () => {
         haptic.trigger("light");
@@ -48,14 +48,12 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         });
     };
 
-    const CurrentIcon =
-        (mounted && (resolvedTheme === "dark" ? Moon : Sun)) || Sun;
-
     return (
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <button
+                        type="button"
                         onClick={toggleTheme}
                         className={cn(
                             "flex items-center justify-center rounded-full p-2 transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary/20",
@@ -63,7 +61,11 @@ export function ThemeSwitcher({ className }: { className?: string }) {
                         )}
                         aria-label="Toggle theme"
                     >
-                        <CurrentIcon className="h-5 w-5" />
+                        {mounted && resolvedTheme === "dark" ? (
+                            <Moon className="h-5 w-5" />
+                        ) : (
+                            <Sun className="h-5 w-5" />
+                        )}
                     </button>
                 </TooltipTrigger>
                 <TooltipContent>

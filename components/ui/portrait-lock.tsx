@@ -8,7 +8,8 @@ export function PortraitLock() {
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
-        setTimeout(() => setIsMounted(true), 0);
+        const timer = setTimeout(() => setIsMounted(true), 0);
+        return () => clearTimeout(timer);
     }, []);
 
     if (!isMounted) return null;

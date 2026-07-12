@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useReducer, useRef } from "react";
-import { m, AnimatePresence } from "framer-motion";
+
 import { Testimonial } from "@/types/testimonial";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -95,7 +95,7 @@ function testimonialsReducer(
 }
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
-    const [state, dispatch] = useReducer(testimonialsReducer, {
+    const [state] = useReducer(testimonialsReducer, {
         randomized: testimonials,
         currentIndex: 0,
         direction: 0,
@@ -131,7 +131,6 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
     if (state.randomized.length === 0) return null;
 
-    const testimonial = state.randomized[state.currentIndex];
 
     return (
         <section className="py-12 md:py-24 lg:py-32 overflow-hidden">
