@@ -17,11 +17,13 @@ import { PortraitLock } from "@/components/ui/portrait-lock";
 const inter = Inter({
     variable: "--font-sans",
     subsets: ["latin"],
+    display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
     variable: "--font-mono",
     subsets: ["latin"],
+    display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -30,7 +32,7 @@ export const metadata: Metadata = {
     keywords: siteConfig.keywords,
     metadataBase: new URL(siteConfig.url),
     alternates: {
-        canonical: "./",
+        canonical: "/",
     },
     openGraph: {
         ...siteConfig.metadata.openGraph,

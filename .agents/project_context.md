@@ -90,6 +90,9 @@ To update or manage the portfolio content, developers should edit the following 
 
 ### ⚡ Architectural Optimization Patterns
 - **Reduced Motion**: Wrapped in `<MotionConfig reducedMotion="user">` inside `app/layout.tsx` to automatically scale down animations based on user OS settings.
+- **Immediate Above-the-Fold LCP Delivery**: Hero content and headings render immediately without blocking `opacity: 0` wrappers to score sub-second FCP and meet Core Web Vitals LCP standards (<2.5s).
+- **Google Fonts Swap Strategy**: Fonts configure `display: "swap"` to prevent invisible text during font network streaming.
+- **Canonical Standardization**: Absolute and root-relative canonical alternates across all routes to prevent Search Console canonical mismatch flags.
 - **Accurate Event Lifecycles**: All timers (`setTimeout`) and listeners are properly garbage-collected using returned effect cleanup functions.
 - **CSS Grid Transitions**: Collapsible accordion panels leverage CSS grid-row transitions (`0fr -> 1fr`) instead of Framer Motion `height: "auto"` to prevent browser layout recalculation thrashing.
 - **Flicker-Free Client Mounts**: Client-only hydration flags utilize `useSyncExternalStore` with module-scope callbacks, bypassing `useState` + `useEffect` hydration flicker.
