@@ -1,42 +1,46 @@
 "use client";
 
-import { useEffect, useState, useLayoutEffect } from "react";
+import { useEffect, useState, useSyncExternalStore, useRef } from "react";
 import { m, AnimatePresence } from "framer-motion";
 
+const subscribe = () => () => {};
+const getClientMounted = () => true;
+const getServerMounted = () => false;
+
+const getPreloaderShownSnapshot = () => {
+    if (typeof window === "undefined") return false;
+    return sessionStorage.getItem("preloader_shown") === "true";
+};
+const getServerPreloaderShownSnapshot = () => false;
+
 export function Preloader() {
+    const isMounted = useSyncExternalStore(
+        subscribe,
+        getClientMounted,
+        getServerMounted
+    );
+
+    const hasShown = useSyncExternalStore(
+        subscribe,
+        getPreloaderShownSnapshot,
+        getServerPreloaderShownSnapshot
+    );
+
     const [isLoading, setIsLoading] = useState(true);
     const [progress, setProgress] = useState(0);
-
-    const [mounted, setMounted] = useState(false);
+    const progressRef = useRef(0);
 
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            const hasShown = sessionStorage.getItem("preloader_shown");
-            if (hasShown) {
-                setIsLoading(false);
-            }
+        if (hasShown) {
+            return;
         }
-        setMounted(true);
-    }, []);
 
-    const useIsomorphicLayoutEffect =
-        typeof window !== "undefined" ? useLayoutEffect : useEffect;
+        const isPageReady = document.readyState === "complete";
+        let timeoutId: NodeJS.Timeout;
 
-    useIsomorphicLayoutEffect(() => {
-        if (!mounted || !isLoading) return;
-
-        const storageKey = "preloader_shown";
-
-        const isPageReady = typeof document !== "undefined" ? document.readyState === "complete" : false;
-        const progressRef = { current: 0 };
-        // eslint-disable-next-line
-        let trickleInterval: NodeJS.Timeout;
-
-        // NProgress-style "Trickle" Logic
         const trickle = () => {
             const current = progressRef.current;
             if (current >= 100) {
-                clearInterval(trickleInterval);
                 return;
             }
 
@@ -44,7 +48,6 @@ export function Preloader() {
             let amount: number;
 
             if (isPageReady) {
-                // Fast mode: page already loaded
                 if (current < 50) {
                     amount = 15 + random * 10;
                 } else if (current < 80) {
@@ -53,7 +56,6 @@ export function Preloader() {
                     amount = 5 + random * 3;
                 }
             } else {
-                // Normal trickle
                 if (current < 20) {
                     amount = (random < 0.5 ? 3 : 5) + random * 5;
                 } else if (current < 50) {
@@ -72,21 +74,23 @@ export function Preloader() {
             setProgress(next);
 
             if (next >= 100) {
-                clearInterval(trickleInterval);
-                sessionStorage.setItem(storageKey, "true");
-                setTimeout(() => {
+                sessionStorage.setItem("preloader_shown", "true");
+                timeoutId = setTimeout(() => {
                     setIsLoading(false);
                 }, 300);
             }
         };
 
         const intervalMs = isPageReady ? 50 : 200;
-        trickleInterval = setInterval(trickle, intervalMs);
+        const trickleInterval = setInterval(trickle, intervalMs);
 
-        return () => clearInterval(trickleInterval);
-    }, [mounted]);
+        return () => {
+            clearInterval(trickleInterval);
+            if (timeoutId) clearTimeout(timeoutId);
+        };
+    }, [hasShown]);
 
-    if (!mounted) return null;
+    if (!isMounted || hasShown) return null;
 
     return (
         <AnimatePresence mode="wait">

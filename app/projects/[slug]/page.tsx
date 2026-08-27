@@ -84,7 +84,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         width={80}
                         height={80}
                         loading="lazy"
-                        className="mb-4 rounded-2xl"
+                        className="mb-4 rounded-2xl h-auto"
+                        style={{ height: "auto" }}
                     />
                     <h1 className="text-4xl font-bold tracking-tight">
                         {project.title}

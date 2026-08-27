@@ -74,7 +74,7 @@ export const projects: Project[] = [
             "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Includes Stockfish-level AI, online multiplayer, puzzles, and educational content. Gained 750,000+ downloads and 35,000 active users in the first quarter. Maintained 4+ star rating on Play Store.",
         tags: ["Flutter", "Dart", "Flame Engine", "Chess AI", "Android", "iOS"],
         role: "Lead Developer",
-        timeline: "2023 - 2024",
+        timeline: "2023 - Present",
         links: {
             github: "https://github.com/shenmareparas/Chess",
             playStore:
@@ -241,21 +241,94 @@ export const projects: Project[] = [
         },
     },
     {
-        slug: "tabletop",
-        title: "Table Top",
-        description: "Improves your dining experience.",
+        slug: "expense-tracker",
+        title: "Expense Tracker",
+        description:
+            "A modern, highly-polished expense tracker application built with Flutter & Supabase.",
         fullDescription:
-            "Elevates your dining experience with TableTop, a restaurant ordering software that streamlines the ordering process and enhances your dining experience.",
-        tags: ["Flutter", "NextJS"],
-        role: "Full Stack Developer",
-        timeline: "2025 - 2026",
-        image: "/upcoming.svg",
-        logo: "/upcoming.svg",
-        accentColor: {
-            light: "#5D5D5D",
-            dark: "#DBDED6",
+            "A feature-rich Expense Tracker application built with Flutter, backed by a Supabase database, and managed using the Provider pattern. It features secure authentication, interactive FL Chart analytics, dynamic category management, optimistic UI updates, smart caching, and rich Material 3 animations with conditional haptic feedback.",
+        tags: [
+            "Flutter",
+            "Dart",
+            "Supabase",
+            "Provider",
+            "FL Chart",
+            "Material 3",
+            "Android",
+            "iOS",
+        ],
+        role: "Lead Developer",
+        timeline: "2026",
+        links: {
+            github: "https://github.com/shenmareparas/expense_tracker",
         },
-        gallery: ["/upcoming.svg", "/upcoming.svg", "/upcoming.svg"],
-        links: {},
+        image: "/project/expense_tracker/1a.webp",
+        logo: "/project/expense_tracker/logo.webp",
+        accentColor: "#10B981",
+        gallery: [
+            {
+                light: "/project/expense_tracker/1a.webp",
+                dark: "/project/expense_tracker/1b.webp",
+            },
+            {
+                light: "/project/expense_tracker/2a.webp",
+                dark: "/project/expense_tracker/2b.webp",
+            },
+            {
+                light: "/project/expense_tracker/3a.webp",
+                dark: "/project/expense_tracker/3b.webp",
+            },
+            {
+                light: "/project/expense_tracker/4a.webp",
+                dark: "/project/expense_tracker/4b.webp",
+            },
+            {
+                light: "/project/expense_tracker/5a.webp",
+                dark: "/project/expense_tracker/5b.webp",
+            },
+            {
+                light: "/project/expense_tracker/6a.webp",
+                dark: "/project/expense_tracker/6b.webp",
+            },
+            {
+                light: "/project/expense_tracker/7a.webp",
+                dark: "/project/expense_tracker/7b.webp",
+            },
+        ],
+    },
+    {
+        slug: "live-wallpaper",
+        title: "Live Wallpaper",
+        description:
+            "Native macOS Live Wallpaper Engine using AppKit and SwiftUI.",
+        fullDescription:
+            "A native macOS Live Wallpaper Engine built with AppKit and SwiftUI to play HEVC video wallpapers seamlessly. Features a professional installer (DMG), an in-app setup guide, custom vector status menu icon, active wallpaper hero card, multi-monitor arrangement preview, and eco/normal power modes. Implements smooth image-to-video crossfade transitions upon unlock and AVPlayerLooper gapless looping with automatic audio track removal to minimize GPU contention.",
+        tags: ["Swift", "SwiftUI", "AppKit", "macOS", "AVFoundation"],
+        role: "Developer",
+        timeline: "2026",
+        links: {
+            github: "https://github.com/shenmareparas/live-wallpaper",
+        },
+        image: "/project/live_wallpaper/banner.webp",
+        logo: "/project/live_wallpaper/logo.webp",
+        accentColor: "#3B82F6",
+    },
+    {
+        slug: "nexu5-music-bot",
+        title: "NEXU5 Music",
+        description:
+            "A clean, modern, and performant Discord Music Bot utilizing discord.js v14, @discordjs/voice, and yt-dlp.",
+        fullDescription:
+            "A high-performance Discord Music Bot built with Node.js and Bun. Leverages discord.js v14, @discordjs/voice, and yt-dlp to stream audio with an ultra-low latency pipeline. Features rich button control interfaces, dynamic queue management, interactive song searches, automatic voice channel auto-leave guards, and robust fault-tolerant networking to prevent process crashes.",
+        tags: ["Node.js", "TypeScript", "Bun", "discord.js", "yt-dlp", "FFmpeg"],
+        role: "Lead Developer",
+        timeline: "2026",
+        links: {
+            github: "https://github.com/shenmareparas/nexu5-music-bot",
+        },
+        image: "/project/nexu5_music_bot/banner.webp",
+        logo: "/project/nexu5_music_bot/logo.webp",
+        accentColor: "#06B6D4",
     },
 ];
+

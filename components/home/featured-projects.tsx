@@ -52,6 +52,7 @@ export function FeaturedProjects() {
                         onHover={() => handleHover(index)}
                         onBlur={() => setHoveredIndex(null)}
                         disabled={!hasHover}
+                        priority={true}
                     />
                 ))}
             </div>

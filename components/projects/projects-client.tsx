@@ -80,6 +80,7 @@ export function ProjectsClient() {
                         onHover={() => handleHover(index)}
                         onBlur={() => setHoveredIndex(null)}
                         disabled={!hasHover}
+                        priority={index < 6}
                     />
                 ))}
             </div>

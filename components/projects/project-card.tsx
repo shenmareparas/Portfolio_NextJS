@@ -24,6 +24,7 @@ interface ProjectCardProps {
     onHover?: () => void;
     onBlur?: () => void;
     disabled?: boolean;
+    priority?: boolean;
 }
 
 export function ProjectCard({
@@ -33,6 +34,7 @@ export function ProjectCard({
     onHover,
     onBlur,
     disabled,
+    priority,
 }: ProjectCardProps) {
     const { previousPath } = useNavigation();
     const shouldAnimate = !(
@@ -73,7 +75,7 @@ export function ProjectCard({
                           y: -8,
                           scale: 1.02,
                           transition: { duration: 0.2 },
-                      }
+                       }
                     : undefined
             }
             className={`h-full ${!disabled ? "group" : ""}`}
@@ -108,7 +110,8 @@ export function ProjectCard({
                         src={project.image}
                         alt={project.title}
                         fill
-                        loading="lazy"
+                        priority={priority}
+                        loading={priority ? undefined : "lazy"}
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
