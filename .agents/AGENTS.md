@@ -56,10 +56,11 @@ This document outlines the development guidelines, constraints, and conventions 
 
 ## ⚡ Performance & Quality Guidelines (React Doctor Audited)
 
-1. **Avoid Layout Property Animations**: Do not animate layout-affecting properties (like `height`, `width`, `top`, `left`, etc.) directly via Framer Motion. Instead:
-   - Use GPU-composited CSS transforms (e.g., `scaleX` or `scaleY` for sliders/progress bars).
-   - Use CSS Grid transitions (`grid-template-rows: 0fr -> 1fr`) with `overflow-hidden` for dynamic expand/collapse panels (e.g., accordions).
+1. **Avoid Layout Property Animations & Broad Transitions**:
+   - Do not animate layout-affecting properties (like `height`, `width`, `top`, `left`, etc.) directly via Framer Motion. Instead use GPU-composited CSS transforms (`scaleX`, `scaleY`) and CSS Grid transitions (`grid-template-rows: 0fr -> 1fr`).
+   - Avoid `transition-all`. Always specify targeted transitions (e.g., `transition-colors`, `transition-opacity`, `transition-transform`, or `transition-[border-color,box-shadow,transform]`) to prevent browser layout reflow jank.
 2. **Prevent Timer and Event Listener Leaks**: Every `setTimeout`, `setInterval`, or DOM event listener registered inside a `useEffect` must return a corresponding cleanup function (`clearTimeout`, `clearInterval`, or `removeEventListener`) to prevent memory leaks and background state updates on unmounted components.
 3. **SSR-Safe Mounting without Flicker**: Do not use `useState` + `useEffect` mount flags just to detect client-side rendering. Use React 19's `useSyncExternalStore` with stable module-level selectors to ensure client-only mount state syncs in a single commit, eliminating hydration flashes.
 4. **Stable Callback Dependencies**: When using hooks like `useCallback` or `useMemo`, avoid depending on complex/derived variables when only a primitive is needed. Extract the primitive boolean or string in the render scope (e.g., `isDark`, `themeToSet`) and depend on that to prevent redundant hook recreation.
 5. **Interactive Element Accessibility**: Never attach click, keydown, or drag handlers directly as React props on static elements (`div`) or semantic non-interactive elements (`section`, `li`). For custom drag-scrollable containers, register listeners dynamically inside a `useEffect` using `.addEventListener()` to bypass static checker violations while ensuring full control over event teardown.
+6. **Zod 4 Schema Standards**: Use top-level format builders (e.g., `z.email()`, `z.uuid()`, `z.iso.date()`) rather than chained methods on `z.string()` (e.g., `z.string().email()`) for forward compatibility.

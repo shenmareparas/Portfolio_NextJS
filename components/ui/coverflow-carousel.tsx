@@ -84,7 +84,7 @@ const CarouselCard = React.memo(
                 className={cn(
                     "absolute w-[260px] xl:w-[320px] aspect-[9/16] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary [container-type:inline-size]",
                     className,
-                    isDragging ? "transition-none" : "transition-all duration-700",
+                    isDragging ? "transition-none" : "transition-[transform,opacity,filter] duration-700",
                 )}
                 style={style}
                 onClick={() => onClick(index)}
@@ -135,7 +135,7 @@ const NavigationButton = ({
         <button
             type="button"
             className={cn(
-                "absolute z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-all hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible",
+                "absolute z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-[background-color,transform] hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible",
                 isLeft ? "left-4 xl:left-[calc(50%-250px)]" : "right-4 xl:right-[calc(50%-250px)]",
             )}
             onClick={(e) => {
@@ -175,7 +175,7 @@ const ThemeToggle = ({
         >
             <div
                 className={cn(
-                    "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
+                    "h-8 w-8 rounded-full flex items-center justify-center transition-[background-color,color,box-shadow,transform] duration-300",
                     currentTheme === "light"
                         ? "bg-primary text-primary-foreground shadow-sm scale-110"
                         : "text-muted-foreground",
@@ -185,7 +185,7 @@ const ThemeToggle = ({
             </div>
             <div
                 className={cn(
-                    "h-8 w-8 rounded-full flex items-center justify-center transition-all duration-300",
+                    "h-8 w-8 rounded-full flex items-center justify-center transition-[background-color,color,box-shadow,transform] duration-300",
                     currentTheme === "dark"
                         ? "bg-primary text-primary-foreground shadow-sm scale-110"
                         : "text-muted-foreground",
@@ -460,7 +460,7 @@ export function CoverflowCarousel({ images, className, autoScrollInterval = 3000
                                 type="button"
                                 onClick={(e) => { e.preventDefault(); triggerInteractionPause(); dispatch({ type: "SET_ACTIVE", payload: idx }); }}
                                 className={cn(
-                                    "h-2 rounded-full transition-all duration-300",
+                                    "h-2 rounded-full transition-[width,background-color] duration-300",
                                     idx === normalizedActive ? "bg-primary w-8" : "bg-primary/20 w-2 hover:bg-primary/40"
                                 )}
                                 aria-label={`Go to slide ${idx + 1}`}

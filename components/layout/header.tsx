@@ -151,7 +151,7 @@ export function Header() {
                                             />
                                             <span
                                                 className={cn(
-                                                    "relative z-10 text-xs font-medium transition-all",
+                                                    "relative z-10 text-xs font-medium transition-colors",
                                                     isActive && "font-semibold",
                                                 )}
                                             >

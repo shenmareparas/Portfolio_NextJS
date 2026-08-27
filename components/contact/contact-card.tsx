@@ -65,7 +65,7 @@ export function ContactCard({
     return (
         <div
             className={cn(
-                "group relative rounded-lg border bg-card text-card-foreground shadow-sm transition-all hover:bg-accent hover:text-accent-foreground",
+                "group relative rounded-lg border bg-card text-card-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground",
                 className,
             )}
         >

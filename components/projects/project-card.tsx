@@ -82,7 +82,7 @@ export function ProjectCard({
             id={project.slug}
         >
             <Card
-                className={`relative flex h-full flex-col overflow-hidden border-border/40 transition-all duration-300 ${
+                className={`relative flex h-full flex-col overflow-hidden border-border/40 transition-shadow duration-300 ${
                     !disabled ? "hover:shadow-lg dark:hover:shadow-2xl" : ""
                 }`}
                 style={
@@ -124,7 +124,7 @@ export function ProjectCard({
                         <span className="truncate text-lg group-hover:text-[var(--project-accent)] dark:group-hover:text-[var(--project-accent-dark)] transition-colors duration-300">
                             {project.title}
                         </span>
-                        <ArrowUpRight className="h-5 w-5 translate-y-2 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 text-[var(--project-accent)] dark:text-[var(--project-accent-dark)]" />
+                        <ArrowUpRight className="h-5 w-5 translate-y-2 opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100 text-[var(--project-accent)] dark:text-[var(--project-accent-dark)]" />
                     </CardTitle>
                     <CardDescription className="line-clamp-2 text-muted-foreground/80">
                         {project.description}

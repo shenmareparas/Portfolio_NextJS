@@ -12,10 +12,10 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 
 ## 🚀 Technology Stack
 
-- **Framework**: Next.js 16.2.10 (App Router, Server & Client Components)
-- **Runtime & Package Manager**: Bun v1.3.14
-- **Styling**: Tailwind CSS v4.3.2 + PostCSS
-- **Animations**: Framer Motion v12.42.2
+- **Framework**: Next.js 16.3.3 (App Router, Server & Client Components)
+- **Runtime & Package Manager**: Bun v1.4.0
+- **Styling**: Tailwind CSS v4.3.3 + PostCSS
+- **Animations**: Framer Motion v12.43.0
 - **Haptic Feedback**: `web-haptics` v0.0.6 (provides tactile/vibration triggers on mobile devices)
 - **UI Base & Icons**: Radix UI primitives, Lucide React, and Simple Icons (for tech logos)
 - **Form Handling**: React Hook Form + Zod (coupled with Formspree for the contact form)

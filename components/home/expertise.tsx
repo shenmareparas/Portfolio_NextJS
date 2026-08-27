@@ -50,7 +50,7 @@ export function Expertise() {
                             <button
                                 type="button"
                                 onClick={() => toggleItem(item.id)}
-                                className="flex w-full items-center justify-between p-6 text-left font-medium transition-all hover:bg-muted/50"
+                                className="flex w-full items-center justify-between p-6 text-left font-medium transition-colors hover:bg-muted/50"
                             >
                                 <div className="flex items-center gap-3">
                                     {Icon && (

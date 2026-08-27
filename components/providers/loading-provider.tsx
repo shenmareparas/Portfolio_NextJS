@@ -3,30 +3,21 @@
 import {
     createContext,
     useContext,
-    useState,
     useCallback,
     useMemo,
 } from "react";
 
-const LoadingStateContext = createContext<number>(0);
 const LoadingActionsContext = createContext<
     | {
-          incrementLoading: (count?: number) => void;
-          decrementLoading: (count?: number) => void;
+          incrementLoading: () => void;
+          decrementLoading: () => void;
       }
     | undefined
 >(undefined);
 
 export function LoadingProvider({ children }: { children: React.ReactNode }) {
-    const [loadingCount, setLoadingCount] = useState(0);
-
-    const incrementLoading = useCallback((count = 1) => {
-        setLoadingCount((prev) => prev + count);
-    }, []);
-
-    const decrementLoading = useCallback((count = 1) => {
-        setLoadingCount((prev) => Math.max(0, prev - count));
-    }, []);
+    const incrementLoading = useCallback(() => {}, []);
+    const decrementLoading = useCallback(() => {}, []);
 
     const actions = useMemo(
         () => ({
@@ -37,16 +28,10 @@ export function LoadingProvider({ children }: { children: React.ReactNode }) {
     );
 
     return (
-        <LoadingStateContext.Provider value={loadingCount}>
-            <LoadingActionsContext.Provider value={actions}>
-                {children}
-            </LoadingActionsContext.Provider>
-        </LoadingStateContext.Provider>
+        <LoadingActionsContext.Provider value={actions}>
+            {children}
+        </LoadingActionsContext.Provider>
     );
-}
-
-export function useLoadingValue() {
-    return useContext(LoadingStateContext);
 }
 
 export function useLoadingActions() {

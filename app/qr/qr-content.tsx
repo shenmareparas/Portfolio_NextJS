@@ -75,7 +75,7 @@ END:VCARD`;
                     <Link
                         href="/"
                         onClick={() => handleHapticFeedback("medium")}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground shadow-lg transition-all hover:opacity-90 active:scale-[0.98]"
+                        className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary p-4 text-primary-foreground shadow-lg transition-transform hover:opacity-90 active:scale-[0.98]"
                     >
                         <Globe className="h-6 w-6" />
                         <span className="font-bold text-lg">View Portfolio</span>
@@ -87,7 +87,7 @@ END:VCARD`;
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={() => handleHapticFeedback("success")}
-                        className="flex w-full items-center justify-center gap-3 rounded-2xl border border-primary/10 bg-primary/10 p-4 text-primary transition-all hover:bg-primary/20 active:scale-[0.98]"
+                        className="flex w-full items-center justify-center gap-3 rounded-2xl border border-primary/10 bg-primary/10 p-4 text-primary transition-colors hover:bg-primary/20 active:scale-[0.98]"
                     >
                         <FileDown className="h-6 w-6" />
                         <span className="font-semibold text-base">My Resume</span>
@@ -98,7 +98,7 @@ END:VCARD`;
                         <a
                             href={`tel:${profile.phone}`}
                             onClick={() => handleHapticFeedback("medium")}
-                            className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-all hover:bg-primary/20 active:scale-95"
+                            className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-colors hover:bg-primary/20 active:scale-95"
                         >
                             <Phone className="h-5 w-5" />
                             <span className="text-[10px] sm:text-xs font-semibold">Call</span>
@@ -106,7 +106,7 @@ END:VCARD`;
                         <a
                             href={`mailto:${profile.email}`}
                             onClick={() => handleHapticFeedback("medium")}
-                            className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-all hover:bg-primary/20 active:scale-95"
+                            className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-colors hover:bg-primary/20 active:scale-95"
                         >
                             <Mail className="h-5 w-5" />
                             <span className="text-[10px] sm:text-xs font-semibold">Email</span>
@@ -114,7 +114,7 @@ END:VCARD`;
                         <button
                             type="button"
                             onClick={generateVCard}
-                            className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-all hover:bg-primary/20 active:scale-95"
+                            className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-primary/10 p-4 text-primary transition-colors hover:bg-primary/20 active:scale-95"
                         >
                             <UserPlus className="h-5 w-5" />
                             <span className="text-[10px] sm:text-xs font-semibold">Contact</span>
@@ -147,7 +147,7 @@ END:VCARD`;
                                 hidden: { opacity: 0, y: 20 },
                                 visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } },
                             }}
-                            className="group flex w-full items-center justify-between overflow-hidden rounded-2xl border bg-card p-4 shadow-sm transition-all hover:border-primary hover:shadow-md active:scale-[0.98]"
+                            className="group flex w-full items-center justify-between overflow-hidden rounded-2xl border bg-card p-4 shadow-sm transition-[border-color,box-shadow,transform] hover:border-primary hover:shadow-md active:scale-[0.98]"
                         >
                             <div className="flex items-center gap-4">
                                 <div className="rounded-xl bg-primary/10 p-3 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">

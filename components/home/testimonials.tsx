@@ -222,7 +222,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                     {state.randomized.map((testimonial) => (
                         <Card
                             key={testimonial.name}
-                            className="w-[450px] flex-none border border-zinc-200/50 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md transition-all duration-300 hover:border-zinc-300/50 dark:hover:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/60 mx-6 shadow-xl"
+                            className="w-[450px] flex-none border border-zinc-200/50 dark:border-white/5 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md transition-[border-color,background-color] duration-300 hover:border-zinc-300/50 dark:hover:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/60 mx-6 shadow-xl"
                         >
                             <CardHeader className="pb-5">
                                 <div className="flex items-start justify-between">
