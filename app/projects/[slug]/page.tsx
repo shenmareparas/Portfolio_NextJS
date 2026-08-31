@@ -84,8 +84,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                         width={80}
                         height={80}
                         loading="lazy"
-                        className="mb-4 rounded-2xl h-auto"
-                        style={{ height: "auto" }}
+                        className="mb-4 rounded-2xl w-20 h-20 object-contain"
                     />
                     <h1 className="text-4xl font-bold tracking-tight">
                         {project.title}
@@ -259,7 +258,24 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                                 </Link>
                             </Button>
                         ) : (
-                            <div className="flex-1" />
+                            <Button
+                                asChild
+                                variant="ghost"
+                                className="group h-auto p-0 hover:bg-transparent flex-1 justify-end max-w-[45%]"
+                            >
+                                <Link
+                                    href="/contact"
+                                    className="flex flex-col items-end gap-2"
+                                >
+                                    <span className="text-[10px] sm:text-xs text-muted-foreground flex items-center gap-2 uppercase tracking-wider font-semibold whitespace-nowrap">
+                                        Next
+                                        <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                                    </span>
+                                    <span className="text-base sm:text-xl font-bold group-hover:text-primary transition-colors text-right line-clamp-1">
+                                        Get in touch
+                                    </span>
+                                </Link>
+                            </Button>
                         )}
                     </div>
                 </FadeIn>

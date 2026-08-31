@@ -133,7 +133,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
 
     return (
-        <section className="py-12 md:py-24 lg:py-32 overflow-hidden">
+        <section className="w-full max-w-full py-12 md:py-24 lg:py-32 overflow-hidden">
             <div className="container mx-auto px-4 flex flex-col items-center justify-center space-y-4 text-center mb-6">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">
                     Testimonials
@@ -145,7 +145,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
             {/* Mobile View - Native Auto/Manual Scroll Container */}
             <div
-                className="md:hidden w-full relative"
+                className="md:hidden w-full max-w-full relative overflow-hidden"
                 onMouseEnter={() => setIsPaused(true)}
                 onMouseLeave={() => setIsPaused(false)}
                 onTouchStart={() => setIsPaused(true)}
@@ -153,7 +153,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             >
                 <div
                     ref={scrollRef}
-                    className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-4 py-8 scroll-smooth no-scrollbar"
+                    className="flex w-full overflow-x-auto snap-x snap-mandatory gap-4 px-4 py-8 scroll-smooth no-scrollbar"
                 >
                     {state.randomized.map((testimonial) => (
                         <Card
@@ -189,7 +189,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                                                 {testimonial.platform && (
                                                     <>
                                                         <span className="text-border">
-                                                            •
+                                                             •
                                                         </span>
                                                         <span className="text-foreground/60">
                                                             {
@@ -217,7 +217,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             </div>
 
             {/* Desktop View - Marquee */}
-            <div className="hidden md:flex relative w-full flex-col items-center justify-center overflow-hidden">
+            <div className="hidden md:flex relative w-full max-w-full flex-col items-center justify-center overflow-hidden">
                 <Marquee pauseOnHover className="[--duration:40s] py-12">
                     {state.randomized.map((testimonial) => (
                         <Card

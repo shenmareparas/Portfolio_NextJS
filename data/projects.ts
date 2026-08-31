@@ -298,12 +298,21 @@ export const projects: Project[] = [
     },
     {
         slug: "live-wallpaper",
-        title: "Live Wallpaper",
+        title: "Live Wallpaper for macOS",
         description:
-            "Native macOS Live Wallpaper Engine using AppKit and SwiftUI.",
+            "Native macOS dynamic desktop & lock screen wallpaper engine built with Swift and SwiftUI.",
         fullDescription:
-            "A native macOS Live Wallpaper Engine built with AppKit and SwiftUI to play HEVC video wallpapers seamlessly. Features a professional installer (DMG), an in-app setup guide, custom vector status menu icon, active wallpaper hero card, multi-monitor arrangement preview, and eco/normal power modes. Implements smooth image-to-video crossfade transitions upon unlock and AVPlayerLooper gapless looping with automatic audio track removal to minimize GPU contention.",
-        tags: ["Swift", "SwiftUI", "AppKit", "macOS", "AVFoundation"],
+            "A native macOS menu bar app built in pure Swift, AppKit, and SwiftUI to render smooth animated wallpapers on desktop and lock screen. Features hardware-accelerated HEVC playback, an integrated YouTube video downloader, multi-monitor support, and zero-CPU occlusion pausing when windows are covered.",
+        tags: [
+            "Swift",
+            "SwiftUI",
+            "AppKit",
+            "macOS",
+            "AVFoundation",
+            "VideoToolbox",
+            "yt-dlp",
+            "FFmpeg",
+        ],
         role: "Developer",
         timeline: "2026",
         links: {
@@ -311,7 +320,7 @@ export const projects: Project[] = [
         },
         image: "/project/live_wallpaper/banner.webp",
         logo: "/project/live_wallpaper/logo.webp",
-        accentColor: "#3B82F6",
+        accentColor: "#007AFF",
     },
     {
         slug: "nexu5-music-bot",

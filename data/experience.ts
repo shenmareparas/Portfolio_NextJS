@@ -6,7 +6,9 @@ export const experience: Experience[] = [
         role: "Software Developer Team Lead",
         dates: "Jan 2026 – Feb 2026",
         description: [
-            "Build and developed an app.",
+            "Architected and developed a cross-platform mobile application for campus mess operations, integrating student, guard, and college administration management modules.",
+            "Engineered a dynamic QR code verification system that auto-refreshes every 15 seconds, instantly displaying student identity details upon guard scanning to eliminate proxy entries and fraud.",
+            "Implemented automated real-time entry logging and attendance tracking, eliminating unauthorized access and streamlining dining operations across the institution.",
         ],
         tech: [
             "Flutter",
@@ -16,7 +18,6 @@ export const experience: Experience[] = [
             "Git",
             "Android",
             "iOS",
-            "Javascript"
         ],
     },
     {
