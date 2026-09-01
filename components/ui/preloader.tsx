@@ -31,12 +31,9 @@ export function Preloader() {
     const progressRef = useRef(0);
 
     useEffect(() => {
-        if (hasShown) {
-            return;
-        }
+        if (hasShown) return;
 
         const isPageReady = document.readyState === "complete";
-        let timeoutId: NodeJS.Timeout;
 
         const trickle = () => {
             const current = progressRef.current;
@@ -72,13 +69,6 @@ export function Preloader() {
             const next = Math.min(100, current + amount);
             progressRef.current = next;
             setProgress(next);
-
-            if (next >= 100) {
-                sessionStorage.setItem("preloader_shown", "true");
-                timeoutId = setTimeout(() => {
-                    setIsLoading(false);
-                }, 300);
-            }
         };
 
         const intervalMs = isPageReady ? 50 : 200;
@@ -86,9 +76,20 @@ export function Preloader() {
 
         return () => {
             clearInterval(trickleInterval);
-            if (timeoutId) clearTimeout(timeoutId);
         };
     }, [hasShown]);
+
+    useEffect(() => {
+        if (progress >= 100) {
+            sessionStorage.setItem("preloader_shown", "true");
+            const timeoutId = setTimeout(() => {
+                setIsLoading(false);
+            }, 300);
+            return () => {
+                clearTimeout(timeoutId);
+            };
+        }
+    }, [progress]);
 
     if (!isMounted || hasShown) return null;
 

@@ -12,7 +12,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 
 ## 🚀 Technology Stack
 
-- **Framework**: Next.js 16.3.3 (App Router, Server & Client Components)
+- **Framework**: Next.js 16.3.4 (App Router, Server & Client Components)
 - **Runtime & Package Manager**: Bun v1.4.0
 - **Styling**: Tailwind CSS v4.3.3 + PostCSS
 - **Animations**: Framer Motion v12.43.0
@@ -25,7 +25,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 ## 📂 Core Folder Structure
 
 ```bash
-├── .agents/                 # AI Agent instructions and localized skills
+├── .agents/                 # AI Agent instructions, project context, and localized skills
 │   ├── AGENTS.md            # Active instructions/rules for AI agents
 │   └── project_context.md   # [This File] High-level codebase documentation
 │   └── skills/              # Custom agent skills (e.g. web-haptics)
@@ -34,6 +34,8 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── page.tsx             # Homepage containing intro, featured projects, experience, expertise
 │   ├── template.tsx         # Framer Motion page entrance animations
 │   ├── globals.css          # Core CSS stylesheet importing Tailwind CSS v4
+│   ├── robots.ts            # Dynamic robots.txt metadata route
+│   ├── sitemap.ts           # Dynamic sitemap.xml indexing pages & projects
 │   ├── about/               # About page layout and content
 │   ├── contact/             # Contact form page
 │   ├── projects/            # Full list of projects & project details page
@@ -56,7 +58,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 
 To update or manage the portfolio content, developers should edit the following files rather than modifying page layouts:
 
-1. **[config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts)**: Configures global variables like title, keywords (for SEO), metadata, OpenGraph parameters, and the Formspree contact form endpoint.
+1. **[config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts)**: Configures global variables like title, keywords (for SEO), metadata, OpenGraph parameters, footer copyright getter, and the Formspree contact form endpoint.
 2. **[profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts)**: Stores general details (name, full name, description/bio blocks, contact email/phone, and path to the resume PDF).
 3. **[projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts)**: A list of projects. Each project conforms to the `Project` type interface, supporting titles, slug-based details, links to App Store/Play Store/GitHub, and gallery assets.
 4. **[experience.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/experience.ts)** & **[education.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/education.ts)**: Chronological timelines of jobs/internships and universities/certifications.
@@ -75,6 +77,7 @@ To update or manage the portfolio content, developers should edit the following 
   - Input warnings ("warning")
   - Project snaps/selection changes ("selection")
   - Button presses ("medium")
+- **Dynamic SEO & Sitemaps**: Dynamic XML sitemap generation (`app/sitemap.ts`) mapping all static pages and dynamic project detail URLs with automated update frequencies and search engine discovery via `app/robots.ts`.
 
 ---
 
@@ -85,6 +88,8 @@ To update or manage the portfolio content, developers should edit the following 
 - **Lint Check**: `bun run lint`
 - **React Doctor Audit**: The project is fully optimized and conforms to React Doctor standards with a perfect **100/100** score. Run audit with:
   ```bash
+  bun doctor
+  # or
   bunx react-doctor@latest . --verbose
   ```
 
@@ -93,6 +98,10 @@ To update or manage the portfolio content, developers should edit the following 
 - **Immediate Above-the-Fold LCP Delivery**: Hero content and headings render immediately without blocking `opacity: 0` wrappers to score sub-second FCP and meet Core Web Vitals LCP standards (<2.5s).
 - **Google Fonts Swap Strategy**: Fonts configure `display: "swap"` to prevent invisible text during font network streaming.
 - **Canonical Standardization**: Absolute and root-relative canonical alternates across all routes to prevent Search Console canonical mismatch flags.
-- **Accurate Event Lifecycles**: All timers (`setTimeout`) and listeners are properly garbage-collected using returned effect cleanup functions.
+- **Accurate Event & Timer Lifecycles**: All timers (`setTimeout`, `setInterval`) and listeners are strictly garbage-collected using dedicated, return-cleaned `useEffect` blocks (`react-doctor/effect-needs-cleanup`).
+- **Dynamic Module Values**: Dynamic values (like copyright year) use property getters instead of module-scope execution to guarantee fresh evaluation per SSR request (`react-doctor/no-impure-call-at-module-scope`).
+- **Context Memoization**: React Context values in form primitives and providers are wrapped in `React.useMemo` to eliminate unnecessary subtree redraws (`react-doctor/jsx-no-constructed-context-values`).
+- **Transient GPU Acceleration**: Avoids permanent `will-change` CSS classes, relying on Framer Motion's hardware-accelerated transform styles (`react-doctor/no-permanent-will-change`).
+- **Fast Refresh State Preservation**: Component files isolate non-component exports to maintain fast refresh hot reloading (`react-doctor/only-export-components`).
 - **CSS Grid Transitions**: Collapsible accordion panels leverage CSS grid-row transitions (`0fr -> 1fr`) instead of Framer Motion `height: "auto"` to prevent browser layout recalculation thrashing.
 - **Flicker-Free Client Mounts**: Client-only hydration flags utilize `useSyncExternalStore` with module-scope callbacks, bypassing `useState` + `useEffect` hydration flicker.

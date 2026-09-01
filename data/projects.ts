@@ -66,8 +66,8 @@ export const projects: Project[] = [
         ],
     },
     {
-        slug: "ai-chess",
-        title: "AI Chess",
+        slug: "chess",
+        title: "Chess Offline: Play 2 Player",
         description:
             "Feature-rich chess app with AI opponent and online multiplayer.",
         fullDescription:
@@ -297,12 +297,12 @@ export const projects: Project[] = [
         ],
     },
     {
-        slug: "live-wallpaper",
-        title: "Live Wallpaper for macOS",
+        slug: "live-wallpaper-engine-for-macos",
+        title: "Live Wallpaper Engine for macOS",
         description:
             "Native macOS dynamic desktop & lock screen wallpaper engine built with Swift and SwiftUI.",
         fullDescription:
-            "A native macOS menu bar app built in pure Swift, AppKit, and SwiftUI to render smooth animated wallpapers on desktop and lock screen. Features hardware-accelerated HEVC playback, an integrated YouTube video downloader, multi-monitor support, and zero-CPU occlusion pausing when windows are covered.",
+            "A native macOS menu bar app built in pure Swift, AppKit, and SwiftUI to render smooth, animated wallpapers on the desktop and lock screen. Features hardware-accelerated HEVC playback, an integrated YouTube video downloader, multi-monitor support, and zero-CPU occlusion pausing when windows are covered.",
         tags: [
             "Swift",
             "SwiftUI",
