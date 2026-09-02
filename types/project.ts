@@ -19,4 +19,5 @@ export interface Project {
     logo: string;
     accentColor?: string | { light: string; dark: string };
     gallery?: GalleryItem[];
+    galleryLayout?: "carousel" | "vertical";
 }

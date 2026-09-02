@@ -60,7 +60,7 @@ To update or manage the portfolio content, developers should edit the following 
 
 1. **[config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts)**: Configures global variables like title, keywords (for SEO), metadata, OpenGraph parameters, footer copyright getter, and the Formspree contact form endpoint.
 2. **[profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts)**: Stores general details (name, full name, description/bio blocks, contact email/phone, and path to the resume PDF).
-3. **[projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts)**: A list of projects. Each project conforms to the `Project` type interface, supporting titles, slug-based details, links to App Store/Play Store/GitHub, and gallery assets.
+3. **[projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts)**: A list of projects conforming to `Project` (`types/project.ts`). Supports `galleryLayout: "carousel" | "vertical"` (mobile apps use 3D Coverflow; desktop/macOS/CLI projects use vertical scrolling screenshots with full-screen zoomable lightbox).
 4. **[experience.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/experience.ts)** & **[education.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/education.ts)**: Chronological timelines of jobs/internships and universities/certifications.
 5. **[skills.tsx](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/skills.tsx)**: Tech logos and skill names grouped by language, web, mobile, backend, and tools.
 6. **[testimonials.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/testimonials.ts)**: Endorsements and recommendations.
@@ -70,7 +70,9 @@ To update or manage the portfolio content, developers should edit the following 
 
 ## 🛠️ Key UI Features
 
-- **3D Coverflow Carousel**: Interactive project navigation leveraging Framer Motion.
+- **Dual Showcase Media System**:
+  - **3D Coverflow Carousel** (`components/ui/coverflow-carousel.tsx`): Interactive 3D phone mockup carousel for mobile applications.
+  - **Vertical Screenshot Gallery & Lightbox** (`components/ui/vertical-gallery.tsx`): Dedicated vertical screenshot stream for desktop/macOS and non-mobile projects. Includes full-screen lightbox modal with calibrated trackpad pinch zoom, drag-to-pan, double-click reset to 100%, backdrop click exit, and non-passive gesture prevention.
 - **Dynamic Title Rotators**: Animated headers that cycle through specialized titles.
 - **Haptic Integrations**: The portfolio uses `useWebHaptics` hook in mobile views to trigger haptic feedback during interactive moments:
   - Form submission successes ("success")

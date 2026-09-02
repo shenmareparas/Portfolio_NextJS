@@ -321,10 +321,19 @@ export const projects: Project[] = [
         image: "/project/live_wallpaper/banner.webp",
         logo: "/project/live_wallpaper/logo.webp",
         accentColor: "#007AFF",
+        galleryLayout: "vertical",
+        gallery: [
+            "/project/live_wallpaper/1.webp",
+            "/project/live_wallpaper/2.webp",
+            "/project/live_wallpaper/3.webp",
+            "/project/live_wallpaper/4.webp",
+            "/project/live_wallpaper/5.webp",
+            "/project/live_wallpaper/6.webp",
+        ],
     },
     {
-        slug: "nexu5-music-bot",
-        title: "NEXU5 Music",
+        slug: "nexu5-discord-music-bot",
+        title: "NEXU5 Discord Music Bot",
         description:
             "A clean, modern, and performant Discord Music Bot utilizing discord.js v14, @discordjs/voice, and yt-dlp.",
         fullDescription:
@@ -338,6 +347,8 @@ export const projects: Project[] = [
         image: "/project/nexu5_music_bot/banner.webp",
         logo: "/project/nexu5_music_bot/logo.webp",
         accentColor: "#06B6D4",
+        galleryLayout: "vertical",
+        gallery: ["/project/nexu5_music_bot/banner.webp"],
     },
 ];
 

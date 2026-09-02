@@ -8,6 +8,7 @@ import { SimpleIconComponent } from "@/components/ui/simple-icon";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
+import { VerticalGallery } from "@/components/ui/vertical-gallery";
 import { FadeIn } from "@/components/motion/fade-in";
 import { projects as projectsData } from "@/data/projects";
 
@@ -198,16 +199,29 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                     </div>
                 </FadeIn>
 
-                {/* Carousel Column */}
+                {/* Media Column */}
                 <div className="w-full mx-auto xl:fixed xl:top-16 xl:right-0 xl:h-[calc(100vh-8rem)] xl:w-1/2 xl:flex xl:items-center xl:justify-center pointer-events-none xl:pointer-events-auto">
                     <FadeIn
                         className="pointer-events-auto w-full h-full"
                         delay={0.1}
                     >
-                        <CoverflowCarousel
-                            className="h-full xl:py-0 w-[calc(100%+2rem)] -mx-4 xl:w-full xl:mx-0"
-                            images={project.gallery || []}
-                        />
+                        {project.galleryLayout === "vertical" ? (
+                            <VerticalGallery
+                                images={
+                                    project.gallery && project.gallery.length > 0
+                                        ? project.gallery
+                                        : project.image
+                                          ? [project.image]
+                                          : []
+                                }
+                                title={project.title}
+                            />
+                        ) : (
+                            <CoverflowCarousel
+                                className="h-full xl:py-0 w-[calc(100%+2rem)] -mx-4 xl:w-full xl:mx-0"
+                                images={project.gallery || []}
+                            />
+                        )}
                     </FadeIn>
                 </div>
             </div>

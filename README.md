@@ -27,7 +27,8 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 -   **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
 -   **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
 -   **🌊 Smooth Animations & Motion:**
-    -   **3D Coverflow Carousel:** Interactive carousel with perspective transformations for project navigation.
+    -   **3D Coverflow Carousel:** Interactive carousel with perspective transformations for mobile app project showcases.
+    -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with full-screen lightbox modal for desktop/macOS and non-mobile projects, featuring smooth gesture zoom, drag-to-pan, double-click resets, and background exit.
     -   **Dynamic Title Rotators:** Cycling header typography.
     -   **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
     -   **Timeline & Education:** Structured, responsive career, university, and certification timelines.

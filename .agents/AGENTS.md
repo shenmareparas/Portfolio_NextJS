@@ -16,7 +16,7 @@ This document outlines the development guidelines, constraints, and conventions 
 
 - **Pages and Routing**: All routing is under `app/` using Next.js App Router.
 - **Components**:
-  - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs).
+  - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs, `coverflow-carousel.tsx`, `vertical-gallery.tsx`).
   - `components/layout/`: Global structure components (Header, Footer, Navbar).
   - `components/providers/`: Client-side provider contexts (Theme, Nav).
   - `components/motion/`: Framer-motion helper components.
@@ -25,7 +25,7 @@ This document outlines the development guidelines, constraints, and conventions 
   - **CRITICAL**: Do NOT hardcode personal details, experience, education, or project lists directly in the page components. Always read from or modify files in the `data/` directory:
     - [config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts): Site SEO and metadata.
     - [profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts): Bio, contact details, and resume links.
-    - [projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts): List of featured and personal projects.
+    - [projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts): List of featured and personal projects. Supports `galleryLayout: "carousel" | "vertical"` where mobile app projects use 3D Coverflow (`"carousel"`) by default and desktop/macOS/CLI projects use `"vertical"` scrolling with a full-screen zoomable lightbox.
     - [experience.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/experience.ts) & [education.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/education.ts): Timelines.
     - [skills.tsx](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/skills.tsx): Categorized developer skills using Lucide and Simple Icons.
     - [testimonials.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/testimonials.ts): User/client feedback.
