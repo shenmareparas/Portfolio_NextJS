@@ -11,7 +11,7 @@ Scans your React codebase for security, performance, correctness, and architectu
 ## Usage
 
 ```bash
-bunx react-doctor@latest . --verbose --scope changed
+bunx react-doctor@latest . --verbose
 ```
 
 ## Workflow

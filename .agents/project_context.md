@@ -107,3 +107,5 @@ To update or manage the portfolio content, developers should edit the following 
 - **Fast Refresh State Preservation**: Component files isolate non-component exports to maintain fast refresh hot reloading (`react-doctor/only-export-components`).
 - **CSS Grid Transitions**: Collapsible accordion panels leverage CSS grid-row transitions (`0fr -> 1fr`) instead of Framer Motion `height: "auto"` to prevent browser layout recalculation thrashing.
 - **Flicker-Free Client Mounts**: Client-only hydration flags utilize `useSyncExternalStore` with module-scope callbacks, bypassing `useState` + `useEffect` hydration flicker.
+- **Pure State Updates & Zero Cascading Setters**: State updater functions are side-effect-free and derived during render, eliminating cascading effect re-renders (`react-hooks/set-state-in-effect`).
+- **Dynamic Event Listener Registration**: Drag, wheel, and backdrop interaction listeners on viewports are registered in return-cleaned `useEffect` blocks rather than static JSX props (`react-doctor/no-static-element-interactions`).

@@ -126,7 +126,7 @@ Portfolio content is centrally managed in the `data/` directory:
 -   **A11y & Reduced Motion**: Automatically respects user OS accessibility settings via `<MotionConfig reducedMotion="user">`.
 -   **Immediate Above-the-Fold LCP**: Zero blocking animation wrappers on above-the-fold hero content ensuring sub-second LCP/FCP.
 -   **Flicker-Free SSR Hydration**: Utilizes React 19 `useSyncExternalStore` for client-only state synchronization to prevent hydration flashes.
--   **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners.
+-   **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners with pure side-effect-free state updaters.
 
 ---
 
