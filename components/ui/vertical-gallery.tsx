@@ -29,9 +29,12 @@ interface VerticalGalleryProps {
     className?: string;
 }
 
-const MIN_SCALE = 1;
-const MAX_SCALE = 3.5;
+const MIN_SCALE = 1;      // hard floor — never zoom below 100%
+const MAX_SCALE = 3;      // hard ceiling — max zoom 300%
 const SCALE_STEP = 0.5;
+// Strip animation duration in ms — must match CSS transition below
+const STRIP_ANIM_MS = 320;
+const SLOT_STYLE = { width: "calc(100% / 3)" } as const;
 
 const emptySubscribe = () => () => {};
 
@@ -65,18 +68,18 @@ function LightboxControls({
 }: LightboxControlsProps) {
     return (
         <>
-            {/* Top Toolbar */}
-            <div
-                className="fixed top-4 right-4 z-50 flex items-center gap-1.5 p-1.5 rounded-full bg-zinc-900/90 backdrop-blur-md border border-white/20 shadow-2xl pointer-events-auto"
+            <header
+                className="fixed top-3 right-3 sm:top-4 sm:right-4 z-50 flex items-center gap-1 sm:gap-1.5 p-1 sm:p-1.5 rounded-full bg-zinc-900/90 backdrop-blur-md border border-white/20 shadow-2xl pointer-events-auto max-w-[calc(100vw-1.5rem)]"
                 onClick={(e) => e.stopPropagation()}
                 onPointerDown={(e) => e.stopPropagation()}
+                aria-label="Image zoom and dialog controls"
             >
                 <button
                     type="button"
                     onClick={onZoomOut}
                     onPointerDown={(e) => e.stopPropagation()}
                     disabled={scale <= MIN_SCALE}
-                    className="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent transition-colors cursor-pointer cursor-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer cursor-hover flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
                     aria-label="Zoom out"
                     title="Zoom out (-)"
                 >
@@ -87,12 +90,12 @@ function LightboxControls({
                     type="button"
                     onClick={onResetZoom}
                     onPointerDown={(e) => e.stopPropagation()}
-                    className="px-2.5 py-1 rounded-full text-xs font-semibold text-white/90 hover:bg-white/10 transition-colors cursor-pointer cursor-hover flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="min-h-10 sm:min-h-9 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold text-white/90 active:bg-white/20 hover:bg-white/10 transition-colors cursor-pointer cursor-hover flex items-center gap-1 sm:gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation tabular-nums"
                     aria-label="Reset zoom to 100%"
                     title="Reset zoom (0)"
                 >
                     <span>{Math.round(scale * 100)}%</span>
-                    {scale !== 1 && <RotateCcw className="w-3 h-3 text-white/70" />}
+                    {scale !== 1 && <RotateCcw className="w-3.5 h-3.5 sm:w-3 sm:h-3 text-white/70" />}
                 </button>
 
                 <button
@@ -100,7 +103,7 @@ function LightboxControls({
                     onClick={onZoomIn}
                     onPointerDown={(e) => e.stopPropagation()}
                     disabled={scale >= MAX_SCALE}
-                    className="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 disabled:opacity-40 disabled:hover:bg-transparent transition-colors cursor-pointer cursor-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer cursor-hover flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
                     aria-label="Zoom in"
                     title="Zoom in (+)"
                 >
@@ -113,36 +116,35 @@ function LightboxControls({
                     type="button"
                     onClick={onClose}
                     onPointerDown={(e) => e.stopPropagation()}
-                    className="p-2 rounded-full text-white/80 hover:text-white hover:bg-white/15 transition-colors cursor-pointer cursor-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/15 transition-colors cursor-pointer cursor-hover flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
                     aria-label="Close full screen view"
                     title="Close (Esc)"
                 >
                     <X className="w-4 h-4" />
                 </button>
-            </div>
+            </header>
 
-            {/* Navigation Controls */}
             {imagesCount > 1 && scale === 1 && (
                 <>
                     <button
                         type="button"
                         onClick={onPrev}
                         onPointerDown={(e) => e.stopPropagation()}
-                        className="fixed left-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 text-white transition-colors duration-200 cursor-pointer cursor-hover border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto"
+                        className="fixed left-2 sm:left-4 top-1/2 -translate-y-1/2 z-50 p-2.5 sm:p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:bg-zinc-700 text-white transition-colors duration-200 cursor-pointer cursor-hover border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto touch-manipulation"
                         aria-label="Previous image"
                     >
-                        <ChevronLeft className="w-6 h-6" />
+                        <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
                     <button
                         type="button"
                         onClick={onNext}
                         onPointerDown={(e) => e.stopPropagation()}
-                        className="fixed right-4 top-1/2 -translate-y-1/2 z-50 p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 text-white transition-colors duration-200 cursor-pointer cursor-hover border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto"
+                        className="fixed right-2 sm:right-4 top-1/2 -translate-y-1/2 z-50 p-2.5 sm:p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:bg-zinc-700 text-white transition-colors duration-200 cursor-pointer cursor-hover border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto touch-manipulation"
                         aria-label="Next image"
                     >
-                        <ChevronRight className="w-6 h-6" />
+                        <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
                     </button>
-                    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-4 py-1.5 rounded-full bg-zinc-900/90 text-white/90 text-xs font-semibold tracking-wider backdrop-blur-md border border-white/20 shadow-lg select-none pointer-events-none">
+                    <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 px-3.5 sm:px-4 py-1.5 rounded-full bg-zinc-900/90 text-white/90 text-xs font-semibold tracking-wider backdrop-blur-md border border-white/20 shadow-lg select-none pointer-events-none tabular-nums">
                         {selectedIdx + 1} / {imagesCount}
                     </div>
                 </>
@@ -152,131 +154,180 @@ function LightboxControls({
 }
 
 interface LightboxModalProps {
-    src: string;
+    images: GalleryItem[];
+    initialIdx: number;
     title: string;
-    selectedIdx: number;
-    imagesCount: number;
+    isDark: boolean;
     onClose: () => void;
-    onPrev: () => void;
-    onNext: () => void;
 }
 
 function LightboxModal({
-    src,
+    images,
+    initialIdx,
     title,
-    selectedIdx,
-    imagesCount,
+    isDark,
     onClose,
-    onPrev,
-    onNext,
 }: LightboxModalProps) {
+    const count = images.length;
+
+    const [activeIdx, setActiveIdx] = useState(initialIdx);
     const [scale, setScale] = useState(1);
     const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isDragging, setIsDragging] = useState(false);
+    const [isInteracting, setIsInteracting] = useState(false);
+    const [stripOffset, setStripOffset] = useState(0);
+    const [isStripAnimating, setIsStripAnimating] = useState(false);
+    const [dismissY, setDismissY] = useState(0);
+    const [dismissProgress, setDismissProgress] = useState(0);
 
     const { trigger } = useMobileHaptics();
-    const modalRef = useRef<HTMLDivElement | null>(null);
-    const viewportRef = useRef<HTMLDivElement | null>(null);
-    const isDragMovedRef = useRef(false);
+    const modalRef      = useRef<HTMLDivElement | null>(null);
+    const viewportRef   = useRef<HTMLDivElement | null>(null);
+    const imgWrapperRef = useRef<HTMLDivElement | null>(null);
 
-    const dragStartRef = useRef<{ x: number; y: number; posX: number; posY: number }>({
-        x: 0,
-        y: 0,
-        posX: 0,
-        posY: 0,
-    });
+    const scaleRef             = useRef(1);
+    const positionRef          = useRef({ x: 0, y: 0 });
+    const activeIdxRef         = useRef(initialIdx);
+    const stripOffsetRef       = useRef(0);
+    const isStripAnimatingRef  = useRef(false);
+    const isDragMovedRef            = useRef(false);
+    const lastTapRef                = useRef<number>(0);
+    const lastTapPosRef             = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+    const lastTouchDoubleTapTimeRef = useRef<number>(0);
+    const navTimerRef               = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => { scaleRef.current = scale; }, [scale]);
+    useEffect(() => { positionRef.current = position; }, [position]);
+    useEffect(() => { activeIdxRef.current = activeIdx; }, [activeIdx]);
+
+    const getImageSrc = useCallback((item: GalleryItem) => {
+        if (typeof item === "string") return item;
+        return isDark ? item.dark : item.light;
+    }, [isDark]);
+
+    const clampPosition = useCallback((targetScale: number, pos: { x: number; y: number }) => {
+        if (!viewportRef.current || targetScale <= 1) return { x: 0, y: 0 };
+        const vw = viewportRef.current.clientWidth;
+        const vh = viewportRef.current.clientHeight;
+        const maxPanX = Math.max(0, (vw * targetScale - vw) / 2);
+        const maxPanY = Math.max(0, (vh * targetScale - vh) / 2);
+        return {
+            x: Math.max(-maxPanX, Math.min(maxPanX, pos.x)),
+            y: Math.max(-maxPanY, Math.min(maxPanY, pos.y)),
+        };
+    }, []);
 
     const resetZoom = useCallback(() => {
+        scaleRef.current = 1;
+        positionRef.current = { x: 0, y: 0 };
         setScale(1);
         setPosition({ x: 0, y: 0 });
     }, []);
 
     const handleZoomIn = useCallback(() => {
-        setScale((prev) => Math.min(MAX_SCALE, Math.round((prev + SCALE_STEP) * 10) / 10));
+        const next = Math.min(MAX_SCALE, Math.round((scaleRef.current + SCALE_STEP) * 10) / 10);
+        scaleRef.current = next;
+        setScale(next);
         trigger("light");
     }, [trigger]);
 
     const handleZoomOut = useCallback(() => {
-        setScale((prev) => Math.max(MIN_SCALE, Math.round((prev - SCALE_STEP) * 10) / 10));
-        trigger("light");
-    }, [trigger]);
-
-    const handleToggleZoom = useCallback(() => {
-        if (scale > 1) {
-            resetZoom();
+        const next = Math.max(MIN_SCALE, Math.round((scaleRef.current - SCALE_STEP) * 10) / 10);
+        scaleRef.current = next;
+        setScale(next);
+        if (next <= 1) {
+            positionRef.current = { x: 0, y: 0 };
+            setPosition({ x: 0, y: 0 });
         } else {
-            setScale(2);
+            const clamped = clampPosition(next, positionRef.current);
+            positionRef.current = clamped;
+            setPosition(clamped);
         }
+        trigger("light");
+    }, [trigger, clampPosition]);
+
+    const navigateTo = useCallback((newIdx: number, direction: "prev" | "next") => {
+        if (isStripAnimatingRef.current || count <= 1) return;
+        const vw = viewportRef.current?.clientWidth ?? window.innerWidth;
+        const targetOffset = direction === "prev" ? vw : -vw;
+
+        isStripAnimatingRef.current = true;
+        setIsStripAnimating(true);
+        stripOffsetRef.current = targetOffset;
+        setStripOffset(targetOffset);
         trigger("selection");
-    }, [scale, resetZoom, trigger]);
 
-    const handlePrev = useCallback(() => {
-        resetZoom();
-        onPrev();
-    }, [resetZoom, onPrev]);
-
-    const handleNext = useCallback(() => {
-        resetZoom();
-        onNext();
-    }, [resetZoom, onNext]);
+        if (navTimerRef.current) clearTimeout(navTimerRef.current);
+        navTimerRef.current = setTimeout(() => {
+            setIsStripAnimating(false);
+            isStripAnimatingRef.current = false;
+            stripOffsetRef.current = 0;
+            setStripOffset(0);
+            activeIdxRef.current = newIdx;
+            setActiveIdx(newIdx);
+            scaleRef.current = 1;
+            positionRef.current = { x: 0, y: 0 };
+            setScale(1);
+            setPosition({ x: 0, y: 0 });
+        }, STRIP_ANIM_MS);
+    }, [count, trigger]);
 
     const actionsRef = useRef({
         handleClose: onClose,
-        handlePrev,
-        handleNext,
         handleZoomIn,
         handleZoomOut,
         resetZoom,
-        scale,
+        clampPosition,
+        trigger,
+        navigateTo,
+        count,
     });
 
     useEffect(() => {
         actionsRef.current = {
             handleClose: onClose,
-            handlePrev,
-            handleNext,
             handleZoomIn,
             handleZoomOut,
             resetZoom,
-            scale,
+            clampPosition,
+            trigger,
+            navigateTo,
+            count,
         };
-    }, [onClose, handlePrev, handleNext, handleZoomIn, handleZoomOut, resetZoom, scale]);
+    }, [onClose, handleZoomIn, handleZoomOut, resetZoom, clampPosition, trigger, navigateTo, count]);
 
-    // Body scroll locking and keyboard navigation
+    // Body scroll lock + keyboard shortcuts
     useEffect(() => {
         const originalOverflow = document.body.style.overflow;
         document.body.style.overflow = "hidden";
 
         const handleKeyDown = (e: KeyboardEvent) => {
-            const actions = actionsRef.current;
+            const a = actionsRef.current;
+            const idx = activeIdxRef.current;
+            const c = a.count;
             if (e.key === "Escape") {
-                if (actions.scale > 1) {
-                    actions.resetZoom();
-                } else {
-                    actions.handleClose();
-                }
-            } else if (e.key === "ArrowLeft") {
-                if (actions.scale === 1) actions.handlePrev();
-            } else if (e.key === "ArrowRight") {
-                if (actions.scale === 1) actions.handleNext();
+                if (scaleRef.current > 1) a.resetZoom();
+                else a.handleClose();
+            } else if (e.key === "ArrowLeft" && scaleRef.current === 1) {
+                a.navigateTo((idx - 1 + c) % c, "prev");
+            } else if (e.key === "ArrowRight" && scaleRef.current === 1) {
+                a.navigateTo((idx + 1) % c, "next");
             } else if (e.key === "+" || e.key === "=") {
-                actions.handleZoomIn();
+                a.handleZoomIn();
             } else if (e.key === "-" || e.key === "_") {
-                actions.handleZoomOut();
+                a.handleZoomOut();
             } else if (e.key === "0") {
-                actions.resetZoom();
+                a.resetZoom();
             }
         };
 
         window.addEventListener("keydown", handleKeyDown);
-
         return () => {
             document.body.style.overflow = originalOverflow;
             window.removeEventListener("keydown", handleKeyDown);
         };
     }, []);
 
-    // Native non-passive wheel & gesture prevention
+    // Non-passive wheel zoom + iOS gesture prevention
     useEffect(() => {
         const modalEl = modalRef.current;
         if (!modalEl) return;
@@ -284,16 +335,22 @@ function LightboxModal({
         const handleNativeWheel = (e: WheelEvent) => {
             e.preventDefault();
             e.stopPropagation();
-
             const sensitivity = e.ctrlKey ? 0.0085 : 0.003;
             const delta = -e.deltaY * sensitivity;
-
-            setScale((prev) => Math.min(MAX_SCALE, Math.max(MIN_SCALE, Math.round((prev + delta) * 100) / 100)));
+            const next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, Math.round((scaleRef.current + delta) * 100) / 100));
+            scaleRef.current = next;
+            setScale(next);
+            if (next <= 1) {
+                positionRef.current = { x: 0, y: 0 };
+                setPosition({ x: 0, y: 0 });
+            } else {
+                const clamped = actionsRef.current.clampPosition(next, positionRef.current);
+                positionRef.current = clamped;
+                setPosition(clamped);
+            }
         };
 
-        const preventGesture = (e: Event) => {
-            e.preventDefault();
-        };
+        const preventGesture = (e: Event) => e.preventDefault();
 
         modalEl.addEventListener("wheel", handleNativeWheel, { passive: false });
         modalEl.addEventListener("gesturestart", preventGesture, { passive: false });
@@ -308,76 +365,339 @@ function LightboxModal({
         };
     }, []);
 
-    // Dynamic drag-scroll registration via useEffect
+    // Main pointer-gesture engine
     useEffect(() => {
         const viewport = viewportRef.current;
         if (!viewport) return;
 
+        const activePointers = new Map<number, { x: number; y: number }>();
+        let pinchStartDistance = 0;
+        let pinchStartScale    = 1;
+        let pinchStartFocal    = { x: 0, y: 0 };
+        let pinchStartPosition = { x: 0, y: 0 };
+        let panStartPos        = { x: 0, y: 0 };
+        let panStartPointer    = { x: 0, y: 0 };
+        let dismissDistY       = 0;
+        type GT = "none" | "swipe-x" | "dismiss-y" | "pinch";
+        let gestureType: GT   = "none";
+        let lastMoveTime      = 0;
+        let lastMoveX         = 0;
+        let velocityX         = 0;
+        let pointerDownTime   = 0;
+
+        const getDistance = (p1: { x: number; y: number }, p2: { x: number; y: number }) =>
+            Math.hypot(p1.x - p2.x, p1.y - p2.y);
+
+        const getCenter = (p1: { x: number; y: number }, p2: { x: number; y: number }) => ({
+            x: (p1.x + p2.x) / 2,
+            y: (p1.y + p2.y) / 2,
+        });
+
+        const snapStripBack = () => {
+            isStripAnimatingRef.current = true;
+            setIsStripAnimating(true);
+            stripOffsetRef.current = 0;
+            setStripOffset(0);
+            setTimeout(() => {
+                isStripAnimatingRef.current = false;
+                setIsStripAnimating(false);
+            }, STRIP_ANIM_MS);
+        };
+
         const onPointerDown = (e: PointerEvent) => {
-            isDragMovedRef.current = false;
-            if (actionsRef.current.scale <= 1 || e.button !== 0) return;
-            setIsDragging(true);
-            dragStartRef.current = {
-                x: e.clientX,
-                y: e.clientY,
-                posX: position.x,
-                posY: position.y,
-            };
+            if (isStripAnimatingRef.current) return;
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+            if (e.pointerType === "touch" && activePointers.size === 2) {
+                const pts = Array.from(activePointers.values());
+                pinchStartDistance = getDistance(pts[0], pts[1]);
+                pinchStartScale    = scaleRef.current;
+                pinchStartPosition = { ...positionRef.current };
+                const rect   = viewport.getBoundingClientRect();
+                const center = getCenter(pts[0], pts[1]);
+                pinchStartFocal = {
+                    x: center.x - rect.left - rect.width  / 2,
+                    y: center.y - rect.top  - rect.height / 2,
+                };
+                gestureType = "pinch";
+                isDragMovedRef.current = true;
+                setIsInteracting(true);
+                return;
+            }
+
+            if (activePointers.size === 1) {
+                pointerDownTime = Date.now();
+                isDragMovedRef.current = false;
+                panStartPointer = { x: e.clientX, y: e.clientY };
+                panStartPos     = { ...positionRef.current };
+                gestureType     = "none";
+                dismissDistY    = 0;
+                velocityX       = 0;
+                lastMoveTime    = Date.now();
+                lastMoveX       = e.clientX;
+                if (scaleRef.current > 1) setIsInteracting(true);
+            }
         };
 
         const onPointerMove = (e: PointerEvent) => {
-            if (!isDragging || actionsRef.current.scale <= 1) return;
-            const dx = e.clientX - dragStartRef.current.x;
-            const dy = e.clientY - dragStartRef.current.y;
-            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+            if (!activePointers.has(e.pointerId)) return;
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+            // Pinch zoom at focal point
+            if (e.pointerType === "touch" && activePointers.size === 2 && pinchStartDistance > 0) {
+                const pts             = Array.from(activePointers.values());
+                const currentDistance = getDistance(pts[0], pts[1]);
+                const center          = getCenter(pts[0], pts[1]);
+                const rect            = viewport.getBoundingClientRect();
+                const currentFocal    = {
+                    x: center.x - rect.left - rect.width  / 2,
+                    y: center.y - rect.top  - rect.height / 2,
+                };
+
+                const rawScale = pinchStartScale * (currentDistance / pinchStartDistance);
+                // Hard floor at 100% — no rubber-band below MIN_SCALE
+                // Gentle rubber-band above MAX_SCALE up to MAX_SCALE+0.5 (350%)
+                const rubbered = rawScale > MAX_SCALE
+                    ? MAX_SCALE + (rawScale - MAX_SCALE) * 0.25
+                    : rawScale;
+                const newScale = Math.max(MIN_SCALE, Math.min(MAX_SCALE + 0.5, rubbered));
+
+                const scaleRatio = newScale / pinchStartScale;
+                const newX = currentFocal.x - (pinchStartFocal.x - pinchStartPosition.x) * scaleRatio;
+                const newY = currentFocal.y - (pinchStartFocal.y - pinchStartPosition.y) * scaleRatio;
+
+                scaleRef.current    = newScale;
+                positionRef.current = { x: newX, y: newY };
+                setScale(newScale);
+                setPosition({ x: newX, y: newY });
                 isDragMovedRef.current = true;
-                if (!viewport.hasPointerCapture(e.pointerId)) {
-                    try {
-                        viewport.setPointerCapture(e.pointerId);
-                    } catch {
-                        // Ignore
-                    }
+                return;
+            }
+
+            if (activePointers.size !== 1) return;
+
+            const dx  = e.clientX - panStartPointer.x;
+            const dy  = e.clientY - panStartPointer.y;
+            const absDx = Math.abs(dx);
+            const absDy = Math.abs(dy);
+            const now = Date.now();
+            const dt  = now - lastMoveTime;
+            if (dt > 0) velocityX = (e.clientX - lastMoveX) / dt;
+            lastMoveTime = now;
+            lastMoveX    = e.clientX;
+
+            if (absDx > 16 || absDy > 16) isDragMovedRef.current = true;
+
+            // Pan inside zoomed image
+            if (scaleRef.current > 1) {
+                if (absDx > 10 || absDy > 10) {
+                    isDragMovedRef.current = true;
+                    positionRef.current = { x: panStartPos.x + dx, y: panStartPos.y + dy };
+                    setPosition({ x: panStartPos.x + dx, y: panStartPos.y + dy });
+                }
+                return;
+            }
+
+            if (e.pointerType !== "touch") return;
+
+            // Classify gesture on first significant movement (with touch slop)
+            if (gestureType === "none") {
+                if (absDx > absDy && absDx > 16) {
+                    gestureType = "swipe-x";
+                    setIsInteracting(true);
+                } else if (dy > 0 && absDy > absDx && absDy > 16) {
+                    gestureType = "dismiss-y";
+                    setIsInteracting(true);
                 }
             }
-            setPosition({
-                x: dragStartRef.current.posX + dx,
-                y: dragStartRef.current.posY + dy,
-            });
+
+            if (gestureType === "swipe-x" && actionsRef.current.count > 1) {
+                stripOffsetRef.current = dx;
+                setStripOffset(dx);
+            } else if (gestureType === "dismiss-y") {
+                dismissDistY = dy;
+                const progress = Math.min(1, Math.abs(dy) / 280);
+                setDismissProgress(progress);
+                setDismissY(dy);
+            }
         };
 
         const onPointerUp = (e: PointerEvent) => {
-            if (isDragging) {
-                setIsDragging(false);
-                try {
-                    if (viewport.hasPointerCapture(e.pointerId)) {
-                        viewport.releasePointerCapture(e.pointerId);
+            activePointers.delete(e.pointerId);
+
+            if (e.pointerType === "touch" && activePointers.size === 1) {
+                const remaining = Array.from(activePointers.values())[0];
+                panStartPointer    = { x: remaining.x, y: remaining.y };
+                panStartPos        = { ...positionRef.current };
+                gestureType        = "none";
+                pinchStartDistance = 0;
+                return;
+            }
+
+            if (activePointers.size > 0) return;
+
+            // ── DOUBLE-TAP: check FIRST, before any setState, so nothing can
+            //    race with or override the zoom state changes below.
+            if (e.pointerType === "touch" && gestureType === "none") {
+                const dxFromStart   = Math.abs(e.clientX - panStartPointer.x);
+                const dyFromStart   = Math.abs(e.clientY - panStartPointer.y);
+                const touchDuration = Date.now() - pointerDownTime;
+                const isQuickTap    = touchDuration < 350 && dxFromStart < 24 && dyFromStart < 24;
+
+                if (isQuickTap) {
+                    const now          = Date.now();
+                    const timeDiff     = now - lastTapRef.current;
+                    const distFromLast = Math.hypot(
+                        e.clientX - lastTapPosRef.current.x,
+                        e.clientY - lastTapPosRef.current.y
+                    );
+
+                    if (timeDiff < 400 && timeDiff > 40 && distFromLast < 45) {
+                        // ── Double-tap confirmed ──────────────────────────────
+                        lastTouchDoubleTapTimeRef.current = Date.now();
+                        lastTapRef.current = 0;
+                        gestureType        = "none";
+
+                        const rect = viewport.getBoundingClientRect();
+                        const tapX = e.clientX - rect.left - rect.width  / 2;
+                        const tapY = e.clientY - rect.top  - rect.height / 2;
+
+                        if (scaleRef.current > 1.05) {
+                            // Zoomed → zoom out: enable transition then reset
+                            setIsInteracting(false);
+                            actionsRef.current.resetZoom();
+                            actionsRef.current.trigger("selection");
+                        } else {
+                            // At 1× → zoom in to 2.4× at tap focal point
+                            // Keep isInteracting=false so CSS transition animates
+                            setIsInteracting(false);
+                            const targetScale = 2.4;
+                            const targetPos   = actionsRef.current.clampPosition(targetScale, {
+                                x: -tapX * (targetScale - 1),
+                                y: -tapY * (targetScale - 1),
+                            });
+                            scaleRef.current    = targetScale;
+                            positionRef.current = targetPos;
+                            setScale(targetScale);
+                            setPosition(targetPos);
+                            actionsRef.current.trigger("selection");
+                        }
+                        return; // done — skip all gesture resolution below
                     }
-                } catch {
-                    // Ignore
+
+                    // First tap of a potential double-tap — record timestamp & position
+                    lastTapRef.current    = now;
+                    lastTapPosRef.current = { x: e.clientX, y: e.clientY };
+                }
+            }
+
+            // ── Resolve classified gesture ────────────────────────────────────
+            setIsInteracting(false);
+
+            if (gestureType === "swipe-x") {
+                const currentOffset  = stripOffsetRef.current;
+                const vw             = viewport.clientWidth;
+                const shouldNavigate = Math.abs(currentOffset) > vw * 0.3 || Math.abs(velocityX) > 0.4;
+                const c              = actionsRef.current.count;
+
+                if (shouldNavigate && currentOffset > 0) {
+                    actionsRef.current.navigateTo((activeIdxRef.current - 1 + c) % c, "prev");
+                } else if (shouldNavigate && currentOffset < 0) {
+                    actionsRef.current.navigateTo((activeIdxRef.current + 1) % c, "next");
+                } else {
+                    snapStripBack();
+                }
+
+            } else if (gestureType === "dismiss-y") {
+                if (Math.abs(dismissDistY) > 90) {
+                    actionsRef.current.trigger("light");
+                    actionsRef.current.handleClose();
+                    return;
+                }
+                setDismissY(0);
+                setDismissProgress(0);
+                dismissDistY = 0;
+
+            } else if (gestureType === "pinch") {
+                // Snap rubber-band back within hard bounds on finger lift
+                const targetScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scaleRef.current));
+
+                if (targetScale <= 1) {
+                    scaleRef.current    = 1;
+                    positionRef.current = { x: 0, y: 0 };
+                    setScale(1);
+                    setPosition({ x: 0, y: 0 });
+                } else {
+                    scaleRef.current = targetScale;
+                    setScale(targetScale);
+                    const clamped       = actionsRef.current.clampPosition(targetScale, positionRef.current);
+                    positionRef.current = clamped;
+                    setPosition(clamped);
+                }
+
+            } else {
+                // Plain tap / unclassified — reset any drift
+                if (scaleRef.current <= 1) {
+                    setDismissY(0);
+                    setDismissProgress(0);
+                    setPosition({ x: 0, y: 0 });
+                    positionRef.current = { x: 0, y: 0 };
+                } else {
+                    const clamped       = actionsRef.current.clampPosition(scaleRef.current, positionRef.current);
+                    positionRef.current = clamped;
+                    setPosition(clamped);
+                }
+            }
+
+            gestureType        = "none";
+            pinchStartDistance = 0;
+        };
+
+        const onClick = (e: MouseEvent) => {
+            if (Date.now() - lastTouchDoubleTapTimeRef.current < 700) {
+                e.stopPropagation();
+                return;
+            }
+            if (!isDragMovedRef.current) {
+                const imgEl          = imgWrapperRef.current;
+                const clickedOnImage = imgEl && (imgEl === e.target || imgEl.contains(e.target as Node));
+                if (!clickedOnImage) {
+                    if (scaleRef.current > 1) {
+                        actionsRef.current.resetZoom();
+                    } else {
+                        actionsRef.current.handleClose();
+                    }
                 }
             }
         };
 
-        const onClick = (e: MouseEvent) => {
-            if (e.target === viewport && !isDragMovedRef.current) {
-                actionsRef.current.handleClose();
-            }
-        };
-
-        viewport.addEventListener("click", onClick);
-        viewport.addEventListener("pointerdown", onPointerDown);
-        viewport.addEventListener("pointermove", onPointerMove);
-        viewport.addEventListener("pointerup", onPointerUp);
+        viewport.addEventListener("click",         onClick);
+        viewport.addEventListener("pointerdown",   onPointerDown);
+        viewport.addEventListener("pointermove",   onPointerMove);
+        viewport.addEventListener("pointerup",     onPointerUp);
         viewport.addEventListener("pointercancel", onPointerUp);
 
         return () => {
-            viewport.removeEventListener("click", onClick);
-            viewport.removeEventListener("pointerdown", onPointerDown);
-            viewport.removeEventListener("pointermove", onPointerMove);
-            viewport.removeEventListener("pointerup", onPointerUp);
+            viewport.removeEventListener("click",         onClick);
+            viewport.removeEventListener("pointerdown",   onPointerDown);
+            viewport.removeEventListener("pointermove",   onPointerMove);
+            viewport.removeEventListener("pointerup",     onPointerUp);
             viewport.removeEventListener("pointercancel", onPointerUp);
         };
-    }, [isDragging, position.x, position.y]);
+    }, []);
+
+    // Cleanup nav timer on unmount
+    useEffect(() => {
+        return () => {
+            if (navTimerRef.current) clearTimeout(navTimerRef.current);
+        };
+    }, []);
+
+    const prevIdx       = (activeIdx - 1 + count) % count;
+    const nextIdx       = (activeIdx + 1) % count;
+    const bgOpacity     = Math.max(0.2, 0.95 - dismissProgress * 0.7);
+    const imgClass      = "max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain rounded-xl shadow-2xl pointer-events-none select-none";
+    const slotClass     = "flex-shrink-0 h-full flex items-center justify-center p-2 sm:p-4 md:p-8";
 
     return (
         <m.div
@@ -386,71 +706,163 @@ function LightboxModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[999] flex items-center justify-center bg-black/90 backdrop-blur-md select-none overflow-hidden"
+            style={{
+                backgroundColor: `rgba(0,0,0,${bgOpacity})`,
+                transition: isInteracting ? "none" : "background-color 0.25s ease-out",
+            }}
+            className="fixed inset-0 z-[999] backdrop-blur-md select-none overflow-hidden touch-none"
             role="dialog"
             aria-modal="true"
             aria-label="Fullscreen screenshot view"
         >
             <LightboxControls
                 scale={scale}
-                imagesCount={imagesCount}
-                selectedIdx={selectedIdx}
+                imagesCount={count}
+                selectedIdx={activeIdx}
                 onZoomIn={handleZoomIn}
                 onZoomOut={handleZoomOut}
                 onResetZoom={resetZoom}
                 onClose={onClose}
-                onPrev={handlePrev}
-                onNext={handleNext}
+                onPrev={() => { if (!isStripAnimatingRef.current) navigateTo(prevIdx, "prev"); }}
+                onNext={() => { if (!isStripAnimatingRef.current) navigateTo(nextIdx, "next"); }}
             />
 
-            {/* Interactive Viewport */}
+            {/* Viewport — receives dismissY so the whole strip lifts together */}
             <div
                 ref={viewportRef}
                 className={cn(
-                    "relative z-10 w-full h-full flex items-center justify-center p-4 md:p-8 touch-none",
-                    scale > 1 ? (isDragging ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
+                    "w-full h-full overflow-hidden touch-none",
+                    scale > 1 ? (isInteracting ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
                 )}
+                style={{
+                    transform: `translateY(${dismissY}px) scale(${1 - dismissProgress * 0.06})`,
+                    transformOrigin: "center center",
+                    transition: isInteracting
+                        ? "none"
+                        : "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+                    willChange: isInteracting ? "transform" : "auto",
+                }}
             >
-                <m.div
-                    key={selectedIdx}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="relative max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none pointer-events-auto"
+                {/*
+                 * 3-image strip:  [prev] [current] [next]
+                 *
+                 * Width = 300% of viewport.
+                 * Default translateX(-100%/3) = -33.333% of strip = -100vw → centres middle slot.
+                 * stripOffset shifts by the user's drag or navigation animation (px).
+                 *
+                 * Navigation flow:
+                 *   1. isStripAnimating = true → CSS transition active
+                 *   2. stripOffset animates to ±vw (next/prev fully centred)
+                 *   3. After STRIP_ANIM_MS: activeIdx swaps + stripOffset resets to 0 instantly.
+                 *      No visual jump because the new image was already at that position.
+                 */}
+                <div
+                    className="flex h-full"
+                    style={{
+                        width: "300%",
+                        transform: `translateX(calc(-100% / 3 + ${stripOffset}px))`,
+                        transition: isStripAnimating
+                            ? `transform ${STRIP_ANIM_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
+                            : "none",
+                        willChange: isStripAnimating ? "transform" : "auto",
+                    }}
                 >
-                    <button
-                        type="button"
-                        onClick={(e) => e.stopPropagation()}
-                        onDoubleClick={handleToggleZoom}
-                        style={{
-                            transform: `translate3d(${scale <= 1 ? 0 : position.x}px, ${scale <= 1 ? 0 : position.y}px, 0px) scale(${scale})`,
-                            transformOrigin: "center center",
-                            transition: isDragging ? "none" : "transform 0.2s cubic-bezier(0.2, 0, 0, 1)",
-                        }}
-                        className={cn(
-                            "relative flex items-center justify-center will-change-transform select-none bg-transparent border-none p-0 outline-none",
-                            scale > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+                    {/* ── PREVIOUS slot ─────────────────────────────────────── */}
+                    <div className={slotClass} style={SLOT_STYLE}>
+                        {count > 1 && (
+                            <Image
+                                src={getImageSrc(images[prevIdx])}
+                                alt={`${title} screenshot ${prevIdx + 1}`}
+                                width={2560}
+                                height={1440}
+                                sizes="95vw"
+                                className={imgClass}
+                                loading="eager"
+                                draggable={false}
+                            />
                         )}
-                        aria-label="Double-click to toggle zoom"
-                    >
-                        <Image
-                            src={src}
-                            alt={`${title} screenshot ${selectedIdx + 1}`}
-                            width={2560}
-                            height={1440}
-                            sizes="95vw"
-                            className="max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain rounded-xl shadow-2xl pointer-events-none select-none"
-                            priority
-                            draggable={false}
-                        />
-                    </button>
-                </m.div>
+                    </div>
+
+                    {/* ── CURRENT slot (zoom / pan applied here) ────────────── */}
+                    <div className={slotClass} style={SLOT_STYLE}>
+                        <div
+                            ref={imgWrapperRef}
+                            onDoubleClick={(e) => {
+                                e.stopPropagation();
+                                if (Date.now() - lastTouchDoubleTapTimeRef.current < 700) {
+                                    return;
+                                }
+                                const vp = viewportRef.current;
+                                if (!vp) return;
+                                const rect = vp.getBoundingClientRect();
+                                const tapX = e.clientX - rect.left - rect.width  / 2;
+                                const tapY = e.clientY - rect.top  - rect.height / 2;
+                                if (scaleRef.current > 1) {
+                                    resetZoom();
+                                    trigger("selection");
+                                } else {
+                                    const targetScale = 2.4;
+                                    const targetPos   = clampPosition(targetScale, {
+                                        x: -tapX * (targetScale - 1),
+                                        y: -tapY * (targetScale - 1),
+                                    });
+                                    scaleRef.current    = targetScale;
+                                    positionRef.current = targetPos;
+                                    setScale(targetScale);
+                                    setPosition(targetPos);
+                                    trigger("selection");
+                                }
+                            }}
+                            className={cn(
+                                "relative max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none pointer-events-auto",
+                                scale > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+                            )}
+                            style={{
+                                transform: `translate3d(${position.x}px,${position.y}px,0) scale(${scale})`,
+                                transformOrigin: "center center",
+                                willChange: isInteracting ? "transform" : "auto",
+                                transition: isInteracting
+                                    ? "none"
+                                    : "transform 0.24s cubic-bezier(0.25, 1, 0.5, 1)",
+                            }}
+                        >
+                            <Image
+                                src={getImageSrc(images[activeIdx])}
+                                alt={`${title} screenshot ${activeIdx + 1}`}
+                                width={2560}
+                                height={1440}
+                                sizes="95vw"
+                                className={imgClass}
+                                priority
+                                draggable={false}
+                            />
+                        </div>
+                    </div>
+
+                    {/* ── NEXT slot ─────────────────────────────────────────── */}
+                    <div className={slotClass} style={SLOT_STYLE}>
+                        {count > 1 && (
+                            <Image
+                                src={getImageSrc(images[nextIdx])}
+                                alt={`${title} screenshot ${nextIdx + 1}`}
+                                width={2560}
+                                height={1440}
+                                sizes="95vw"
+                                className={imgClass}
+                                loading="eager"
+                                draggable={false}
+                            />
+                        )}
+                    </div>
+                </div>
             </div>
         </m.div>
     );
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// VerticalGallery — thumbnail grid + lightbox portal
+// ─────────────────────────────────────────────────────────────────────────────
 export function VerticalGallery({
     images,
     title,
@@ -458,15 +870,10 @@ export function VerticalGallery({
 }: VerticalGalleryProps) {
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
     const { resolvedTheme } = useTheme();
-    const { trigger } = useMobileHaptics();
+    const { trigger }       = useMobileHaptics();
 
-    const mounted = useSyncExternalStore(
-        emptySubscribe,
-        () => true,
-        () => false
-    );
-
-    const isDark = mounted && resolvedTheme === "dark";
+    const mounted = useSyncExternalStore(emptySubscribe, () => true, () => false);
+    const isDark  = mounted && resolvedTheme === "dark";
 
     const getImageUrl = useCallback(
         (item: GalleryItem) => {
@@ -489,48 +896,28 @@ export function VerticalGallery({
         trigger("selection");
     }, [trigger]);
 
-    const handlePrev = useCallback(() => {
-        if (images.length === 0) return;
-        setSelectedIdx((prev) => (prev === null ? null : (prev - 1 + images.length) % images.length));
-        trigger("selection");
-    }, [images.length, trigger]);
-
-    const handleNext = useCallback(() => {
-        if (images.length === 0) return;
-        setSelectedIdx((prev) => (prev === null ? null : (prev + 1) % images.length));
-        trigger("selection");
-    }, [images.length, trigger]);
-
     if (!images || images.length === 0) return null;
-
-    const activeImageSrc = selectedIdx !== null ? getImageUrl(images[selectedIdx]) : null;
 
     return (
         <>
             <div className={cn("w-full h-full xl:overflow-y-auto xl:px-8 xl:py-6 space-y-6 md:space-y-8", className)}>
                 {images.map((item, idx) => {
-                    const src = getImageUrl(item);
+                    const src     = getImageUrl(item);
                     const itemKey = getGalleryItemKey(item, idx);
                     return (
                         <m.button
                             type="button"
                             key={itemKey}
                             onClick={() => handleOpen(idx)}
-                            whileHover={{
-                                y: -8,
-                                scale: 1.02,
-                                transition: { duration: 0.2 },
-                            }}
+                            whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.2 } }}
                             whileTap={{ scale: 0.98 }}
                             className="group relative w-full text-left rounded-2xl overflow-hidden border border-border/40 bg-zinc-900/5 dark:bg-zinc-900/40 transition-shadow duration-300 hover:shadow-xl dark:hover:shadow-2xl cursor-zoom-in cursor-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block"
                             aria-label={`Open ${title} screenshot ${idx + 1} in full screen`}
                         >
-                            {/* Dynamic Border Glow */}
                             <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none z-20">
                                 <div className="absolute inset-0 border-2 border-primary rounded-2xl opacity-40" />
                                 <div className="absolute inset-0 bg-primary opacity-[0.03] rounded-2xl" />
                             </div>
-
                             <div className="relative w-full rounded-2xl bg-muted/20">
                                 <Image
                                     src={src}
@@ -539,8 +926,8 @@ export function VerticalGallery({
                                     height={1080}
                                     sizes="(max-width: 1280px) 100vw, 50vw"
                                     className="w-full h-auto object-contain rounded-2xl"
-                                    loading={idx === 0 ? "eager" : "lazy"}
-                                    priority={idx === 0}
+                                    loading={idx <= 1 ? "eager" : "lazy"}
+                                    priority={idx <= 1}
                                 />
                             </div>
                         </m.button>
@@ -548,19 +935,16 @@ export function VerticalGallery({
                 })}
             </div>
 
-            {/* Lightbox Portal */}
             {mounted &&
                 createPortal(
                     <AnimatePresence mode="wait">
-                        {selectedIdx !== null && activeImageSrc && (
+                        {selectedIdx !== null && (
                             <LightboxModal
-                                src={activeImageSrc}
+                                images={images}
+                                initialIdx={selectedIdx}
                                 title={title}
-                                selectedIdx={selectedIdx}
-                                imagesCount={images.length}
+                                isDark={isDark}
                                 onClose={handleClose}
-                                onPrev={handlePrev}
-                                onNext={handleNext}
                             />
                         )}
                     </AnimatePresence>,
