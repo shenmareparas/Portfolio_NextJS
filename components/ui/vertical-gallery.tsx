@@ -6,6 +6,7 @@ import React, {
     useCallback,
     useRef,
     useSyncExternalStore,
+    useReducer,
 } from "react";
 import { createPortal } from "react-dom";
 import { useTheme } from "next-themes";
@@ -161,140 +162,124 @@ interface LightboxModalProps {
     onClose: () => void;
 }
 
-function LightboxModal({
-    images,
-    initialIdx,
-    title,
-    isDark,
-    onClose,
-}: LightboxModalProps) {
-    const count = images.length;
+interface LightboxState {
+    activeIdx: number;
+    scale: number;
+    position: { x: number; y: number };
+    isInteracting: boolean;
+    stripOffset: number;
+    isStripAnimating: boolean;
+    dismissY: number;
+    dismissProgress: number;
+}
 
-    const [activeIdx, setActiveIdx] = useState(initialIdx);
-    const [scale, setScale] = useState(1);
-    const [position, setPosition] = useState({ x: 0, y: 0 });
-    const [isInteracting, setIsInteracting] = useState(false);
-    const [stripOffset, setStripOffset] = useState(0);
-    const [isStripAnimating, setIsStripAnimating] = useState(false);
-    const [dismissY, setDismissY] = useState(0);
-    const [dismissProgress, setDismissProgress] = useState(0);
+type LightboxAction =
+    | { type: "RESET_ZOOM" }
+    | { type: "SET_SCALE"; scale: number }
+    | { type: "SET_ZOOM"; scale: number; position: { x: number; y: number } }
+    | { type: "SET_POSITION"; position: { x: number; y: number } }
+    | { type: "SET_INTERACTING"; isInteracting: boolean }
+    | { type: "NAVIGATE_START"; stripOffset: number }
+    | { type: "NAVIGATE_END"; newIdx: number }
+    | { type: "SNAP_STRIP_START" }
+    | { type: "SNAP_STRIP_END" }
+    | { type: "SET_STRIP_OFFSET"; offset: number }
+    | { type: "SET_DISMISS"; dismissY: number; dismissProgress: number }
+    | { type: "RESET_DISMISS" };
 
-    const { trigger } = useMobileHaptics();
-    const modalRef      = useRef<HTMLDivElement | null>(null);
-    const viewportRef   = useRef<HTMLDivElement | null>(null);
-    const imgWrapperRef = useRef<HTMLDivElement | null>(null);
+function createInitialLightboxState(initialIdx: number): LightboxState {
+    return {
+        activeIdx: initialIdx,
+        scale: 1,
+        position: { x: 0, y: 0 },
+        isInteracting: false,
+        stripOffset: 0,
+        isStripAnimating: false,
+        dismissY: 0,
+        dismissProgress: 0,
+    };
+}
 
-    const scaleRef             = useRef(1);
-    const positionRef          = useRef({ x: 0, y: 0 });
-    const activeIdxRef         = useRef(initialIdx);
-    const stripOffsetRef       = useRef(0);
-    const isStripAnimatingRef  = useRef(false);
-    const isDragMovedRef            = useRef(false);
-    const lastTapRef                = useRef<number>(0);
-    const lastTapPosRef             = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
-    const lastTouchDoubleTapTimeRef = useRef<number>(0);
-    const navTimerRef               = useRef<ReturnType<typeof setTimeout> | null>(null);
+function lightboxReducer(state: LightboxState, action: LightboxAction): LightboxState {
+    switch (action.type) {
+        case "RESET_ZOOM":
+            return { ...state, scale: 1, position: { x: 0, y: 0 } };
+        case "SET_SCALE":
+            return { ...state, scale: action.scale };
+        case "SET_ZOOM":
+            return { ...state, scale: action.scale, position: action.position };
+        case "SET_POSITION":
+            return { ...state, position: action.position };
+        case "SET_INTERACTING":
+            return { ...state, isInteracting: action.isInteracting };
+        case "NAVIGATE_START":
+            return { ...state, isStripAnimating: true, stripOffset: action.stripOffset };
+        case "NAVIGATE_END":
+            return {
+                ...state,
+                isStripAnimating: false,
+                stripOffset: 0,
+                activeIdx: action.newIdx,
+                scale: 1,
+                position: { x: 0, y: 0 },
+            };
+        case "SNAP_STRIP_START":
+            return { ...state, isStripAnimating: true, stripOffset: 0 };
+        case "SNAP_STRIP_END":
+            return { ...state, isStripAnimating: false };
+        case "SET_STRIP_OFFSET":
+            return { ...state, stripOffset: action.offset };
+        case "SET_DISMISS":
+            return { ...state, dismissY: action.dismissY, dismissProgress: action.dismissProgress };
+        case "RESET_DISMISS":
+            return { ...state, dismissY: 0, dismissProgress: 0 };
+        default:
+            return state;
+    }
+}
 
-    useEffect(() => { scaleRef.current = scale; }, [scale]);
-    useEffect(() => { positionRef.current = position; }, [position]);
-    useEffect(() => { activeIdxRef.current = activeIdx; }, [activeIdx]);
+interface UseLightboxGesturesParams {
+    modalRef: React.RefObject<HTMLDivElement | null>;
+    viewportRef: React.RefObject<HTMLDivElement | null>;
+    imgWrapperRef: React.RefObject<HTMLDivElement | null>;
+    scaleRef: React.RefObject<number>;
+    positionRef: React.RefObject<{ x: number; y: number }>;
+    activeIdxRef: React.RefObject<number>;
+    stripOffsetRef: React.RefObject<number>;
+    isStripAnimatingRef: React.RefObject<boolean>;
+    isDragMovedRef: React.RefObject<boolean>;
+    lastTapRef: React.RefObject<number>;
+    lastTapPosRef: React.RefObject<{ x: number; y: number }>;
+    lastTouchDoubleTapTimeRef: React.RefObject<number>;
+    actionsRef: React.RefObject<{
+        handleClose: () => void;
+        handleZoomIn: () => void;
+        handleZoomOut: () => void;
+        resetZoom: () => void;
+        clampPosition: (targetScale: number, pos: { x: number; y: number }) => { x: number; y: number };
+        trigger: ReturnType<typeof useMobileHaptics>["trigger"];
+        navigateTo: (newIdx: number, direction: "prev" | "next") => void;
+        count: number;
+    }>;
+    dispatch: React.Dispatch<LightboxAction>;
+}
 
-    const getImageSrc = useCallback((item: GalleryItem) => {
-        if (typeof item === "string") return item;
-        return isDark ? item.dark : item.light;
-    }, [isDark]);
-
-    const clampPosition = useCallback((targetScale: number, pos: { x: number; y: number }) => {
-        if (!viewportRef.current || targetScale <= 1) return { x: 0, y: 0 };
-        const vw = viewportRef.current.clientWidth;
-        const vh = viewportRef.current.clientHeight;
-        const maxPanX = Math.max(0, (vw * targetScale - vw) / 2);
-        const maxPanY = Math.max(0, (vh * targetScale - vh) / 2);
-        return {
-            x: Math.max(-maxPanX, Math.min(maxPanX, pos.x)),
-            y: Math.max(-maxPanY, Math.min(maxPanY, pos.y)),
-        };
-    }, []);
-
-    const resetZoom = useCallback(() => {
-        scaleRef.current = 1;
-        positionRef.current = { x: 0, y: 0 };
-        setScale(1);
-        setPosition({ x: 0, y: 0 });
-    }, []);
-
-    const handleZoomIn = useCallback(() => {
-        const next = Math.min(MAX_SCALE, Math.round((scaleRef.current + SCALE_STEP) * 10) / 10);
-        scaleRef.current = next;
-        setScale(next);
-        trigger("light");
-    }, [trigger]);
-
-    const handleZoomOut = useCallback(() => {
-        const next = Math.max(MIN_SCALE, Math.round((scaleRef.current - SCALE_STEP) * 10) / 10);
-        scaleRef.current = next;
-        setScale(next);
-        if (next <= 1) {
-            positionRef.current = { x: 0, y: 0 };
-            setPosition({ x: 0, y: 0 });
-        } else {
-            const clamped = clampPosition(next, positionRef.current);
-            positionRef.current = clamped;
-            setPosition(clamped);
-        }
-        trigger("light");
-    }, [trigger, clampPosition]);
-
-    const navigateTo = useCallback((newIdx: number, direction: "prev" | "next") => {
-        if (isStripAnimatingRef.current || count <= 1) return;
-        const vw = viewportRef.current?.clientWidth ?? window.innerWidth;
-        const targetOffset = direction === "prev" ? vw : -vw;
-
-        isStripAnimatingRef.current = true;
-        setIsStripAnimating(true);
-        stripOffsetRef.current = targetOffset;
-        setStripOffset(targetOffset);
-        trigger("selection");
-
-        if (navTimerRef.current) clearTimeout(navTimerRef.current);
-        navTimerRef.current = setTimeout(() => {
-            setIsStripAnimating(false);
-            isStripAnimatingRef.current = false;
-            stripOffsetRef.current = 0;
-            setStripOffset(0);
-            activeIdxRef.current = newIdx;
-            setActiveIdx(newIdx);
-            scaleRef.current = 1;
-            positionRef.current = { x: 0, y: 0 };
-            setScale(1);
-            setPosition({ x: 0, y: 0 });
-        }, STRIP_ANIM_MS);
-    }, [count, trigger]);
-
-    const actionsRef = useRef({
-        handleClose: onClose,
-        handleZoomIn,
-        handleZoomOut,
-        resetZoom,
-        clampPosition,
-        trigger,
-        navigateTo,
-        count,
-    });
-
-    useEffect(() => {
-        actionsRef.current = {
-            handleClose: onClose,
-            handleZoomIn,
-            handleZoomOut,
-            resetZoom,
-            clampPosition,
-            trigger,
-            navigateTo,
-            count,
-        };
-    }, [onClose, handleZoomIn, handleZoomOut, resetZoom, clampPosition, trigger, navigateTo, count]);
-
+function useLightboxGestures({
+    modalRef,
+    viewportRef,
+    imgWrapperRef,
+    scaleRef,
+    positionRef,
+    activeIdxRef,
+    stripOffsetRef,
+    isStripAnimatingRef,
+    isDragMovedRef,
+    lastTapRef,
+    lastTapPosRef,
+    lastTouchDoubleTapTimeRef,
+    actionsRef,
+    dispatch,
+}: UseLightboxGesturesParams) {
     // Body scroll lock + keyboard shortcuts
     useEffect(() => {
         const originalOverflow = document.body.style.overflow;
@@ -325,7 +310,7 @@ function LightboxModal({
             document.body.style.overflow = originalOverflow;
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, []);
+    }, [actionsRef, activeIdxRef, scaleRef]);
 
     // Non-passive wheel zoom + iOS gesture prevention
     useEffect(() => {
@@ -339,14 +324,13 @@ function LightboxModal({
             const delta = -e.deltaY * sensitivity;
             const next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, Math.round((scaleRef.current + delta) * 100) / 100));
             scaleRef.current = next;
-            setScale(next);
             if (next <= 1) {
                 positionRef.current = { x: 0, y: 0 };
-                setPosition({ x: 0, y: 0 });
+                dispatch({ type: "SET_ZOOM", scale: 1, position: { x: 0, y: 0 } });
             } else {
                 const clamped = actionsRef.current.clampPosition(next, positionRef.current);
                 positionRef.current = clamped;
-                setPosition(clamped);
+                dispatch({ type: "SET_ZOOM", scale: next, position: clamped });
             }
         };
 
@@ -363,7 +347,7 @@ function LightboxModal({
             modalEl.removeEventListener("gesturechange", preventGesture);
             modalEl.removeEventListener("gestureend", preventGesture);
         };
-    }, []);
+    }, [actionsRef, dispatch, modalRef, positionRef, scaleRef]);
 
     // Main pointer-gesture engine
     useEffect(() => {
@@ -395,12 +379,11 @@ function LightboxModal({
 
         const snapStripBack = () => {
             isStripAnimatingRef.current = true;
-            setIsStripAnimating(true);
             stripOffsetRef.current = 0;
-            setStripOffset(0);
+            dispatch({ type: "SNAP_STRIP_START" });
             setTimeout(() => {
                 isStripAnimatingRef.current = false;
-                setIsStripAnimating(false);
+                dispatch({ type: "SNAP_STRIP_END" });
             }, STRIP_ANIM_MS);
         };
 
@@ -421,7 +404,7 @@ function LightboxModal({
                 };
                 gestureType = "pinch";
                 isDragMovedRef.current = true;
-                setIsInteracting(true);
+                dispatch({ type: "SET_INTERACTING", isInteracting: true });
                 return;
             }
 
@@ -435,7 +418,7 @@ function LightboxModal({
                 velocityX       = 0;
                 lastMoveTime    = Date.now();
                 lastMoveX       = e.clientX;
-                if (scaleRef.current > 1) setIsInteracting(true);
+                if (scaleRef.current > 1) dispatch({ type: "SET_INTERACTING", isInteracting: true });
             }
         };
 
@@ -443,7 +426,6 @@ function LightboxModal({
             if (!activePointers.has(e.pointerId)) return;
             activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-            // Pinch zoom at focal point
             if (e.pointerType === "touch" && activePointers.size === 2 && pinchStartDistance > 0) {
                 const pts             = Array.from(activePointers.values());
                 const currentDistance = getDistance(pts[0], pts[1]);
@@ -455,8 +437,6 @@ function LightboxModal({
                 };
 
                 const rawScale = pinchStartScale * (currentDistance / pinchStartDistance);
-                // Hard floor at 100% — no rubber-band below MIN_SCALE
-                // Gentle rubber-band above MAX_SCALE up to MAX_SCALE+0.5 (350%)
                 const rubbered = rawScale > MAX_SCALE
                     ? MAX_SCALE + (rawScale - MAX_SCALE) * 0.25
                     : rawScale;
@@ -468,8 +448,7 @@ function LightboxModal({
 
                 scaleRef.current    = newScale;
                 positionRef.current = { x: newX, y: newY };
-                setScale(newScale);
-                setPosition({ x: newX, y: newY });
+                dispatch({ type: "SET_ZOOM", scale: newScale, position: { x: newX, y: newY } });
                 isDragMovedRef.current = true;
                 return;
             }
@@ -488,37 +467,34 @@ function LightboxModal({
 
             if (absDx > 16 || absDy > 16) isDragMovedRef.current = true;
 
-            // Pan inside zoomed image
             if (scaleRef.current > 1) {
                 if (absDx > 10 || absDy > 10) {
                     isDragMovedRef.current = true;
                     positionRef.current = { x: panStartPos.x + dx, y: panStartPos.y + dy };
-                    setPosition({ x: panStartPos.x + dx, y: panStartPos.y + dy });
+                    dispatch({ type: "SET_POSITION", position: { x: panStartPos.x + dx, y: panStartPos.y + dy } });
                 }
                 return;
             }
 
             if (e.pointerType !== "touch") return;
 
-            // Classify gesture on first significant movement (with touch slop)
             if (gestureType === "none") {
                 if (absDx > absDy && absDx > 16) {
                     gestureType = "swipe-x";
-                    setIsInteracting(true);
+                    dispatch({ type: "SET_INTERACTING", isInteracting: true });
                 } else if (dy > 0 && absDy > absDx && absDy > 16) {
                     gestureType = "dismiss-y";
-                    setIsInteracting(true);
+                    dispatch({ type: "SET_INTERACTING", isInteracting: true });
                 }
             }
 
             if (gestureType === "swipe-x" && actionsRef.current.count > 1) {
                 stripOffsetRef.current = dx;
-                setStripOffset(dx);
+                dispatch({ type: "SET_STRIP_OFFSET", offset: dx });
             } else if (gestureType === "dismiss-y") {
                 dismissDistY = dy;
                 const progress = Math.min(1, Math.abs(dy) / 280);
-                setDismissProgress(progress);
-                setDismissY(dy);
+                dispatch({ type: "SET_DISMISS", dismissY: dy, dismissProgress: progress });
             }
         };
 
@@ -536,8 +512,6 @@ function LightboxModal({
 
             if (activePointers.size > 0) return;
 
-            // ── DOUBLE-TAP: check FIRST, before any setState, so nothing can
-            //    race with or override the zoom state changes below.
             if (e.pointerType === "touch" && gestureType === "none") {
                 const dxFromStart   = Math.abs(e.clientX - panStartPointer.x);
                 const dyFromStart   = Math.abs(e.clientY - panStartPointer.y);
@@ -553,7 +527,6 @@ function LightboxModal({
                     );
 
                     if (timeDiff < 400 && timeDiff > 40 && distFromLast < 45) {
-                        // ── Double-tap confirmed ──────────────────────────────
                         lastTouchDoubleTapTimeRef.current = Date.now();
                         lastTapRef.current = 0;
                         gestureType        = "none";
@@ -563,14 +536,11 @@ function LightboxModal({
                         const tapY = e.clientY - rect.top  - rect.height / 2;
 
                         if (scaleRef.current > 1.05) {
-                            // Zoomed → zoom out: enable transition then reset
-                            setIsInteracting(false);
+                            dispatch({ type: "SET_INTERACTING", isInteracting: false });
                             actionsRef.current.resetZoom();
                             actionsRef.current.trigger("selection");
                         } else {
-                            // At 1× → zoom in to 2.4× at tap focal point
-                            // Keep isInteracting=false so CSS transition animates
-                            setIsInteracting(false);
+                            dispatch({ type: "SET_INTERACTING", isInteracting: false });
                             const targetScale = 2.4;
                             const targetPos   = actionsRef.current.clampPosition(targetScale, {
                                 x: -tapX * (targetScale - 1),
@@ -578,21 +548,18 @@ function LightboxModal({
                             });
                             scaleRef.current    = targetScale;
                             positionRef.current = targetPos;
-                            setScale(targetScale);
-                            setPosition(targetPos);
+                            dispatch({ type: "SET_ZOOM", scale: targetScale, position: targetPos });
                             actionsRef.current.trigger("selection");
                         }
-                        return; // done — skip all gesture resolution below
+                        return;
                     }
 
-                    // First tap of a potential double-tap — record timestamp & position
                     lastTapRef.current    = now;
                     lastTapPosRef.current = { x: e.clientX, y: e.clientY };
                 }
             }
 
-            // ── Resolve classified gesture ────────────────────────────────────
-            setIsInteracting(false);
+            dispatch({ type: "SET_INTERACTING", isInteracting: false });
 
             if (gestureType === "swipe-x") {
                 const currentOffset  = stripOffsetRef.current;
@@ -614,38 +581,32 @@ function LightboxModal({
                     actionsRef.current.handleClose();
                     return;
                 }
-                setDismissY(0);
-                setDismissProgress(0);
+                dispatch({ type: "RESET_DISMISS" });
                 dismissDistY = 0;
 
             } else if (gestureType === "pinch") {
-                // Snap rubber-band back within hard bounds on finger lift
                 const targetScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scaleRef.current));
 
                 if (targetScale <= 1) {
                     scaleRef.current    = 1;
                     positionRef.current = { x: 0, y: 0 };
-                    setScale(1);
-                    setPosition({ x: 0, y: 0 });
+                    dispatch({ type: "SET_ZOOM", scale: 1, position: { x: 0, y: 0 } });
                 } else {
                     scaleRef.current = targetScale;
-                    setScale(targetScale);
                     const clamped       = actionsRef.current.clampPosition(targetScale, positionRef.current);
                     positionRef.current = clamped;
-                    setPosition(clamped);
+                    dispatch({ type: "SET_ZOOM", scale: targetScale, position: clamped });
                 }
 
             } else {
-                // Plain tap / unclassified — reset any drift
                 if (scaleRef.current <= 1) {
-                    setDismissY(0);
-                    setDismissProgress(0);
-                    setPosition({ x: 0, y: 0 });
+                    dispatch({ type: "RESET_DISMISS" });
                     positionRef.current = { x: 0, y: 0 };
+                    dispatch({ type: "SET_POSITION", position: { x: 0, y: 0 } });
                 } else {
                     const clamped       = actionsRef.current.clampPosition(scaleRef.current, positionRef.current);
                     positionRef.current = clamped;
-                    setPosition(clamped);
+                    dispatch({ type: "SET_POSITION", position: clamped });
                 }
             }
 
@@ -653,51 +614,334 @@ function LightboxModal({
             pinchStartDistance = 0;
         };
 
-        const onClick = (e: MouseEvent) => {
-            if (Date.now() - lastTouchDoubleTapTimeRef.current < 700) {
-                e.stopPropagation();
-                return;
-            }
-            if (!isDragMovedRef.current) {
-                const imgEl          = imgWrapperRef.current;
-                const clickedOnImage = imgEl && (imgEl === e.target || imgEl.contains(e.target as Node));
-                if (!clickedOnImage) {
-                    if (scaleRef.current > 1) {
-                        actionsRef.current.resetZoom();
-                    } else {
-                        actionsRef.current.handleClose();
-                    }
-                }
-            }
-        };
-
-        viewport.addEventListener("click",         onClick);
         viewport.addEventListener("pointerdown",   onPointerDown);
         viewport.addEventListener("pointermove",   onPointerMove);
         viewport.addEventListener("pointerup",     onPointerUp);
         viewport.addEventListener("pointercancel", onPointerUp);
 
         return () => {
-            viewport.removeEventListener("click",         onClick);
             viewport.removeEventListener("pointerdown",   onPointerDown);
             viewport.removeEventListener("pointermove",   onPointerMove);
             viewport.removeEventListener("pointerup",     onPointerUp);
             viewport.removeEventListener("pointercancel", onPointerUp);
         };
+    }, [actionsRef, dispatch, imgWrapperRef, isDragMovedRef, isStripAnimatingRef, lastTapPosRef, lastTapRef, lastTouchDoubleTapTimeRef, positionRef, scaleRef, stripOffsetRef, viewportRef, activeIdxRef]);
+}
+
+interface LightboxStripProps {
+    viewportRef: React.RefObject<HTMLDivElement | null>;
+    imgWrapperRef: React.RefObject<HTMLDivElement | null>;
+    scale: number;
+    position: { x: number; y: number };
+    isInteracting: boolean;
+    dismissY: number;
+    dismissProgress: number;
+    stripOffset: number;
+    isStripAnimating: boolean;
+    images: GalleryItem[];
+    activeIdx: number;
+    prevIdx: number;
+    nextIdx: number;
+    count: number;
+    title: string;
+    getImageSrc: (item: GalleryItem) => string;
+    onImageDoubleClick: (e: React.MouseEvent) => void;
+}
+
+function LightboxStrip({
+    viewportRef,
+    imgWrapperRef,
+    scale,
+    position,
+    isInteracting,
+    dismissY,
+    dismissProgress,
+    stripOffset,
+    isStripAnimating,
+    images,
+    activeIdx,
+    prevIdx,
+    nextIdx,
+    count,
+    title,
+    getImageSrc,
+    onImageDoubleClick,
+}: LightboxStripProps) {
+    const imgClass  = "max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain rounded-xl shadow-2xl pointer-events-none select-none";
+    const slotClass = "flex-shrink-0 h-full flex items-center justify-center p-2 sm:p-4 md:p-8";
+
+    return (
+        <div
+            ref={viewportRef}
+            className={cn(
+                "w-full h-full overflow-hidden touch-none",
+                scale > 1 ? (isInteracting ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
+            )}
+            style={{
+                transform: `translateY(${dismissY}px) scale(${1 - dismissProgress * 0.06})`,
+                transformOrigin: "center center",
+                transition: isInteracting
+                    ? "none"
+                    : "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
+                willChange: isInteracting ? "transform" : "auto",
+            }}
+        >
+            <div
+                className="flex h-full"
+                style={{
+                    width: "300%",
+                    transform: `translateX(calc(-100% / 3 + ${stripOffset}px))`,
+                    transition: isStripAnimating
+                        ? `transform ${STRIP_ANIM_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
+                        : "none",
+                    willChange: isStripAnimating ? "transform" : "auto",
+                }}
+            >
+                <div className={slotClass} style={SLOT_STYLE}>
+                    {count > 1 && (
+                        <Image
+                            src={getImageSrc(images[prevIdx])}
+                            alt={`${title} screenshot ${prevIdx + 1}`}
+                            width={2560}
+                            height={1440}
+                            sizes="95vw"
+                            className={imgClass}
+                            loading="eager"
+                            draggable={false}
+                        />
+                    )}
+                </div>
+
+                <div className={slotClass} style={SLOT_STYLE}>
+                    <div
+                        ref={imgWrapperRef}
+                        onDoubleClick={onImageDoubleClick}
+                        className={cn(
+                            "relative max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none pointer-events-auto",
+                            scale > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
+                        )}
+                        style={{
+                            transform: `translate3d(${position.x}px,${position.y}px,0) scale(${scale})`,
+                            transformOrigin: "center center",
+                            willChange: isInteracting ? "transform" : "auto",
+                            transition: isInteracting
+                                ? "none"
+                                : "transform 0.24s cubic-bezier(0.25, 1, 0.5, 1)",
+                        }}
+                    >
+                        <Image
+                            src={getImageSrc(images[activeIdx])}
+                            alt={`${title} screenshot ${activeIdx + 1}`}
+                            width={2560}
+                            height={1440}
+                            sizes="95vw"
+                            className={imgClass}
+                            priority
+                            draggable={false}
+                        />
+                    </div>
+                </div>
+
+                <div className={slotClass} style={SLOT_STYLE}>
+                    {count > 1 && (
+                        <Image
+                            src={getImageSrc(images[nextIdx])}
+                            alt={`${title} screenshot ${nextIdx + 1}`}
+                            width={2560}
+                            height={1440}
+                            sizes="95vw"
+                            className={imgClass}
+                            loading="eager"
+                            draggable={false}
+                        />
+                    )}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function LightboxModal({
+    images,
+    initialIdx,
+    title,
+    isDark,
+    onClose,
+}: LightboxModalProps) {
+    const count = images.length;
+    const [state, dispatch] = useReducer(lightboxReducer, initialIdx, createInitialLightboxState);
+    const {
+        activeIdx,
+        scale,
+        position,
+        isInteracting,
+        stripOffset,
+        isStripAnimating,
+        dismissY,
+        dismissProgress,
+    } = state;
+
+    const { trigger } = useMobileHaptics();
+    const modalRef      = useRef<HTMLDivElement | null>(null);
+    const viewportRef   = useRef<HTMLDivElement | null>(null);
+    const imgWrapperRef = useRef<HTMLDivElement | null>(null);
+
+    const scaleRef                  = useRef(1);
+    const positionRef               = useRef({ x: 0, y: 0 });
+    const activeIdxRef              = useRef(initialIdx);
+    const stripOffsetRef            = useRef(0);
+    const isStripAnimatingRef       = useRef(false);
+    const isDragMovedRef            = useRef(false);
+    const lastTapRef                = useRef<number>(0);
+    const lastTapPosRef             = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+    const lastTouchDoubleTapTimeRef = useRef<number>(0);
+    const navTimerRef               = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => { scaleRef.current = scale; }, [scale]);
+    useEffect(() => { positionRef.current = position; }, [position]);
+    useEffect(() => { activeIdxRef.current = activeIdx; }, [activeIdx]);
+
+    const getImageSrc = useCallback((item: GalleryItem) => {
+        if (typeof item === "string") return item;
+        return isDark ? item.dark : item.light;
+    }, [isDark]);
+
+    const clampPosition = useCallback((targetScale: number, pos: { x: number; y: number }) => {
+        if (!viewportRef.current || targetScale <= 1) return { x: 0, y: 0 };
+        const vw = viewportRef.current.clientWidth;
+        const vh = viewportRef.current.clientHeight;
+        const maxPanX = Math.max(0, (vw * targetScale - vw) / 2);
+        const maxPanY = Math.max(0, (vh * targetScale - vh) / 2);
+        return {
+            x: Math.max(-maxPanX, Math.min(maxPanX, pos.x)),
+            y: Math.max(-maxPanY, Math.min(maxPanY, pos.y)),
+        };
     }, []);
 
-    // Cleanup nav timer on unmount
+    const resetZoom = useCallback(() => {
+        scaleRef.current = 1;
+        positionRef.current = { x: 0, y: 0 };
+        dispatch({ type: "RESET_ZOOM" });
+    }, []);
+
+    const handleZoomIn = useCallback(() => {
+        const next = Math.min(MAX_SCALE, Math.round((scaleRef.current + SCALE_STEP) * 10) / 10);
+        scaleRef.current = next;
+        dispatch({ type: "SET_SCALE", scale: next });
+        trigger("light");
+    }, [trigger]);
+
+    const handleZoomOut = useCallback(() => {
+        const next = Math.max(MIN_SCALE, Math.round((scaleRef.current - SCALE_STEP) * 10) / 10);
+        scaleRef.current = next;
+        if (next <= 1) {
+            positionRef.current = { x: 0, y: 0 };
+            dispatch({ type: "SET_ZOOM", scale: next, position: { x: 0, y: 0 } });
+        } else {
+            const clamped = clampPosition(next, positionRef.current);
+            positionRef.current = clamped;
+            dispatch({ type: "SET_ZOOM", scale: next, position: clamped });
+        }
+        trigger("light");
+    }, [trigger, clampPosition]);
+
+    const navigateTo = useCallback((newIdx: number, direction: "prev" | "next") => {
+        if (isStripAnimatingRef.current || count <= 1) return;
+        const vw = viewportRef.current?.clientWidth ?? window.innerWidth;
+        const targetOffset = direction === "prev" ? vw : -vw;
+
+        isStripAnimatingRef.current = true;
+        stripOffsetRef.current = targetOffset;
+        dispatch({ type: "NAVIGATE_START", stripOffset: targetOffset });
+        trigger("selection");
+
+        if (navTimerRef.current) clearTimeout(navTimerRef.current);
+        navTimerRef.current = setTimeout(() => {
+            isStripAnimatingRef.current = false;
+            stripOffsetRef.current = 0;
+            activeIdxRef.current = newIdx;
+            scaleRef.current = 1;
+            positionRef.current = { x: 0, y: 0 };
+            dispatch({ type: "NAVIGATE_END", newIdx });
+        }, STRIP_ANIM_MS);
+    }, [count, trigger]);
+
+    const actionsRef = useRef({
+        handleClose: onClose,
+        handleZoomIn,
+        handleZoomOut,
+        resetZoom,
+        clampPosition,
+        trigger,
+        navigateTo,
+        count,
+    });
+
+    useEffect(() => {
+        actionsRef.current = {
+            handleClose: onClose,
+            handleZoomIn,
+            handleZoomOut,
+            resetZoom,
+            clampPosition,
+            trigger,
+            navigateTo,
+            count,
+        };
+    }, [onClose, handleZoomIn, handleZoomOut, resetZoom, clampPosition, trigger, navigateTo, count]);
+
+    useLightboxGestures({
+        modalRef,
+        viewportRef,
+        imgWrapperRef,
+        scaleRef,
+        positionRef,
+        activeIdxRef,
+        stripOffsetRef,
+        isStripAnimatingRef,
+        isDragMovedRef,
+        lastTapRef,
+        lastTapPosRef,
+        lastTouchDoubleTapTimeRef,
+        actionsRef,
+        dispatch,
+    });
+
     useEffect(() => {
         return () => {
             if (navTimerRef.current) clearTimeout(navTimerRef.current);
         };
     }, []);
 
-    const prevIdx       = (activeIdx - 1 + count) % count;
-    const nextIdx       = (activeIdx + 1) % count;
-    const bgOpacity     = Math.max(0.2, 0.95 - dismissProgress * 0.7);
-    const imgClass      = "max-w-[95vw] max-h-[90vh] w-auto h-auto object-contain rounded-xl shadow-2xl pointer-events-none select-none";
-    const slotClass     = "flex-shrink-0 h-full flex items-center justify-center p-2 sm:p-4 md:p-8";
+    const handleImageDoubleClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (Date.now() - lastTouchDoubleTapTimeRef.current < 700) {
+            return;
+        }
+        const vp = viewportRef.current;
+        if (!vp) return;
+        const rect = vp.getBoundingClientRect();
+        const tapX = e.clientX - rect.left - rect.width  / 2;
+        const tapY = e.clientY - rect.top  - rect.height / 2;
+        if (scaleRef.current > 1) {
+            resetZoom();
+            trigger("selection");
+        } else {
+            const targetScale = 2.4;
+            const targetPos   = clampPosition(targetScale, {
+                x: -tapX * (targetScale - 1),
+                y: -tapY * (targetScale - 1),
+            });
+            scaleRef.current    = targetScale;
+            positionRef.current = targetPos;
+            dispatch({ type: "SET_ZOOM", scale: targetScale, position: targetPos });
+            trigger("selection");
+        }
+    }, [clampPosition, resetZoom, trigger]);
+
+    const prevIdx   = (activeIdx - 1 + count) % count;
+    const nextIdx   = (activeIdx + 1) % count;
+    const bgOpacity = Math.max(0.2, 0.95 - dismissProgress * 0.7);
 
     return (
         <m.div
@@ -726,136 +970,25 @@ function LightboxModal({
                 onPrev={() => { if (!isStripAnimatingRef.current) navigateTo(prevIdx, "prev"); }}
                 onNext={() => { if (!isStripAnimatingRef.current) navigateTo(nextIdx, "next"); }}
             />
-
-            {/* Viewport — receives dismissY so the whole strip lifts together */}
-            <div
-                ref={viewportRef}
-                className={cn(
-                    "w-full h-full overflow-hidden touch-none",
-                    scale > 1 ? (isInteracting ? "cursor-grabbing" : "cursor-grab") : "cursor-default"
-                )}
-                style={{
-                    transform: `translateY(${dismissY}px) scale(${1 - dismissProgress * 0.06})`,
-                    transformOrigin: "center center",
-                    transition: isInteracting
-                        ? "none"
-                        : "transform 0.3s cubic-bezier(0.25, 1, 0.5, 1)",
-                    willChange: isInteracting ? "transform" : "auto",
-                }}
-            >
-                {/*
-                 * 3-image strip:  [prev] [current] [next]
-                 *
-                 * Width = 300% of viewport.
-                 * Default translateX(-100%/3) = -33.333% of strip = -100vw → centres middle slot.
-                 * stripOffset shifts by the user's drag or navigation animation (px).
-                 *
-                 * Navigation flow:
-                 *   1. isStripAnimating = true → CSS transition active
-                 *   2. stripOffset animates to ±vw (next/prev fully centred)
-                 *   3. After STRIP_ANIM_MS: activeIdx swaps + stripOffset resets to 0 instantly.
-                 *      No visual jump because the new image was already at that position.
-                 */}
-                <div
-                    className="flex h-full"
-                    style={{
-                        width: "300%",
-                        transform: `translateX(calc(-100% / 3 + ${stripOffset}px))`,
-                        transition: isStripAnimating
-                            ? `transform ${STRIP_ANIM_MS}ms cubic-bezier(0.25, 1, 0.5, 1)`
-                            : "none",
-                        willChange: isStripAnimating ? "transform" : "auto",
-                    }}
-                >
-                    {/* ── PREVIOUS slot ─────────────────────────────────────── */}
-                    <div className={slotClass} style={SLOT_STYLE}>
-                        {count > 1 && (
-                            <Image
-                                src={getImageSrc(images[prevIdx])}
-                                alt={`${title} screenshot ${prevIdx + 1}`}
-                                width={2560}
-                                height={1440}
-                                sizes="95vw"
-                                className={imgClass}
-                                loading="eager"
-                                draggable={false}
-                            />
-                        )}
-                    </div>
-
-                    {/* ── CURRENT slot (zoom / pan applied here) ────────────── */}
-                    <div className={slotClass} style={SLOT_STYLE}>
-                        <div
-                            ref={imgWrapperRef}
-                            onDoubleClick={(e) => {
-                                e.stopPropagation();
-                                if (Date.now() - lastTouchDoubleTapTimeRef.current < 700) {
-                                    return;
-                                }
-                                const vp = viewportRef.current;
-                                if (!vp) return;
-                                const rect = vp.getBoundingClientRect();
-                                const tapX = e.clientX - rect.left - rect.width  / 2;
-                                const tapY = e.clientY - rect.top  - rect.height / 2;
-                                if (scaleRef.current > 1) {
-                                    resetZoom();
-                                    trigger("selection");
-                                } else {
-                                    const targetScale = 2.4;
-                                    const targetPos   = clampPosition(targetScale, {
-                                        x: -tapX * (targetScale - 1),
-                                        y: -tapY * (targetScale - 1),
-                                    });
-                                    scaleRef.current    = targetScale;
-                                    positionRef.current = targetPos;
-                                    setScale(targetScale);
-                                    setPosition(targetPos);
-                                    trigger("selection");
-                                }
-                            }}
-                            className={cn(
-                                "relative max-w-[95vw] max-h-[90vh] flex items-center justify-center select-none pointer-events-auto",
-                                scale > 1 ? "cursor-grab active:cursor-grabbing" : "cursor-zoom-in"
-                            )}
-                            style={{
-                                transform: `translate3d(${position.x}px,${position.y}px,0) scale(${scale})`,
-                                transformOrigin: "center center",
-                                willChange: isInteracting ? "transform" : "auto",
-                                transition: isInteracting
-                                    ? "none"
-                                    : "transform 0.24s cubic-bezier(0.25, 1, 0.5, 1)",
-                            }}
-                        >
-                            <Image
-                                src={getImageSrc(images[activeIdx])}
-                                alt={`${title} screenshot ${activeIdx + 1}`}
-                                width={2560}
-                                height={1440}
-                                sizes="95vw"
-                                className={imgClass}
-                                priority
-                                draggable={false}
-                            />
-                        </div>
-                    </div>
-
-                    {/* ── NEXT slot ─────────────────────────────────────────── */}
-                    <div className={slotClass} style={SLOT_STYLE}>
-                        {count > 1 && (
-                            <Image
-                                src={getImageSrc(images[nextIdx])}
-                                alt={`${title} screenshot ${nextIdx + 1}`}
-                                width={2560}
-                                height={1440}
-                                sizes="95vw"
-                                className={imgClass}
-                                loading="eager"
-                                draggable={false}
-                            />
-                        )}
-                    </div>
-                </div>
-            </div>
+            <LightboxStrip
+                viewportRef={viewportRef}
+                imgWrapperRef={imgWrapperRef}
+                scale={scale}
+                position={position}
+                isInteracting={isInteracting}
+                dismissY={dismissY}
+                dismissProgress={dismissProgress}
+                stripOffset={stripOffset}
+                isStripAnimating={isStripAnimating}
+                images={images}
+                activeIdx={activeIdx}
+                prevIdx={prevIdx}
+                nextIdx={nextIdx}
+                count={count}
+                title={title}
+                getImageSrc={getImageSrc}
+                onImageDoubleClick={handleImageDoubleClick}
+            />
         </m.div>
     );
 }

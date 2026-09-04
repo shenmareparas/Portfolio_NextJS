@@ -28,7 +28,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 -   **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
 -   **🌊 Smooth Animations & Motion:**
     -   **3D Coverflow Carousel:** Interactive carousel with perspective transformations for mobile app project showcases.
-    -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`). Features Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan.
+    -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`). Features Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
     -   **Dynamic Title Rotators:** Cycling header typography.
     -   **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
     -   **Timeline & Education:** Structured, responsive career, university, and certification timelines.
@@ -127,6 +127,8 @@ Portfolio content is centrally managed in the `data/` directory:
 -   **Immediate Above-the-Fold LCP**: Zero blocking animation wrappers on above-the-fold hero content ensuring sub-second LCP/FCP.
 -   **Flicker-Free SSR Hydration**: Utilizes React 19 `useSyncExternalStore` for client-only state synchronization to prevent hydration flashes.
 -   **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners with pure side-effect-free state updaters.
+-   **Atomic State Coordination (`useReducer`)**: Replaces fragmented state setters with typed reducers for complex modals to ensure predictable, race-condition-free transitions.
+-   **Modular Sub-Component Architecture**: High-complexity features are cleanly factored into small sub-components and isolated custom hooks to maintain low cyclomatic complexity.
 
 ---
 
