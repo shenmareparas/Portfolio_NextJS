@@ -31,6 +31,9 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   └── skills/              # Custom agent skills (e.g. web-haptics)
 ├── app/                     # Next.js App Router routing structure
 │   ├── layout.tsx           # Global layout & HTML structure
+│   ├── favicon.ico          # Legacy & standard browser tab favicon (32x32)
+│   ├── icon.png             # High-resolution PNG app icon (512x512)
+│   ├── apple-icon.png       # Apple Touch Icon for iOS/macOS (180x180)
 │   ├── page.tsx             # Homepage containing intro, featured projects, experience, expertise
 │   ├── template.tsx         # Framer Motion page entrance animations
 │   ├── globals.css          # Core CSS stylesheet importing Tailwind CSS v4
@@ -60,7 +63,7 @@ To update or manage the portfolio content, developers should edit the following 
 
 1. **[config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts)**: Configures global variables like title, keywords (for SEO), metadata, OpenGraph parameters, footer copyright getter, and the Formspree contact form endpoint.
 2. **[profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts)**: Stores general details (name, full name, description/bio blocks, contact email/phone, and path to the resume PDF).
-3. **[projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts)**: A list of projects conforming to `Project` (`types/project.ts`). Supports `galleryLayout: "carousel" | "vertical"` (mobile apps use 3D Coverflow; desktop/macOS/CLI projects use vertical scrolling screenshots with full-screen zoomable lightbox).
+3. **[projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts)**: A list of projects conforming to `Project` (`types/project.ts`). Supports `galleryLayout: "carousel" | "vertical"` (mobile apps use 3D Coverflow; desktop/macOS/CLI projects use vertical scrolling screenshots with full-screen zoomable lightbox). Supports project card banners (`image: "/project/<slug>/banner.webp"`) and theme-aware paired gallery screenshots (`GalleryItem = string | { light: string; dark: string }`) with tightly cropped transparent borders.
 4. **[experience.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/experience.ts)** & **[education.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/education.ts)**: Chronological timelines of jobs/internships and universities/certifications.
 5. **[skills.tsx](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/skills.tsx)**: Tech logos and skill names grouped by language, web, mobile, backend, and tools.
 6. **[testimonials.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/testimonials.ts)**: Endorsements and recommendations.

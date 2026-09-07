@@ -262,7 +262,7 @@ export const projects: Project[] = [
         links: {
             github: "https://github.com/shenmareparas/expense_tracker",
         },
-        image: "/project/expense_tracker/1a.webp",
+        image: "/project/expense_tracker/banner.webp",
         logo: "/project/expense_tracker/logo.webp",
         accentColor: "#10B981",
         gallery: [
@@ -323,11 +323,26 @@ export const projects: Project[] = [
         accentColor: "#007AFF",
         galleryLayout: "vertical",
         gallery: [
-            "/project/live_wallpaper/1.webp",
-            "/project/live_wallpaper/2.webp",
-            "/project/live_wallpaper/3.webp",
-            "/project/live_wallpaper/4.webp",
-            "/project/live_wallpaper/5.webp",
+            {
+                light: "/project/live_wallpaper/1a.webp",
+                dark: "/project/live_wallpaper/1b.webp",
+            },
+            {
+                light: "/project/live_wallpaper/2a.webp",
+                dark: "/project/live_wallpaper/2b.webp",
+            },
+            {
+                light: "/project/live_wallpaper/3a.webp",
+                dark: "/project/live_wallpaper/3b.webp",
+            },
+            {
+                light: "/project/live_wallpaper/4a.webp",
+                dark: "/project/live_wallpaper/4b.webp",
+            },
+            {
+                light: "/project/live_wallpaper/5a.webp",
+                dark: "/project/live_wallpaper/5b.webp",
+            },
             "/project/live_wallpaper/6.webp",
         ],
     },

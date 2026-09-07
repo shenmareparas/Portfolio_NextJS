@@ -22,13 +22,13 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ## ✨ Key Features
 
--   **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, and crisp typography.
--   **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes.
+-   **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
+-   **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
 -   **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
 -   **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
 -   **🌊 Smooth Animations & Motion:**
     -   **3D Coverflow Carousel:** Interactive carousel with perspective transformations for mobile app project showcases.
-    -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`). Features Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
+    -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`). Supports theme-aware `{ light, dark }` screenshot pairs with uniform shadow margins, Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
     -   **Dynamic Title Rotators:** Cycling header typography.
     -   **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
     -   **Timeline & Education:** Structured, responsive career, university, and certification timelines.
@@ -79,6 +79,9 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 │   └── skills/              # Custom agent skills (e.g. web-haptics)
 ├── app/                     # Next.js App Router routing structure
 │   ├── layout.tsx           # Global layout & HTML structure
+│   ├── favicon.ico          # Legacy & standard browser tab favicon (32x32)
+│   ├── icon.png             # High-resolution PNG app icon (512x512)
+│   ├── apple-icon.png       # Apple Touch Icon for iOS/macOS (180x180)
 │   ├── page.tsx             # Homepage containing hero, featured projects, experience, expertise
 │   ├── template.tsx         # Framer Motion page entrance animations
 │   ├── globals.css          # Core CSS stylesheet importing Tailwind CSS v4
