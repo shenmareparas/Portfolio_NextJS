@@ -74,7 +74,7 @@ To update or manage the portfolio content, developers should edit the following 
 ## 🛠️ Key UI Features
 
 - **Dual Showcase Media System**:
-  - **3D Coverflow Carousel** (`components/ui/coverflow-carousel.tsx`): Interactive 3D phone mockup carousel for mobile applications.
+  - **3D Coverflow Carousel** (`components/ui/coverflow-carousel.tsx`): Interactive 3D phone mockup carousel for mobile applications, modeled after the iPhone 18 Pro Max form factor (native 19.5:9 display ratio `1320/2868`, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis with chamfered rim accents).
   - **Vertical Screenshot Gallery & Lightbox** (`components/ui/vertical-gallery.tsx`): Dedicated vertical screenshot stream for desktop/macOS and non-mobile projects. Includes a full-screen lightbox powered by a 3-image sliding strip layout (`[prev] [current] [next]` slot system):
     - **Google Photos Mobile Gestures**: Focal pinch-to-zoom (1.0x to 3.0x with gentle ceiling rubber-banding and a hard 1.0x floor), reliable double-tap focal zoom toggle (100% ⇄ 240%) with synthetic mouse event debouncing (`lastTouchDoubleTapTimeRef` 700ms window), calibrated touch slop (16px gesture classification, <24px quick tap displacement, <45px tap proximity), horizontal swipe-to-navigate with distance and velocity thresholds (`velocityX > 0.4`), and vertical swipe-to-dismiss (`dy > 90px`) with progressive backdrop opacity transitions.
     - **Desktop Controls**: Calibrated non-passive mouse wheel zoom, double-click to zoom in/out at cursor, drag-to-pan when scaled, touch-friendly top toolbar controls, and backdrop click to exit.

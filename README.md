@@ -8,7 +8,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ## 🚀 Tech Stack
 
--   **Framework:** [Next.js 16.3.4 (App Router)](https://nextjs.org/)
+-   **Framework:** [Next.js 16.3.5 (App Router)](https://nextjs.org/) & React 19.3.0
 -   **Runtime & Package Manager:** [Bun](https://bun.sh/)
 -   **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + PostCSS
 -   **Animations:** [Framer Motion v12](https://www.framer.com/motion/)
@@ -27,7 +27,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 -   **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
 -   **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
 -   **🌊 Smooth Animations & Motion:**
-    -   **3D Coverflow Carousel:** Interactive carousel with perspective transformations for mobile app project showcases.
+    -   **3D Coverflow Carousel:** Interactive 3D phone mockup carousel for mobile application showcases, modeled after the iPhone 18 Pro Max (native 19.5:9 aspect ratio, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis) with perspective transformations, gesture physics, and theme switching.
     -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`). Supports theme-aware `{ light, dark }` screenshot pairs with uniform shadow margins, Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
     -   **Dynamic Title Rotators:** Cycling header typography.
     -   **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
@@ -76,7 +76,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 ├── .agents/                 # AI Agent instructions, project context, and localized skills
 │   ├── AGENTS.md            # Active instructions/rules for AI agents
 │   └── project_context.md   # High-level codebase architecture documentation
-│   └── skills/              # Custom agent skills (e.g. web-haptics)
+│   └── skills/              # Custom agent skills (e.g. web-haptics, react-doctor)
 ├── app/                     # Next.js App Router routing structure
 │   ├── layout.tsx           # Global layout & HTML structure
 │   ├── favicon.ico          # Legacy & standard browser tab favicon (32x32)
@@ -120,13 +120,15 @@ Portfolio content is centrally managed in the `data/` directory:
 
 ## ⚡ Performance & Quality Audits
 
--   **React Doctor Certified (100 / 100)**: Conforms to strict code quality, effect cleanup, and render optimization standards.
+-   **React Doctor Certified (100 / 100)**: Conforms to strict code quality, effect cleanup, and render optimization standards. React Doctor is installed locally and enforced via pre-commit git hook and npm script:
     ```bash
-    bun doctor
-    # or
-    bunx react-doctor@latest . --verbose
+    bun run doctor
+    # or non-interactive full scan
+    bunx react-doctor --yes --verbose
     ```
 -   **A11y & Reduced Motion**: Automatically respects user OS accessibility settings via `<MotionConfig reducedMotion="user">`.
+-   **Touch & Mobile Viewport Precision**: Screen-orientation lock (`PortraitLock`) is strictly scoped to coarse-pointer touch devices in landscape mode, leaving desktop browser resizes unaffected.
+-   **SSR-Safe Mobile Haptics**: `useMobileHaptics` hook utilizes React 19 `useSyncExternalStore` for media queries to eliminate hydration flashes and safely trigger tactile feedback on supported mobile devices.
 -   **Immediate Above-the-Fold LCP**: Zero blocking animation wrappers on above-the-fold hero content ensuring sub-second LCP/FCP.
 -   **Flicker-Free SSR Hydration**: Utilizes React 19 `useSyncExternalStore` for client-only state synchronization to prevent hydration flashes.
 -   **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners with pure side-effect-free state updaters.

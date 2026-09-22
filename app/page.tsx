@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 export default function Home() {
     return (
         <div className="flex flex-1 flex-col items-center w-full max-w-full overflow-x-clip">
-            <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-32 min-h-[calc(100dvh-4rem)] flex flex-col justify-center relative w-full">
+            <section className="space-y-6 pb-8 pt-6 md:pb-12 md:pt-10 lg:py-24 [@media(max-height:750px)]:py-8 min-h-[calc(100dvh-4rem)] flex flex-col justify-center relative w-full">
                 <div className="container mx-auto px-4 flex max-w-[64rem] flex-col items-center gap-6 text-center">
                     <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight">
                         Hi, I&apos;m{" "}
@@ -67,8 +67,8 @@ export default function Home() {
                 </div>
 
                 {/* Scroll Hint */}
-                <div className="absolute bottom-24 left-0 right-0 flex justify-center animate-bounce">
-                    <Mouse className="h-8 w-8 text-muted-foreground opacity-50" />
+                <div className="absolute bottom-6 left-0 right-0 flex justify-center animate-bounce pointer-events-none [@media(max-height:750px)]:hidden">
+                    <Mouse className="h-7 w-7 text-muted-foreground opacity-50" />
                 </div>
             </section>
 

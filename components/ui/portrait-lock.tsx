@@ -1,26 +1,17 @@
 "use client";
 
 import { Smartphone } from "lucide-react";
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 export function PortraitLock() {
-    const [isMounted, setIsMounted] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => setIsMounted(true), 0);
-        return () => clearTimeout(timer);
-    }, []);
-
-    if (!isMounted) return null;
-
     return (
-        <div
+        <aside
+            aria-live="polite"
             className={cn(
                 "fixed inset-0 z-[9999] bg-background flex-col items-center justify-center gap-6 p-8 text-center hidden",
-                // Show only on landscape orientation AND max-height 600px (typical phones)
-                // We use raw CSS media query for precision targeting
-                "[@media(max-height:600px)_and_(orientation:landscape)]:flex"
+                // Show ONLY on mobile touch devices in landscape orientation with max-height 600px
+                // Using pointer:coarse and hover:none ensures desktop/laptop displays with small viewport heights (taskbar + browser bars) are never locked
+                "[@media(hover:none)_and_(pointer:coarse)_and_(orientation:landscape)_and_(max-height:600px)_and_(max-width:1024px)]:flex"
             )}
         >
             <div className="relative">
@@ -38,6 +29,7 @@ export function PortraitLock() {
                     mobile device.
                 </p>
             </div>
-        </div>
+        </aside>
     );
 }
+

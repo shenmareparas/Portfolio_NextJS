@@ -1,26 +1,24 @@
 "use client";
 
 import { useWebHaptics } from "web-haptics/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
+
+const subscribeMobile = (callback: () => void) => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    mq.addEventListener("change", callback);
+    return () => mq.removeEventListener("change", callback);
+};
+
+const getMobileSnapshot = () => window.matchMedia("(max-width: 768px)").matches;
+const getServerSnapshot = () => false;
 
 export function useMobileHaptics() {
     const defaultHaptics = useWebHaptics();
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => {
-            setIsMobile(window.matchMedia("(max-width: 768px)").matches);
-        };
-
-        // Check initially
-        checkMobile();
-
-        // Add event listener for screen size changes
-        const mediaQuery = window.matchMedia("(max-width: 768px)");
-        mediaQuery.addEventListener("change", checkMobile);
-
-        return () => mediaQuery.removeEventListener("change", checkMobile);
-    }, []);
+    const isMobile = useSyncExternalStore(
+        subscribeMobile,
+        getMobileSnapshot,
+        getServerSnapshot,
+    );
 
     const trigger = useCallback(
         (type?: string) => {
@@ -33,3 +31,4 @@ export function useMobileHaptics() {
 
     return { ...defaultHaptics, trigger };
 }
+

@@ -82,7 +82,7 @@ const CarouselCard = React.memo(
         return (
             <div
                 className={cn(
-                    "absolute w-[260px] xl:w-[320px] aspect-[9/16] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary [container-type:inline-size]",
+                    "absolute w-[260px] xl:w-[320px] aspect-[1320/2868] ease-out cursor-pointer touch-manipulation select-none will-change-[transform,opacity,filter] outline-none focus-visible:ring-2 focus-visible:ring-primary [container-type:inline-size]",
                     className,
                     isDragging ? "transition-none" : "transition-[transform,opacity,filter] duration-700",
                 )}
@@ -95,9 +95,12 @@ const CarouselCard = React.memo(
                     if (e.key === "Enter" || e.key === " ") onClick(index);
                 }}
             >
-                <div className="relative w-full h-full rounded-[14cqw] bg-[#1c1c1e] p-[1.2cqw] shadow-2xl ring-1 ring-white/10">
-                    <div className="absolute inset-0 rounded-[14cqw] border-[0.5cqw] border-[#ffffff10] pointer-events-none z-10" />
-                    <div className="relative w-full h-full bg-black rounded-[12.8cqw] overflow-hidden border border-[#ffffff05] shadow-inner">
+                {/* iPhone Pro Max Chassis: Grade-5 brushed titanium frame with micro-bezel */}
+                <div className="relative w-full h-full rounded-[13cqw] bg-gradient-to-b from-[#2e2e32] via-[#1c1c1f] to-[#161618] p-[0.7cqw] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.08)]">
+                    {/* Titanium chamfer outer edge reflection */}
+                    <div className="absolute inset-0 rounded-[13cqw] border-[0.4cqw] border-white/[0.07] pointer-events-none z-10" />
+                    {/* All-screen OLED display viewport */}
+                    <div className="relative w-full h-full bg-black rounded-[12.3cqw] overflow-hidden border border-black/40 shadow-inner">
                         <Image
                             src={src}
                             alt={`Slide ${index + 1}`}

@@ -4,10 +4,10 @@ description: Add haptic feedback to web apps using the web-haptics library. Use 
 license: MIT
 metadata:
   author: lochie
-  version: "1.0"
+  version: "1.1"
 ---
 
-Install `web-haptics` (`npm i web-haptics`) and add haptic feedback to the app following these rules:
+Install `web-haptics` (`bun add web-haptics`) and add haptic feedback to the app following these rules:
 
 ## Package: web-haptics
 
@@ -34,9 +34,36 @@ Selection (discrete stepping):
 
 - "selection" -- picker scroll, stepper increment, slider detent, segment switch
 
-## Framework Imports
+## Framework Imports & Conventions
 
-React:
+### Next.js (App Router) & React 19 (Portfolio Pattern)
+
+In this project, always use the dedicated viewport-guarded hook `@/hooks/use-mobile-haptics`:
+
+```tsx
+"use client";
+
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
+
+export function ActionButton() {
+    const haptic = useMobileHaptics();
+
+    return (
+        <button
+            onClick={() => {
+                haptic.trigger("medium");
+                // do action
+            }}
+        >
+            Tap me
+        </button>
+    );
+}
+```
+
+*Note: `useMobileHaptics` uses React 19's `useSyncExternalStore` to ensure flicker-free SSR safety and restricts haptic execution strictly to mobile viewports (`(max-width: 768px)`).*
+
+### Standard React:
 
 ```tsx
 import { useWebHaptics } from "web-haptics/react";

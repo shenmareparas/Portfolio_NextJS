@@ -7,8 +7,9 @@ This document outlines the development guidelines, constraints, and conventions 
 1. **Framework**: Next.js 16 (App Router), React 19, TypeScript, and Bun as the package manager and runner.
 2. **Styling**: Tailwind CSS v4. Ensure configuration is done via CSS variables or standard Tailwind classes. Avoid using deprecated Tailwind v3 config structures or styles.
 3. **Animations**: Framer Motion. Keep animations smooth, subtle, and responsive.
-4. **Haptics**: `web-haptics` (local plugin in `.agents/skills/web-haptics`) should be used for interactive elements targeting mobile viewports (e.g., buttons, toggles, form submissions). Refer to [web-haptics SKILL.md](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/.agents/skills/web-haptics/SKILL.md) for trigger details.
+4. **Haptics**: `web-haptics` (local skill in `.agents/skills/web-haptics`) should be used for interactive elements targeting mobile viewports (e.g., buttons, toggles, form submissions). Always use `@/hooks/use-mobile-haptics`, which wraps `useWebHaptics` with `useSyncExternalStore` for SSR-safe mobile media query subscription. Refer to [web-haptics SKILL.md](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/.agents/skills/web-haptics/SKILL.md) for trigger details.
 5. **UI Components**: Built using Shadcn UI primitives (`components/ui/`) and Radix UI.
+6. **Code Health & Quality Audits**: React Doctor is installed locally and enforced via pre-commit git hooks and `bun run doctor`. AI agents must follow [react-doctor SKILL.md](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/.agents/skills/react-doctor/SKILL.md) before committing or wrapping up features to ensure a 100/100 score.
 
 ---
 
@@ -27,7 +28,7 @@ This document outlines the development guidelines, constraints, and conventions 
     - [profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts): Bio, contact details, and resume links.
     - [projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts): List of featured and personal projects. Key conventions:
       - Cover banners: Standardized to `image: "/project/<slug>/banner.webp"`.
-      - Gallery layouts: Mobile apps use 3D Coverflow (`galleryLayout: "carousel"`); desktop/macOS/CLI apps use vertical scrolling (`galleryLayout: "vertical"`).
+      - Gallery layouts: Mobile apps use 3D Coverflow (`galleryLayout: "carousel"`) modeled on the iPhone 18 Pro Max chassis (19.5:9 aspect ratio, micro-thin 1.15mm borders, brushed titanium frame); desktop/macOS/CLI apps use vertical scrolling (`galleryLayout: "vertical"`).
       - Theme-aware gallery items: Supports `GalleryItem = string | { light: string; dark: string }` for automatic theme-switched screenshots.
       - Screenshot cropping: Window/app captures must have excessive OS transparent drop-shadow borders cropped away (preserving only a subtle 14–15px margin around the window frame) to maintain consistent aspect ratios across the lightbox.
     - Favicons & App Icons: Managed via Next.js metadata file conventions: [app/favicon.ico](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/app/favicon.ico) (32x32), [app/icon.png](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/app/icon.png) (512x512), [app/apple-icon.png](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/app/apple-icon.png) (180x180), and fallback [public/favicon.ico](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/public/favicon.ico).
@@ -55,6 +56,7 @@ This document outlines the development guidelines, constraints, and conventions 
 - **Run Dev Server**: `bun dev`
 - **Build Production**: `bun run build`
 - **Lint Code**: `bun run lint`
+- **React Doctor Audit**: `bun run doctor` (or `bunx react-doctor --yes --verbose`)
 - **Install Dependencies**: `bun install`
 
 ---
@@ -78,4 +80,6 @@ This document outlines the development guidelines, constraints, and conventions 
 13. **Dynamic GPU Optimization (`willChange`) & Module-Level Static Objects**: Never apply permanent `will-change: transform` or `will-change-transform` to idle DOM elements as it wastes dedicated GPU memory compositor layers. Dynamicize `willChange` to active interaction state (e.g. `willChange: isInteracting ? "transform" : "auto"`). Extract static object declarations (e.g., `const SLOT_STYLE = { width: "calc(100% / 3)" } as const;`) to module scope to prevent re-instantiation across renders.
 14. **Coordinated Component State via `useReducer` (`react-doctor/prefer-useReducer`)**: When managing multiple interrelated state variables that transition together (such as lightbox zoom scale, pan position, strip offset, animation flags, and dismiss coordinates), consolidate them into a typed `useReducer` with an atomic action dispatch instead of firing disjoint `useState` setters.
 15. **Sub-component & Custom Hook Decomposition (`react-doctor/no-giant-component`)**: Maintain concise component boundaries (< 300 lines). Decouple complex gesture/pointer engines and lifecycle listeners into dedicated custom hooks (e.g. `useLightboxGestures`) and encapsulate multi-slot render strips or control bars into focused sub-components (e.g. `LightboxStrip`, `LightboxControls`).
+16. **SSR-Safe Client-Side Media Queries via `useSyncExternalStore`**: Avoid registering window event listeners or state flags in `useEffect` to detect media queries (e.g., mobile viewport width). Use `useSyncExternalStore` with module-level subscription functions (`subscribeMobile`, `getMobileSnapshot`, `getServerSnapshot`) to ensure synchronous, flicker-free hydration without cascading effect re-renders.
+17. **Strict Device-Targeted Responsive Overlays**: Full-screen modal orientation locks (such as `PortraitLock`) must be scoped strictly to touch devices (`@media(hover:none) and (pointer:coarse)`) to ensure desktop/laptop browsers resized to smaller window heights are never blocked.
 
