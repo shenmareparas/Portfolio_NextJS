@@ -22,7 +22,7 @@
     "clsx": "^2.1.1",
     "framer-motion": "^12.43.0",
     "lucide-react": "^0.556.0",
-    "next": "^16.3.5",
+    "next": "^16.3.6",
     "next-themes": "^0.4.6",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
@@ -41,7 +41,7 @@
     "@types/react-dom": "^19.3.0",
     "baseline-browser-mapping": "^2.11.25",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.5",
+    "eslint-config-next": "^16.3.6",
     "react-doctor": "^0.9.14",
     "tailwindcss": "^4.3.3",
     "typescript": "^5.9.3"

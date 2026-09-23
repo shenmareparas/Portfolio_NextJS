@@ -8,7 +8,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ## 🚀 Tech Stack
 
--   **Framework:** [Next.js 16.3.5 (App Router)](https://nextjs.org/) & React 19.3.0
+-   **Framework:** [Next.js 16.3.6 (App Router)](https://nextjs.org/) & React 19.3.0
 -   **Runtime & Package Manager:** [Bun](https://bun.sh/)
 -   **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + PostCSS
 -   **Animations:** [Framer Motion v12](https://www.framer.com/motion/)
@@ -22,7 +22,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ## ✨ Key Features
 
--   **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
+-   **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
 -   **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
 -   **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
 -   **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.

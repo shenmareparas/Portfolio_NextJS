@@ -69,9 +69,9 @@ export const projects: Project[] = [
         slug: "chess",
         title: "Chess Offline: Play 2 Player",
         description:
-            "Feature-rich chess app with AI opponent and online multiplayer.",
+            "Feature-rich offline chess game with Stockfish AI and pass-and-play 2-player mode.",
         fullDescription:
-            "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Includes Stockfish-level AI, online multiplayer, puzzles, and educational content. Gained 750,000+ downloads and 35,000 active users in the first quarter. Maintained 4+ star rating on Play Store.",
+            "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Features the Stockfish 18 AI engine across 5 difficulty levels, offline pass-and-play multiplayer, timed matches, and customizable board themes. Gained 750,000+ downloads and maintained a 4+ star rating on the Play Store.",
         tags: ["Flutter", "Dart", "Flame Engine", "Chess AI", "Android", "iOS"],
         role: "Lead Developer",
         timeline: "2023 - Present",
@@ -244,9 +244,9 @@ export const projects: Project[] = [
         slug: "expense-tracker",
         title: "Expense Tracker",
         description:
-            "A modern, highly-polished expense tracker application built with Flutter & Supabase.",
+            "Expense tracking & bill splitting app with interactive charts and Supabase sync.",
         fullDescription:
-            "A feature-rich Expense Tracker application built with Flutter, backed by a Supabase database, and managed using the Provider pattern. It features secure authentication, interactive FL Chart analytics, dynamic category management, optimistic UI updates, smart caching, and rich Material 3 animations with conditional haptic feedback.",
+            "A modern expense tracker and shared bill splitting app built with Flutter and Supabase. Features 6 flexible split modes, settlement logging, inline math inputs, dynamic category management, interactive FL Chart analytics, and smart caching.",
         tags: [
             "Flutter",
             "Dart",
@@ -264,7 +264,10 @@ export const projects: Project[] = [
         },
         image: "/project/expense_tracker/banner.webp",
         logo: "/project/expense_tracker/logo.webp",
-        accentColor: "#10B981",
+        accentColor: {
+            light: "#B85D3B",
+            dark: "#E29D86",
+        },
         gallery: [
             {
                 light: "/project/expense_tracker/1a.webp",
@@ -293,6 +296,14 @@ export const projects: Project[] = [
             {
                 light: "/project/expense_tracker/7a.webp",
                 dark: "/project/expense_tracker/7b.webp",
+            },
+            {
+                light: "/project/expense_tracker/8a.webp",
+                dark: "/project/expense_tracker/8b.webp",
+            },
+            {
+                light: "/project/expense_tracker/9a.webp",
+                dark: "/project/expense_tracker/9b.webp",
             },
         ],
     },
