@@ -28,7 +28,7 @@ This document outlines the development guidelines, constraints, and conventions 
     - [profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts): Bio, contact details, and resume links.
     - [projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts): List of featured and personal projects. Key conventions:
       - Cover banners: Standardized to `image: "/project/<slug>/banner.webp"`.
-      - Gallery layouts: Mobile apps use 3D Coverflow (`galleryLayout: "carousel"`) modeled on the iPhone 18 Pro Max chassis (19.5:9 aspect ratio, micro-thin 1.15mm borders, brushed titanium frame); desktop/macOS/CLI apps use vertical scrolling (`galleryLayout: "vertical"`).
+      - Gallery layouts: Mobile apps use 3D Coverflow (`galleryLayout: "carousel"`) modeled on the iPhone 18 Pro Max chassis (19.5:9 aspect ratio, micro-thin 1.15mm borders, brushed titanium frame); desktop/macOS/CLI/web console apps (such as *Live Wallpaper Engine for macOS*, *Play Store AI Console*, *NEXU5*) use vertical scrolling (`galleryLayout: "vertical"`).
       - Theme-aware gallery items: Supports `GalleryItem = string | { light: string; dark: string }` for automatic theme-switched screenshots.
       - Theme-aware accent colors: Projects support `accentColor: string | { light: string; dark: string }` to ensure pill badges and interactive accents maintain accessible WCAG contrast across both light and dark themes based on app icon branding.
       - Screenshot cropping: Window/app captures must have excessive OS transparent drop-shadow borders cropped away (preserving only a subtle 14–15px margin around the window frame) to maintain consistent aspect ratios across the lightbox.

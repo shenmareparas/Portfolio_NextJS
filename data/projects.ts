@@ -376,5 +376,37 @@ export const projects: Project[] = [
         galleryLayout: "vertical",
         gallery: ["/project/nexu5_music_bot/banner.webp"],
     },
+    {
+        slug: "play-store-ai-review",
+        title: "Play Store AI Console",
+        description:
+            "AI-powered dev console for fetching Google Play reviews, generating Gemini replies, and pushing to Play Console.",
+        fullDescription:
+            "A specialized console for Android developer teams to streamline app reputation and user engagement. Fetches live reviews via the Google Play Developer API (androidpublisher v3), imports historical CSV reports directly from Google Cloud Storage, and automatically translates multi-lingual feedback at zero API cost. Generates contextual developer replies using Google Gemini with dynamic model resolution, custom system prompts with 12 placeholders, targeted per-review directions ('Instruct AI'), and strict 350-character Play Store response limit guardrails before pushing directly to the Play Console with one click.",
+        tags: ["Next.js", "Gemini AI", "Google Play API", "TypeScript"],
+        role: "Full Stack Developer",
+        timeline: "2026",
+        links: {
+            github: "https://github.com/shenmareparas/play-store-ai-review",
+        },
+        image: "/project/play_store_ai_review/banner.webp",
+        logo: "/project/play_store_ai_review/logo.webp",
+        accentColor: "#34A853",
+        galleryLayout: "vertical",
+        gallery: [
+            {
+                light: "/project/play_store_ai_review/1a.webp",
+                dark: "/project/play_store_ai_review/1b.webp",
+            },
+            {
+                light: "/project/play_store_ai_review/2a.webp",
+                dark: "/project/play_store_ai_review/2b.webp",
+            },
+            {
+                light: "/project/play_store_ai_review/3a.webp",
+                dark: "/project/play_store_ai_review/3b.webp",
+            },
+        ],
+    },
 ];
 
