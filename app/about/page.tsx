@@ -2,8 +2,7 @@ import { profile } from "@/data/profile";
 import { skills } from "@/data/skills";
 import { education, certifications, achievements } from "@/data/education";
 import { ExperienceTimeline } from "@/components/experience/experience-timeline";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { CredentialsSection } from "@/components/about/credentials-section";
 import { Badge } from "@/components/ui/badge";
 import { FadeIn } from "@/components/motion/fade-in";
 import { RenderedIcon } from "@/components/ui/rendered-icon";
@@ -171,49 +170,11 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Certifications Section */}
-      <section className="space-y-6">
-        <h2 className="text-3xl font-bold tracking-tight">Certifications</h2>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {certifications.map((cert) => (
-            <Link
-              key={cert.name}
-              href={cert.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block group"
-            >
-              <div className="rounded-lg border bg-card text-card-foreground shadow-sm p-6 transition-colors hover:bg-accent/50 h-full relative">
-                <div className="absolute top-6 right-6 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-                  <ExternalLink className="h-4 w-4 text-muted-foreground" />
-                </div>
-                <h3 className="font-semibold leading-none tracking-tight mb-2 pr-6">
-                  {cert.name}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {cert.issuer} • {cert.year}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* Achievements Section */}
-      <section className="space-y-6">
-        <h2 className="text-3xl font-bold tracking-tight">Achievements</h2>
-        <div className="space-y-4">
-          {achievements.map((achievement) => (
-            <div
-              key={achievement}
-              className="flex items-center gap-3 rounded-lg border bg-card text-card-foreground shadow-sm p-4"
-            >
-              <div className="h-2 w-2 rounded-full bg-primary" />
-              <span className="font-medium">{achievement}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* Credentials & Recognition Section */}
+      <CredentialsSection
+        certifications={certifications}
+        achievements={achievements}
+      />
     </FadeIn>
   );
 }

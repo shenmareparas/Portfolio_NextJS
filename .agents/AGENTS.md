@@ -2,7 +2,7 @@
 
 This document outlines the development guidelines, constraints, and conventions for AI agents working on the **Paras Shenmare Portfolio** codebase.
 
-## 🛠️ Stack & Architecture Constraints
+## Stack & Architecture Constraints
 
 1. **Framework**: Next.js 16 (App Router), React 19, TypeScript, and Bun as the package manager and runner.
 2. **Styling**: Tailwind CSS v4. Ensure configuration is done via CSS variables or standard Tailwind classes. Avoid using deprecated Tailwind v3 config structures or styles.
@@ -13,15 +13,14 @@ This document outlines the development guidelines, constraints, and conventions 
 
 ---
 
-## 📂 Codebase & Folder Conventions
+## Codebase & Folder Conventions
 
 - **Pages and Routing**: All routing is under `app/` using Next.js App Router.
 - **Components**:
   - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs, `command-palette.tsx`, `keyboard-shortcuts-dialog.tsx`, `custom-cursor.tsx`, `coverflow-carousel.tsx`, `vertical-gallery.tsx`).
-  - `components/layout/`: Global structure components (Header with Minimalist Spotlight Search Pill `[ 🔍 Search... ⌘K ]`, Footer, Navbar).
-  - `components/providers/`: Client-side provider contexts (Theme, Nav, KeyboardProvider for global navigation chords and shortcuts).
+  - `components/layout/`: Global structure components (Header with Minimalist Spotlight Search Pill `[ Search... ⌘K ]`, Footer, Navbar).
   - `components/motion/`: Framer-motion helper components.
-  - Page-specific components reside in folders like `components/home/`, `components/projects/`, `components/experience/`, etc.
+  - Page-specific components reside in folders like `components/home/`, `components/projects/`, `components/experience/`, and `components/about/` (`credentials-section.tsx`, `certification-card.tsx`, `achievement-card.tsx`).
 - **Hooks**:
   - `hooks/use-card-grid-nav.ts`: Reusable card grid navigation hook synchronizing hover & keyboard focus, suppressing stationary synthetic mousemove events, and coordinating grid spotlight dimming.
   - `hooks/use-mobile-haptics.ts`: Mobile vibration and haptic feedback wrapper.
@@ -45,7 +44,7 @@ This document outlines the development guidelines, constraints, and conventions 
 
 ---
 
-## 🎨 Styling & Design Guidelines
+## Styling & Design Guidelines
 
 - **Theme Support**: The site is light/dark system-aware. Ensure all new components use Tailwind's dark-mode classes (e.g., `dark:bg-zinc-950`).
 - **Typography & Colors**:
@@ -56,7 +55,7 @@ This document outlines the development guidelines, constraints, and conventions 
 
 ---
 
-## 🚀 Key Commands
+## Key Commands
 
 - **Run Dev Server**: `bun dev`
 - **Build Production**: `bun run build`
@@ -66,7 +65,7 @@ This document outlines the development guidelines, constraints, and conventions 
 
 ---
 
-## ⚡ Performance & Quality Guidelines (React Doctor Audited)
+## Performance & Quality Guidelines (React Doctor Audited)
 
 1. **Avoid Layout Property Animations & Broad Transitions**:
    - Do not animate layout-affecting properties (like `height`, `width`, `top`, `left`, etc.) directly via Framer Motion. Instead use GPU-composited CSS transforms (`scaleX`, `scaleY`) and CSS Grid transitions (`grid-template-rows: 0fr -> 1fr`).
@@ -91,3 +90,4 @@ This document outlines the development guidelines, constraints, and conventions 
 19. **Programmatic Focus Anchoring on `#main-content` for Modals & Route Chords**: When dismissing overlays (such as `<CommandPalette>` or `<KeyboardShortcutsDialog>`) or navigating via global keyboard chords (`g h`, `g p`, `1`–`4`), explicitly blur modal inputs, activate `setGlobalKeyboardNav(true)`, and hand off focus directly to `<main id="main-content" tabIndex={-1}>`. This ensures the subsequent `Tab` keystroke immediately targets the first focusable child in page content (e.g., project card #0) rather than falling back to `document.body` or cycling through top header elements.
 20. **Auto-Hiding Custom Cursor During Keyboard Navigation**: Interactive custom cursors (`CustomCursor`) must track active keyboard interaction (`isKeyboardNav` / `Tab` and navigation keystrokes) and hide (`opacity: 0`, `scale: 0`, or display suppression). They should only re-emerge upon genuine physical mouse displacement (`movementX !== 0 || movementY !== 0`) to prevent visual cursor clutter during pure keyboard operation.
 21. **Card Grid Spotlight Dimming & Focus Parity**: Interactive card grids must provide visual and kinetic parity between mouse hover and keyboard focus states. When any card receives focus via keyboard (`onFocus`) or hover (`onMouseEnter`), adjacent sibling cards dim uniformly (`opacity-40 scale-[0.98]`). Focus styles (`group-focus-within:`) must match hover animations (`group-hover:`) to ensure complete accessibility compliance.
+22. **Dual-Column Balanced Layout & Zero-Reflow Collapsible Overflow**: Content-heavy credential and achievement lists must avoid single-column long vertical stacks. Group complementary categories (e.g., Certifications and Achievements) into a responsive side-by-side grid (`grid grid-cols-1 md:grid-cols-2`) with equalized initial item counts to preserve vertical symmetry. Overflow items must be managed via zero-reflow CSS Grid expanders (`grid-template-rows: 0fr -> 1fr` with `transition-[grid-template-rows,opacity]`) and tactile mobile haptic toggles (`useMobileHaptics`). Maintain aesthetic cohesion by strictly using the site's primary and neutral theme tokens rather than multi-colored ad-hoc accents.

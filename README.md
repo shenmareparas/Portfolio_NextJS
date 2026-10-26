@@ -6,7 +6,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ---
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Framework:** [Next.js 16.3.6 (App Router)](https://nextjs.org/) & React 19.3.0
 - **Runtime & Package Manager:** [Bun](https://bun.sh/)
@@ -20,26 +20,25 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
-- **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
-- **🔍 Command Palette & Global Keyboard System:** Instant `⌘K` / `Ctrl+K` Spotlight search palette indexing pages, projects, social profiles, and quick actions. Features Vim-style navigation chords (`g h`, `g p`, `g a`, `g c`), numeric route jumps (`1`–`4`), instant theme toggle (`t`), and a visual shortcuts cheat sheet (`?`). The header features a unified, minimalist spotlight pill (`[ 🔍 Search... ⌘K ]`) with responsive mobile controls.
-- **⌨️ Fluid Card Grid Navigation & Spotlight Dimming:** Accessible keyboard `Tab` traversal across project cards with visual elevation, spotlight glow, and sibling dimming via `useCardGridNav`. Smart synthetic mouse suppression prevents stationary mouse cursors from interrupting active keyboard navigation on scroll. Modal exits and keyboard navigation automatically hand off focus to `#main-content` for instant, sequential card traversal.
-- **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
-- **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
-- **🌊 Smooth Animations & Motion:**
+- **Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
+- **Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
+- **Command Palette & Global Keyboard System:** Instant `⌘K` / `Ctrl+K` Spotlight search palette indexing pages, projects, social profiles, and quick actions. Features Vim-style navigation chords (`g h`, `g p`, `g a`, `g c`), numeric route jumps (`1`–`4`), instant theme toggle (`t`), and a visual shortcuts cheat sheet (`?`). The header features a unified, minimalist spotlight pill (`[ Search... ⌘K ]`) with responsive mobile controls.
+- **Fluid Card Grid Navigation & Spotlight Dimming:** Accessible keyboard `Tab` traversal across project cards with visual elevation, spotlight glow, and sibling dimming via `useCardGridNav`. Smart synthetic mouse suppression prevents stationary mouse cursors from interrupting active keyboard navigation on scroll. Modal exits and keyboard navigation automatically hand off focus to `#main-content` for instant, sequential card traversal.
+- **Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
+- **Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
+- **Smooth Animations & Motion:**
   - **3D Coverflow Carousel:** Interactive 3D phone mockup carousel for mobile application showcases, modeled after the iPhone 18 Pro Max (native 19.5:9 aspect ratio, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis) with perspective transformations, gesture physics, and theme switching.
   - **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`) powering macOS, CLI, and web application showcases (e.g. _Live Wallpaper Engine for macOS_, _Play Store AI Console_, _NEXU5 Music Bot_). Supports theme-aware `{ light, dark }` screenshot pairs with uniform shadow margins, Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
   - **Dynamic Title Rotators:** Cycling header typography.
-  - **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling and smart auto-hiding during keyboard navigation.
-  - **Timeline & Education:** Structured, responsive career, university, and certification timelines.
-- **💳 Digital QR Contact Card:** Dedicated `/qr` page for quick contact sharing and mobile scanning.
-- **📧 Validated Contact Form:** Form validation with Zod schemas and Formspree submission feedback.
+  - **Timeline, Education & Credentials:** Structured career and university timelines paired with a space-efficient, responsive dual-column Credentials & Recognition system (`components/about/credentials-section.tsx`). Symmetrically balances Certifications and Achievements side-by-side (reducing vertical height by over 70%) with zero-reflow CSS Grid expanders (`grid-template-rows: 0fr -> 1fr`), mobile haptic feedback, and branded monochromatic micro-cards.
+- **Digital QR Contact Card:** Dedicated `/qr` page for quick contact sharing and mobile scanning.
+- **Validated Contact Form:** Form validation with Zod schemas and Formspree submission feedback.
 
 ---
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -75,7 +74,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 ├── .agents/                 # AI Agent instructions, project context, and localized skills
@@ -101,7 +100,8 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 │   ├── layout/              # Navbars, Header (with Minimalist Spotlight Pill), Footer
 │   ├── providers/           # ThemeProvider, NavProvider, and KeyboardProvider
 │   ├── motion/              # Scroll reveals & Framer Motion helper wrappers
-│   └── home/                # Homepage sections (Hero, Featured, etc.)
+│   ├── home/                # Homepage sections (Hero, Featured, etc.)
+│   └── about/               # About page sections (CredentialsSection, CertificationCard, AchievementCard)
 ├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock)
 ├── data/                    # The source of truth for portfolio content & static state
 ├── lib/                     # System utilities (cn styling merger, time formatters, etc.)
@@ -111,20 +111,20 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 Portfolio content is centrally managed in the `data/` directory:
 
 - `data/config.ts`: Site metadata, SEO settings, dynamic copyright getter, and Formspree endpoint.
 - `data/profile.ts`: Bio, contact details, and resume links.
 - `data/projects.ts`: Project showcases, tags, live URLs, GitHub repositories, and gallery media.
-- `data/experience.ts` & `data/education.ts`: Work history, degrees, and certifications.
+- `data/experience.ts` & `data/education.ts`: Work history, degrees, certifications, and structured honors/achievements.
 - `data/skills.tsx`: Categorized skill stacks and icon mappings.
 - `data/socials.ts`: Social media profiles and contact links.
 
 ---
 
-## ⚡ Performance & Quality Audits
+## Performance & Quality Audits
 
 - **React Doctor Certified (100 / 100)**: Conforms to strict code quality, effect cleanup, and render optimization standards. React Doctor is installed locally and enforced via pre-commit git hook and npm script:
   ```bash
@@ -146,7 +146,7 @@ Portfolio content is centrally managed in the `data/` directory:
 
 ---
 
-## 📞 Contact
+## Contact
 
 - **Email:** [shenmareparas@gmail.com](mailto:shenmareparas@gmail.com)
 - **Website:** [shenmareparas.vercel.app](https://shenmareparas.vercel.app)

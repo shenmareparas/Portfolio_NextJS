@@ -4,13 +4,13 @@ This document provides a comprehensive overview of the architecture, file layout
 
 ---
 
-## 🎯 Project Overview
+## Project Overview
 
 This is a modern, high-performance portfolio website built using **Next.js 16 (App Router)**, **React 19**, **TypeScript**, and **Tailwind CSS v4**. It features interactive custom experiences, glassmorphic UI cards, smooth page transitions, preloader states, and support for mobile haptic feedback.
 
 ---
 
-## 🚀 Technology Stack
+## Technology Stack
 
 - **Framework**: Next.js 16.3.6 (App Router, Server & Client Components)
 - **Runtime & Package Manager**: Bun v1.4.0
@@ -22,7 +22,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 
 ---
 
-## 📂 Core Folder Structure
+## Core Folder Structure
 
 ```bash
 ├── .agents/                 # AI Agent instructions, project context, and localized skills
@@ -48,7 +48,8 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── layout/              # Navbars, Header (with Minimalist Spotlight Pill), Footer
 │   ├── providers/           # ThemeProvider, NavProvider, and KeyboardProvider
 │   ├── motion/              # Scroll reveals & Framer Motion helper wrappers
-│   └── home/                # Homepage sections (Hero, Featured, etc.)
+│   ├── home/                # Homepage sections (Hero, Featured, etc.)
+│   └── about/               # About page sections (CredentialsSection, CertificationCard, AchievementCard)
 ├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock)
 ├── data/                    # The source of truth for portfolio content & static state
 ├── lib/                     # System utilities (cn styling merger, time formatters, etc.)
@@ -58,7 +59,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 
 ---
 
-## ⚙️ Configuration & Data Files (`data/`)
+## Configuration & Data Files (`data/`)
 
 To update or manage the portfolio content, developers should edit the following files rather than modifying page layouts:
 
@@ -72,13 +73,13 @@ To update or manage the portfolio content, developers should edit the following 
 
 ---
 
-## 🛠️ Key UI Features
+## Key UI Features
 
 - **Command Palette & Global Keyboard System**:
   - **Command Palette (`components/ui/command-palette.tsx`)**: Triggered via `⌘K` or `Ctrl+K`. Indexes all routes, projects, social handles, external links, and system actions (e.g. theme toggle) with real-time filtering, group headers, and quick-action shortcuts.
   - **Keyboard Shortcuts Dialog (`components/ui/keyboard-shortcuts-dialog.tsx`)**: Triggered via `?`. Presents a visual cheat sheet of all available shortcuts grouped by Navigation, Actions, and Navigation Chords.
   - **Global Keyboard Provider (`components/providers/keyboard-provider.tsx`)**: Listens for vim-style navigation chords (`g h` for Home, `g p` for Projects, `g a` for About, `g c` for Contact), numeric page jumps (`1`–`4`), theme switching (`t`), and shortcut overlays.
-  - **Minimalist Spotlight Pill (`components/layout/header.tsx`)**: Unified `[ 🔍 Search... ⌘K ]` pill button anchored seamlessly in the desktop header navigation, collapsing down to a compact search icon on mobile viewports.
+  - **Minimalist Spotlight Pill (`components/layout/header.tsx`)**: Unified `[ Search... ⌘K ]` pill button anchored seamlessly in the desktop header navigation, collapsing down to a compact search icon on mobile viewports.
 - **Card Grid Traversal & Spotlight Dimming System**:
   - **`useCardGridNav` Hook (`hooks/use-card-grid-nav.ts`)**: Synchronizes mouse hover and keyboard focus states across project card grids (`/projects` and featured section). When any card is focused or hovered, inactive siblings dim to `opacity-40 scale-[0.98]`.
   - **Stationary Mouse Suppression**: Debounces synthetic `mousemove`/`mouseenter` events dispatched when cards scroll beneath a stationary mouse cursor, ensuring keyboard `Tab` traversal is never interrupted.
@@ -91,6 +92,11 @@ To update or manage the portfolio content, developers should edit the following 
     - **Desktop Controls**: Calibrated non-passive mouse wheel zoom, double-click to zoom in/out at cursor, drag-to-pan when scaled, touch-friendly top toolbar controls, and backdrop click to exit.
     - **useReducer Architecture & Sub-component Decomposition**: State transitions (zoom, pan offset, navigation strip indices, animation states, dismiss progress) are orchestrated atomically via `useReducer` (`lightboxReducer`). Interaction logic is decoupled into a dedicated `useLightboxGestures` hook, while the 3-image viewport carousel is encapsulated in `LightboxStrip`, ensuring low component complexity and clean separation of concerns.
     - **Lifecycle, Purity & Memory Management**: Strip transition timers and DOM pointer/wheel/gesture listeners are clean-unmounted with zero event or memory leaks. Pure state updaters, module-scoped static styles (`SLOT_STYLE`), and dynamic `willChange` compositor bindings ensure minimal GPU overhead.
+- **Credentials & Recognition Dual-Column System**:
+  - **Side-by-Side Dual-Column Layout (`components/about/credentials-section.tsx`)**: Replaces bulky sequential full-page blocks with a responsive 2-column grid (`grid grid-cols-1 md:grid-cols-2 gap-8`), cutting vertical space consumption by over 70%.
+  - **Height-Balanced Zero-Reflow Overflow**: Equilibrates the initial display to 6 certifications and 6 achievements for visual symmetry (~360px height). Renders remaining certifications within a GPU-composited CSS Grid expander (`grid-template-rows: 0fr -> 1fr`) driven by a solid outline toggle button with mobile haptics (`selection`).
+  - **Monochromatic Branded Micro-Cards (`components/about/certification-card.tsx` & `components/about/achievement-card.tsx`)**: High-density `p-3` rows with branded icons (Anthropic, AWS, Google, Cisco, Kaggle, Coursera, Android, Hackathons) styled strictly in the site's neutral/primary palette (`bg-primary/10 text-primary border-primary/20`) for cohesive dark/light mode elegance.
+  - **Minimalist Typography**: Clean column headings with live item counts (`13` for certifications, `6` for achievements) without decorative title icon clutter, keeping typography aligned with the rest of the portfolio.
 - **Dynamic Title Rotators**: Animated headers that cycle through specialized titles.
 - **Haptic Integrations**: The portfolio uses `useWebHaptics` hook in mobile views to trigger haptic feedback during interactive moments:
   - Form submission successes ("success")
@@ -101,7 +107,7 @@ To update or manage the portfolio content, developers should edit the following 
 
 ---
 
-## 🏗️ Building, Quality & Audits
+## Building, Quality & Audits
 
 - **Dev Server**: `bun dev` (runs on `localhost:3000`)
 - **Production Build**: `bun run build`
@@ -113,7 +119,7 @@ To update or manage the portfolio content, developers should edit the following 
   bunx react-doctor@latest . --verbose
   ```
 
-### ⚡ Architectural Optimization Patterns
+### Architectural Optimization Patterns
 
 - **Reduced Motion**: Wrapped in `<MotionConfig reducedMotion="user">` inside `app/layout.tsx` to automatically scale down animations based on user OS settings.
 - **Immediate Above-the-Fold LCP Delivery**: Hero content and headings render immediately without blocking `opacity: 0` wrappers to score sub-second FCP and meet Core Web Vitals LCP standards (<2.5s).
