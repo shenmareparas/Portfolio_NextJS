@@ -1,34 +1,22 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { projects } from "@/data/projects";
 import { ProjectCard } from "@/components/projects/project-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useCardGridNav } from "@/hooks/use-card-grid-nav";
 
 export function FeaturedProjects() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hasHover, setHasHover] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(pointer: fine)");
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHasHover(mediaQuery.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setHasHover(e.matches);
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, []);
-
-  const handleHover = (index: number) => {
-    if (hasHover) {
-      setHoveredIndex(index);
-    }
-  };
+  const {
+    hasHover,
+    activeIndex,
+    focusedIndex,
+    handleHover,
+    handleMouseLeave,
+    handleFocus,
+    handleBlur,
+  } = useCardGridNav();
 
   return (
     <section className="container mx-auto px-4 py-12 md:py-24 lg:py-32">
@@ -46,9 +34,12 @@ export function FeaturedProjects() {
             key={project.slug}
             project={project}
             index={index}
-            isDimmed={hoveredIndex !== null && hoveredIndex !== index}
+            isDimmed={activeIndex !== null && activeIndex !== index}
+            isFocused={focusedIndex === index}
             onHover={() => handleHover(index)}
-            onBlur={() => setHoveredIndex(null)}
+            onMouseLeave={handleMouseLeave}
+            onFocus={() => handleFocus(index)}
+            onBlur={() => handleBlur(index)}
             disabled={!hasHover}
             priority={true}
           />

@@ -44,11 +44,12 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── projects/            # Full list of projects & project details page
 │   └── qr/                  # Digital QR Business Card / Contact Card
 ├── components/              # Modular UI components
-│   ├── ui/                  # Atom-level reusable controls (Button, Toast, Tooltip, Avatar)
-│   ├── layout/              # Navbars, Header, Footer
-│   ├── providers/           # ThemeProvider (next-themes) and NavProvider
+│   ├── ui/                  # Atom-level reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, Avatar)
+│   ├── layout/              # Navbars, Header (with Minimalist Spotlight Pill), Footer
+│   ├── providers/           # ThemeProvider, NavProvider, and KeyboardProvider
 │   ├── motion/              # Scroll reveals & Framer Motion helper wrappers
 │   └── home/                # Homepage sections (Hero, Featured, etc.)
+├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock)
 ├── data/                    # The source of truth for portfolio content & static state
 ├── lib/                     # System utilities (cn styling merger, time formatters, etc.)
 ├── types/                   # Shared TypeScript interface definitions
@@ -73,6 +74,16 @@ To update or manage the portfolio content, developers should edit the following 
 
 ## 🛠️ Key UI Features
 
+- **Command Palette & Global Keyboard System**:
+  - **Command Palette (`components/ui/command-palette.tsx`)**: Triggered via `⌘K` or `Ctrl+K`. Indexes all routes, projects, social handles, external links, and system actions (e.g. theme toggle) with real-time filtering, group headers, and quick-action shortcuts.
+  - **Keyboard Shortcuts Dialog (`components/ui/keyboard-shortcuts-dialog.tsx`)**: Triggered via `?`. Presents a visual cheat sheet of all available shortcuts grouped by Navigation, Actions, and Navigation Chords.
+  - **Global Keyboard Provider (`components/providers/keyboard-provider.tsx`)**: Listens for vim-style navigation chords (`g h` for Home, `g p` for Projects, `g a` for About, `g c` for Contact), numeric page jumps (`1`–`4`), theme switching (`t`), and shortcut overlays.
+  - **Minimalist Spotlight Pill (`components/layout/header.tsx`)**: Unified `[ 🔍 Search... ⌘K ]` pill button anchored seamlessly in the desktop header navigation, collapsing down to a compact search icon on mobile viewports.
+- **Card Grid Traversal & Spotlight Dimming System**:
+  - **`useCardGridNav` Hook (`hooks/use-card-grid-nav.ts`)**: Synchronizes mouse hover and keyboard focus states across project card grids (`/projects` and featured section). When any card is focused or hovered, inactive siblings dim to `opacity-40 scale-[0.98]`.
+  - **Stationary Mouse Suppression**: Debounces synthetic `mousemove`/`mouseenter` events dispatched when cards scroll beneath a stationary mouse cursor, ensuring keyboard `Tab` traversal is never interrupted.
+  - **Direct Focus Handoff**: Dismissing the Command Palette or triggering a route chord immediately hands off focus to `<main id="main-content" tabIndex={-1}>`, so the very next `Tab` keystroke lands cleanly on Project Card #0 without cycling through header links.
+  - **Keyboard-Aware Custom Cursor (`components/ui/custom-cursor.tsx`)**: Smooth Framer Motion spring cursor automatically fades out upon keyboard navigation (`Tab`, chord strokes) and reappears only upon genuine physical mouse displacement.
 - **Dual Showcase Media System**:
   - **3D Coverflow Carousel** (`components/ui/coverflow-carousel.tsx`): Interactive 3D phone mockup carousel for mobile applications, modeled after the iPhone 18 Pro Max form factor (native 19.5:9 display ratio `1320/2868`, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis with chamfered rim accents).
   - **Vertical Screenshot Gallery & Lightbox** (`components/ui/vertical-gallery.tsx`): Dedicated vertical screenshot stream for desktop/macOS, developer tools, and web applications (e.g. _Play Store AI Console_, _Live Wallpaper Engine for macOS_). Includes a full-screen lightbox powered by a 3-image sliding strip layout (`[prev] [current] [next]` slot system):
@@ -119,3 +130,6 @@ To update or manage the portfolio content, developers should edit the following 
 - **Dynamic Event Listener Registration**: Drag, wheel, and backdrop interaction listeners on viewports are registered in return-cleaned `useEffect` blocks rather than static JSX props (`react-doctor/no-static-element-interactions`).
 - **Coordinated State via `useReducer`**: Complex interactive components (like `LightboxModal`) group multiple coupled states into a single reducer with typed transitions, ensuring atomic state updates (`react-doctor/prefer-useReducer`).
 - **Modular Sub-component Architecture**: Monolithic views exceeding line count thresholds are split into dedicated sub-components and focused custom hooks to ensure low cyclomatic complexity (`react-doctor/no-giant-component`).
+- **Stationary Mouse Suppression & Hover Debouncing**: Verifies physical pointer displacement before toggling hover states to prevent stationary mouse cursors from hijacking keyboard `Tab` flow (`useCardGridNav`).
+- **Focus Anchoring on `#main-content`**: Seamlessly resets tab target to the primary content container when navigating routes or closing modals, ensuring direct keyboard access to page cards.
+- **Keyboard-Aware Custom Cursor**: Auto-hides the spring cursor during keyboard interaction and gracefully reveals it on physical pointer displacement.

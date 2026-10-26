@@ -21,7 +21,10 @@ interface ProjectCardProps {
   project: Project;
   index: number;
   isDimmed?: boolean;
+  isFocused?: boolean;
   onHover?: () => void;
+  onMouseLeave?: () => void;
+  onFocus?: () => void;
   onBlur?: () => void;
   disabled?: boolean;
   priority?: boolean;
@@ -31,7 +34,10 @@ export function ProjectCard({
   project,
   index,
   isDimmed,
+  isFocused,
   onHover,
+  onMouseLeave,
+  onFocus,
   onBlur,
   disabled,
   priority,
@@ -56,16 +62,18 @@ export function ProjectCard({
       animate={{
         opacity: isDimmed ? 0.5 : 1,
         filter: isDimmed ? "brightness(0.8)" : "brightness(1)",
-        y: 0,
+        y: isFocused ? -8 : 0,
+        scale: isFocused ? 1.02 : 1,
       }}
       onMouseEnter={onHover}
-      onMouseLeave={onBlur}
+      onMouseLeave={onMouseLeave ?? onBlur}
       transition={{
         duration: 0.4,
         delay: shouldAnimate ? index * 0.1 : 0,
         opacity: { duration: 0.2 },
         filter: { duration: 0.2 },
         scale: { duration: 0.2 },
+        y: { duration: 0.2 },
       }}
       whileHover={
         !disabled
@@ -81,7 +89,9 @@ export function ProjectCard({
     >
       <Card
         className={`relative flex h-full flex-col overflow-hidden border-border/40 transition-shadow duration-300 ${
-          !disabled ? "hover:shadow-lg dark:hover:shadow-2xl" : ""
+          !disabled
+            ? "hover:shadow-lg dark:hover:shadow-2xl group-focus-within:shadow-lg dark:group-focus-within:shadow-2xl"
+            : ""
         }`}
         style={
           {
@@ -91,14 +101,16 @@ export function ProjectCard({
         }
       >
         {/* Dynamic Border Glow */}
-        <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none z-20">
+        <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100 pointer-events-none z-20">
           <div className="absolute inset-0 border-2 border-[var(--project-accent)] dark:border-[var(--project-accent-dark)] rounded-xl opacity-50" />
           <div className="absolute inset-0 bg-[var(--project-accent)] dark:bg-[var(--project-accent-dark)] opacity-[0.03]" />
         </div>
 
         <Link
           href={`/projects/${project.slug}`}
-          className="absolute inset-0 z-10 focus:outline-none"
+          onFocus={onFocus}
+          onBlur={onBlur}
+          className="absolute inset-0 z-10 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--project-accent)] dark:focus-visible:ring-[var(--project-accent-dark)] focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         >
           <span className="sr-only">View {project.title}</span>
         </Link>
@@ -110,7 +122,7 @@ export function ProjectCard({
             fill
             priority={priority}
             loading={priority ? undefined : "lazy"}
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105 group-focus-within:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           {/* Image Overlay which lightens on hover */}
@@ -119,10 +131,10 @@ export function ProjectCard({
 
         <CardHeader>
           <CardTitle className="flex items-center justify-between gap-2">
-            <span className="truncate text-lg group-hover:text-[var(--project-accent)] dark:group-hover:text-[var(--project-accent-dark)] transition-colors duration-300">
+            <span className="truncate text-lg group-hover:text-[var(--project-accent)] group-focus-within:text-[var(--project-accent)] dark:group-hover:text-[var(--project-accent-dark)] dark:group-focus-within:text-[var(--project-accent-dark)] transition-colors duration-300">
               {project.title}
             </span>
-            <ArrowUpRight className="h-5 w-5 translate-y-2 opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100 text-[var(--project-accent)] dark:text-[var(--project-accent-dark)]" />
+            <ArrowUpRight className="h-5 w-5 translate-y-2 opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 text-[var(--project-accent)] dark:text-[var(--project-accent-dark)]" />
           </CardTitle>
           <CardDescription className="line-clamp-2 text-muted-foreground/80">
             {project.description}

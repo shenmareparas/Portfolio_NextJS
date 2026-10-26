@@ -4,25 +4,30 @@ import { useState, useEffect } from "react";
 import { projects as projectsData } from "@/data/projects";
 import { ProjectCard } from "@/components/projects/project-card";
 import { useNavigation } from "@/components/providers/navigation-provider";
+import { useCardGridNav } from "@/hooks/use-card-grid-nav";
 
 export function ProjectsClient() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [hasHover, setHasHover] = useState(false);
   const { previousPath } = useNavigation();
   const [isRestoring, setIsRestoring] = useState(
     () =>
       previousPath?.startsWith("/projects/") && previousPath !== "/projects",
   );
 
+  const {
+    hasHover,
+    activeIndex,
+    focusedIndex,
+    isKeyboardNav,
+    handleHover,
+    handleMouseLeave,
+    handleFocus,
+    handleBlur,
+  } = useCardGridNav();
+
   useEffect(() => {
-    let hoverTimer: NodeJS.Timeout | null = null;
     let restoreTimer: NodeJS.Timeout | null = null;
     let resetTimer: NodeJS.Timeout | null = null;
-
-    // Defer state update to avoid synchronous rendering warning
-    hoverTimer = setTimeout(() => {
-      setHasHover(window.matchMedia("(pointer: fine)").matches);
-    }, 0);
+    let focusTimer: NodeJS.Timeout | null = null;
 
     // Handle scrolling back to the previous project
     if (isRestoring) {
@@ -36,26 +41,33 @@ export function ProjectsClient() {
               behavior: "instant",
               block: "center",
             });
+            const link = element.querySelector("a");
+            if (link) {
+              link.focus({ preventScroll: true });
+            }
           }
           setIsRestoring(false);
         }, 0);
       } else {
         resetTimer = setTimeout(() => setIsRestoring(false), 0);
       }
+    } else if (isKeyboardNav) {
+      // If arriving via keyboard navigation (Cmd+K, shortcuts), prime focus on main-content
+      // so the very next Tab traverses directly through the project cards
+      focusTimer = setTimeout(() => {
+        const main = document.getElementById("main-content");
+        if (main && !main.contains(document.activeElement)) {
+          main.focus({ preventScroll: true });
+        }
+      }, 50);
     }
 
     return () => {
-      if (hoverTimer) clearTimeout(hoverTimer);
       if (restoreTimer) clearTimeout(restoreTimer);
       if (resetTimer) clearTimeout(resetTimer);
+      if (focusTimer) clearTimeout(focusTimer);
     };
-  }, [previousPath, isRestoring]);
-
-  const handleHover = (index: number) => {
-    if (hasHover) {
-      setHoveredIndex(index);
-    }
-  };
+  }, [previousPath, isRestoring, isKeyboardNav]);
 
   return (
     <div
@@ -75,9 +87,12 @@ export function ProjectsClient() {
             key={project.slug}
             project={project}
             index={index}
-            isDimmed={hoveredIndex !== null && hoveredIndex !== index}
+            isDimmed={activeIndex !== null && activeIndex !== index}
+            isFocused={focusedIndex === index}
             onHover={() => handleHover(index)}
-            onBlur={() => setHoveredIndex(null)}
+            onMouseLeave={handleMouseLeave}
+            onFocus={() => handleFocus(index)}
+            onBlur={() => handleBlur(index)}
             disabled={!hasHover}
             priority={index < 6}
           />

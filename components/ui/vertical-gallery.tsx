@@ -1193,7 +1193,7 @@ export function VerticalGallery({
               className="group relative w-full text-left rounded-2xl overflow-hidden border border-border/40 bg-zinc-900/5 dark:bg-zinc-900/40 transition-shadow duration-300 hover:shadow-xl dark:hover:shadow-2xl cursor-zoom-in cursor-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block"
               aria-label={`Open ${title} screenshot ${idx + 1} in full screen`}
             >
-              <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none z-20">
+              <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-events-none z-20">
                 <div className="absolute inset-0 border-2 border-primary rounded-2xl opacity-40" />
                 <div className="absolute inset-0 bg-primary opacity-[0.03] rounded-2xl" />
               </div>

@@ -60,10 +60,10 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             type="button"
             onClick={toggleTheme}
             className={cn(
-              "flex items-center justify-center rounded-full p-2 transition-colors hover:bg-muted focus:outline-none focus:ring-2 focus:ring-primary/20",
+              "flex items-center justify-center rounded-full p-2 transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
               className,
             )}
-            aria-label="Toggle theme"
+            aria-label="Toggle theme (t)"
           >
             {mounted && resolvedTheme === "dark" ? (
               <Moon className="h-5 w-5" />
@@ -73,7 +73,12 @@ export function ThemeSwitcher({ className }: { className?: string }) {
           </button>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Theme</p>
+          <p>
+            Theme{" "}
+            <kbd className="ml-1 text-[10px] opacity-70 font-mono px-1 py-0.5 rounded bg-muted">
+              T
+            </kbd>
+          </p>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

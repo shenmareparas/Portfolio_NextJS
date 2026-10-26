@@ -24,13 +24,15 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 - **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
 - **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
+- **🔍 Command Palette & Global Keyboard System:** Instant `⌘K` / `Ctrl+K` Spotlight search palette indexing pages, projects, social profiles, and quick actions. Features Vim-style navigation chords (`g h`, `g p`, `g a`, `g c`), numeric route jumps (`1`–`4`), instant theme toggle (`t`), and a visual shortcuts cheat sheet (`?`). The header features a unified, minimalist spotlight pill (`[ 🔍 Search... ⌘K ]`) with responsive mobile controls.
+- **⌨️ Fluid Card Grid Navigation & Spotlight Dimming:** Accessible keyboard `Tab` traversal across project cards with visual elevation, spotlight glow, and sibling dimming via `useCardGridNav`. Smart synthetic mouse suppression prevents stationary mouse cursors from interrupting active keyboard navigation on scroll. Modal exits and keyboard navigation automatically hand off focus to `#main-content` for instant, sequential card traversal.
 - **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
 - **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
 - **🌊 Smooth Animations & Motion:**
   - **3D Coverflow Carousel:** Interactive 3D phone mockup carousel for mobile application showcases, modeled after the iPhone 18 Pro Max (native 19.5:9 aspect ratio, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis) with perspective transformations, gesture physics, and theme switching.
   - **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`) powering macOS, CLI, and web application showcases (e.g. _Live Wallpaper Engine for macOS_, _Play Store AI Console_, _NEXU5 Music Bot_). Supports theme-aware `{ light, dark }` screenshot pairs with uniform shadow margins, Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
   - **Dynamic Title Rotators:** Cycling header typography.
-  - **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
+  - **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling and smart auto-hiding during keyboard navigation.
   - **Timeline & Education:** Structured, responsive career, university, and certification timelines.
 - **💳 Digital QR Contact Card:** Dedicated `/qr` page for quick contact sharing and mobile scanning.
 - **📧 Validated Contact Form:** Form validation with Zod schemas and Formspree submission feedback.
@@ -95,11 +97,12 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 │   ├── projects/            # Full list of projects & project details page
 │   └── qr/                  # Digital QR Business Card / Contact Card
 ├── components/              # Modular UI components
-│   ├── ui/                  # Atom-level reusable controls (Button, Toast, Tooltip, Avatar)
-│   ├── layout/              # Navbars, Header, Footer
-│   ├── providers/           # ThemeProvider (next-themes) and NavProvider
+│   ├── ui/                  # Atom-level reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts)
+│   ├── layout/              # Navbars, Header (with Minimalist Spotlight Pill), Footer
+│   ├── providers/           # ThemeProvider, NavProvider, and KeyboardProvider
 │   ├── motion/              # Scroll reveals & Framer Motion helper wrappers
 │   └── home/                # Homepage sections (Hero, Featured, etc.)
+├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock)
 ├── data/                    # The source of truth for portfolio content & static state
 ├── lib/                     # System utilities (cn styling merger, time formatters, etc.)
 ├── types/                   # Shared TypeScript interface definitions
@@ -130,6 +133,9 @@ Portfolio content is centrally managed in the `data/` directory:
   bunx react-doctor --yes --verbose
   ```
 - **A11y & Reduced Motion**: Automatically respects user OS accessibility settings via `<MotionConfig reducedMotion="user">`.
+- **Keyboard-First Focus & Stationary Mouse Immunity**: Card grids employ `useCardGridNav` to debounce synthetic mouseover events triggered while scrolling under stationary cursors, guaranteeing zero interruptions during keyboard `Tab` traversal.
+- **Seamless Focus Handoff**: Closing the Command Palette (`⌘K`) or executing keyboard route navigation (`g h`, `g p`, `1`–`4`) automatically anchors focus to `<main id="main-content">`, ensuring sequential `Tab` strokes jump immediately to content items without traversing the navbar.
+- **Auto-Hiding Custom Cursor**: The custom fluid spring cursor automatically hides on keyboard navigation and smoothly reappears upon genuine physical mouse movement.
 - **Touch & Mobile Viewport Precision**: Screen-orientation lock (`PortraitLock`) is strictly scoped to coarse-pointer touch devices in landscape mode, leaving desktop browser resizes unaffected.
 - **SSR-Safe Mobile Haptics**: `useMobileHaptics` hook utilizes React 19 `useSyncExternalStore` for media queries to eliminate hydration flashes and safely trigger tactile feedback on supported mobile devices.
 - **Immediate Above-the-Fold LCP**: Zero blocking animation wrappers on above-the-fold hero content ensuring sub-second LCP/FCP.

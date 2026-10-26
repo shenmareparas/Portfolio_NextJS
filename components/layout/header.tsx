@@ -4,8 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { cn } from "@/lib/utils";
-import { Home, FolderCode, User, Send } from "lucide-react";
+import { Home, FolderCode, User, Send, Search } from "lucide-react";
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
+import { useKeyboard } from "@/components/providers/keyboard-provider";
 
 import { useSyncExternalStore } from "react";
 import { AnimatePresence, m } from "framer-motion";
@@ -25,6 +26,7 @@ const navItems = [
 export function Header() {
   const pathname = usePathname();
   const haptic = useMobileHaptics();
+  const { openCommandPalette } = useKeyboard();
   const mounted = useSyncExternalStore(
     subscribe,
     getSnapshot,
@@ -36,7 +38,10 @@ export function Header() {
       <m.header className="fixed top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/95 border-border/40">
         <div className="container mx-auto flex h-16 items-center justify-between px-4 relative">
           <div className="flex items-center gap-2 z-50">
-            <Link href="/" className="flex items-center space-x-2 cursor-hover">
+            <Link
+              href="/"
+              className="flex items-center space-x-2 cursor-hover rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
               <span className="text-xl font-bold">Paras Shenmare</span>
             </Link>
           </div>
@@ -62,7 +67,7 @@ export function Header() {
                   href={item.href}
                   onClick={handleClick}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary cursor-hover",
+                    "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary cursor-hover rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     isActive ? "text-foreground" : "text-muted-foreground",
                   )}
                 >
@@ -84,7 +89,23 @@ export function Header() {
             })}
           </nav>
 
-          <div className="flex items-center gap-4 z-50">
+          <div className="flex items-center gap-2 sm:gap-3 z-50">
+            <button
+              type="button"
+              onClick={openCommandPalette}
+              className="group flex items-center gap-2 rounded-full border border-border/50 bg-muted/40 hover:bg-muted/70 hover:border-border/80 px-2.5 sm:px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-[colors,border-color,box-shadow] duration-200 shadow-2xs backdrop-blur-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background cursor-pointer"
+              aria-label="Search and command palette (⌘K)"
+              title="Search and commands (⌘K)"
+            >
+              <Search className="h-3.5 w-3.5 text-muted-foreground/70 group-hover:text-foreground transition-colors" />
+              <span className="hidden sm:inline font-normal text-muted-foreground group-hover:text-foreground transition-colors">
+                Search...
+              </span>
+              <kbd className="hidden sm:inline-flex items-center rounded border border-border/60 bg-background/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-muted-foreground/90 group-hover:text-foreground group-hover:border-border transition-colors shadow-2xs">
+                ⌘K
+              </kbd>
+            </button>
+
             <ThemeSwitcher />
           </div>
         </div>

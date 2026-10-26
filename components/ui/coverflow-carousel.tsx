@@ -146,7 +146,7 @@ const NavigationButton = ({
     <button
       type="button"
       className={cn(
-        "absolute z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-[background-color,transform] hover:scale-110 outline-none touch-manipulation select-none opacity-100 visible",
+        "absolute z-50 h-12 w-12 flex items-center justify-center rounded-full shadow-lg backdrop-blur supports-[backdrop-filter]:bg-background/60 bg-background/60 border border-border/40 text-foreground hover:bg-background/80 transition-[background-color,transform] hover:scale-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation select-none opacity-100 visible",
         isLeft
           ? "left-4 xl:left-[calc(50%-250px)]"
           : "right-4 xl:right-[calc(50%-250px)]",
@@ -186,7 +186,7 @@ const ThemeToggle = ({
     <button
       type="button"
       onClick={toggleTheme}
-      className="flex items-center p-1 rounded-full shadow-lg backdrop-blur bg-background/60 border border-border/40 cursor-pointer outline-none hover:bg-background/80 transition-colors"
+      className="flex items-center p-1 rounded-full shadow-lg backdrop-blur bg-background/60 border border-border/40 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background hover:bg-background/80 transition-colors"
       aria-label="Toggle image theme"
       style={
         { viewTransitionName: "theme-toggle-button" } as React.CSSProperties
@@ -483,9 +483,11 @@ export function CoverflowCarousel({
   return (
     <div
       ref={containerRef}
-      aria-label="Image Carousel"
+      tabIndex={0}
+      role="region"
+      aria-label="App screenshots coverflow (Use Left/Right arrow keys to navigate)"
       className={cn(
-        "relative w-full max-w-6xl mx-auto py-12 xl:flex xl:flex-col",
+        "relative w-full max-w-6xl mx-auto py-12 xl:flex xl:flex-col focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-3xl",
         className,
       )}
     >

@@ -7,6 +7,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { NavigationProvider } from "@/components/providers/navigation-provider";
 import { LoadingProvider } from "@/components/providers/loading-provider";
+import { KeyboardProvider } from "@/components/providers/keyboard-provider";
 import { ClientLayout } from "@/components/layout/client-layout";
 import { Toaster } from "@/components/ui/toaster";
 import { CustomCursor } from "@/components/ui/custom-cursor";
@@ -94,10 +95,12 @@ export default function RootLayout({
             <MotionConfig reducedMotion="user">
               <NavigationProvider>
                 <LoadingProvider>
-                  <Preloader />
-                  <CustomCursor />
-                  <ClientLayout>{children}</ClientLayout>
-                  <Toaster />
+                  <KeyboardProvider>
+                    <Preloader />
+                    <CustomCursor />
+                    <ClientLayout>{children}</ClientLayout>
+                    <Toaster />
+                  </KeyboardProvider>
                 </LoadingProvider>
               </NavigationProvider>
             </MotionConfig>

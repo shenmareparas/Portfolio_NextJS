@@ -78,19 +78,37 @@ const CursorInner = ({
 
   const [interactState, dispatchInteract] = useReducer(
     (
-      state: { isHovering: boolean; isDragging: boolean },
-      action: Partial<{ isHovering: boolean; isDragging: boolean }>,
+      state: { isHovering: boolean; isDragging: boolean; isHidden: boolean },
+      action: Partial<{
+        isHovering: boolean;
+        isDragging: boolean;
+        isHidden: boolean;
+      }>,
     ) => ({ ...state, ...action }),
-    { isHovering: false, isDragging: false },
+    { isHovering: false, isDragging: false, isHidden: false },
   );
 
   useEffect(() => {
+    let lastX = initialX;
+    let lastY = initialY;
+    let isKeyboardActive = false;
+
     const updateMousePosition = (e: MouseEvent) => {
+      if (e.clientX !== lastX || e.clientY !== lastY) {
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (isKeyboardActive) {
+          isKeyboardActive = false;
+          dispatchInteract({ isHidden: false });
+        }
+      }
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
 
     const handleMouseOver = (e: MouseEvent) => {
+      if (isKeyboardActive) return;
+
       const target = e.target as HTMLElement;
       const interactive =
         target.closest("a") ||
@@ -100,7 +118,18 @@ const CursorInner = ({
       dispatchInteract({ isHovering: !!interactive });
     };
 
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab" || e.key.startsWith("Arrow")) {
+        isKeyboardActive = true;
+        dispatchInteract({ isHidden: true, isHovering: false });
+      }
+    };
+
     const handleMouseDown = (e: MouseEvent) => {
+      if (isKeyboardActive) {
+        isKeyboardActive = false;
+        dispatchInteract({ isHidden: false });
+      }
       const scrollbarThreshold = 20;
       const isNearRightEdge =
         e.clientX >= window.innerWidth - scrollbarThreshold;
@@ -120,14 +149,16 @@ const CursorInner = ({
     window.addEventListener("mouseover", handleMouseOver);
     window.addEventListener("mousedown", handleMouseDown);
     window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("keydown", handleKeyDown);
 
     return () => {
       window.removeEventListener("mousemove", updateMousePosition);
       window.removeEventListener("mouseover", handleMouseOver);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [mouseX, mouseY]);
+  }, [initialX, initialY, mouseX, mouseY]);
 
   return (
     <m.div
@@ -138,7 +169,7 @@ const CursorInner = ({
       }}
       initial={{ opacity: 0, scale: 0.4 }}
       animate={{
-        opacity: interactState.isDragging ? 0 : 1,
+        opacity: interactState.isDragging || interactState.isHidden ? 0 : 1,
         scale: interactState.isHovering ? 1 : 0.4,
       }}
       exit={{ opacity: 0, scale: 0.4 }}

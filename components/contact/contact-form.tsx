@@ -86,9 +86,23 @@ export function ContactForm() {
     }
   }
 
-  function onError() {
+  function onError(errors: Record<string, unknown>) {
     haptic.trigger("error");
+    const firstErrorKey = Object.keys(errors)[0];
+    if (firstErrorKey) {
+      const el = document.getElementById(firstErrorKey);
+      el?.focus();
+    }
   }
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+      e.preventDefault();
+      form.handleSubmit(onSubmit, onError)();
+    }
+  };
 
   return (
     <Form {...form}>
@@ -157,8 +171,9 @@ export function ContactForm() {
               <FormControl>
                 <Textarea
                   id="message"
-                  placeholder="Tell me about your project..."
+                  placeholder="Tell me about your project... (Press ⌘+Enter to submit)"
                   className="min-h-[150px]"
+                  onKeyDown={handleTextareaKeyDown}
                   {...field}
                 />
               </FormControl>
@@ -166,14 +181,18 @@ export function ContactForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+          disabled={isSubmitting}
+        >
           {isSubmitting ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               Sending...
             </>
           ) : (
-            <>Submit</>
+            <>Submit Message</>
           )}
         </Button>
       </form>

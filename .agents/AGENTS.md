@@ -17,11 +17,15 @@ This document outlines the development guidelines, constraints, and conventions 
 
 - **Pages and Routing**: All routing is under `app/` using Next.js App Router.
 - **Components**:
-  - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs, `coverflow-carousel.tsx`, `vertical-gallery.tsx`).
-  - `components/layout/`: Global structure components (Header, Footer, Navbar).
-  - `components/providers/`: Client-side provider contexts (Theme, Nav).
+  - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs, `command-palette.tsx`, `keyboard-shortcuts-dialog.tsx`, `custom-cursor.tsx`, `coverflow-carousel.tsx`, `vertical-gallery.tsx`).
+  - `components/layout/`: Global structure components (Header with Minimalist Spotlight Search Pill `[ 🔍 Search... ⌘K ]`, Footer, Navbar).
+  - `components/providers/`: Client-side provider contexts (Theme, Nav, KeyboardProvider for global navigation chords and shortcuts).
   - `components/motion/`: Framer-motion helper components.
   - Page-specific components reside in folders like `components/home/`, `components/projects/`, `components/experience/`, etc.
+- **Hooks**:
+  - `hooks/use-card-grid-nav.ts`: Reusable card grid navigation hook synchronizing hover & keyboard focus, suppressing stationary synthetic mousemove events, and coordinating grid spotlight dimming.
+  - `hooks/use-mobile-haptics.ts`: Mobile vibration and haptic feedback wrapper.
+  - `hooks/use-scroll-lock.ts`: Scroll locking hook for full-screen dialogs and modals.
 - **Data-Driven Configuration**:
   - **CRITICAL**: Do NOT hardcode personal details, experience, education, or project lists directly in the page components. Always read from or modify files in the `data/` directory:
     - [config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts): Site SEO and metadata.
@@ -83,3 +87,7 @@ This document outlines the development guidelines, constraints, and conventions 
 15. **Sub-component & Custom Hook Decomposition (`react-doctor/no-giant-component`)**: Maintain concise component boundaries (< 300 lines). Decouple complex gesture/pointer engines and lifecycle listeners into dedicated custom hooks (e.g. `useLightboxGestures`) and encapsulate multi-slot render strips or control bars into focused sub-components (e.g. `LightboxStrip`, `LightboxControls`).
 16. **SSR-Safe Client-Side Media Queries via `useSyncExternalStore`**: Avoid registering window event listeners or state flags in `useEffect` to detect media queries (e.g., mobile viewport width). Use `useSyncExternalStore` with module-level subscription functions (`subscribeMobile`, `getMobileSnapshot`, `getServerSnapshot`) to ensure synchronous, flicker-free hydration without cascading effect re-renders.
 17. **Strict Device-Targeted Responsive Overlays**: Full-screen modal orientation locks (such as `PortraitLock`) must be scoped strictly to touch devices (`@media(hover:none) and (pointer:coarse)`) to ensure desktop/laptop browsers resized to smaller window heights are never blocked.
+18. **Synthetic Mouse Event Suppression & Hover Debouncing (`useCardGridNav`)**: Browsers dispatch synthetic `mouseenter` and `mousemove` events when an element scrolls under a stationary mouse cursor. To prevent stationary cursors from overriding active keyboard `Tab` traversal or stealing focus highlights on scroll, track pointer coordinates with minimum movement thresholds (`Math.abs(clientX - prevX) > 2 || Math.abs(clientY - prevY) > 2`) and give `focusedIndex` precedence over `hoveredIndex`.
+19. **Programmatic Focus Anchoring on `#main-content` for Modals & Route Chords**: When dismissing overlays (such as `<CommandPalette>` or `<KeyboardShortcutsDialog>`) or navigating via global keyboard chords (`g h`, `g p`, `1`–`4`), explicitly blur modal inputs, activate `setGlobalKeyboardNav(true)`, and hand off focus directly to `<main id="main-content" tabIndex={-1}>`. This ensures the subsequent `Tab` keystroke immediately targets the first focusable child in page content (e.g., project card #0) rather than falling back to `document.body` or cycling through top header elements.
+20. **Auto-Hiding Custom Cursor During Keyboard Navigation**: Interactive custom cursors (`CustomCursor`) must track active keyboard interaction (`isKeyboardNav` / `Tab` and navigation keystrokes) and hide (`opacity: 0`, `scale: 0`, or display suppression). They should only re-emerge upon genuine physical mouse displacement (`movementX !== 0 || movementY !== 0`) to prevent visual cursor clutter during pure keyboard operation.
+21. **Card Grid Spotlight Dimming & Focus Parity**: Interactive card grids must provide visual and kinetic parity between mouse hover and keyboard focus states. When any card receives focus via keyboard (`onFocus`) or hover (`onMouseEnter`), adjacent sibling cards dim uniformly (`opacity-40 scale-[0.98]`). Focus styles (`group-focus-within:`) must match hover animations (`group-hover:`) to ensure complete accessibility compliance.
