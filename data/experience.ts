@@ -1,62 +1,46 @@
 import { Experience } from "@/types/experience";
 
 export const experience: Experience[] = [
-    {
-        company: "IBSS Group of Institutions",
-        role: "Software Developer Team Lead",
-        dates: "Jan 2026 – Feb 2026",
-        description: [
-            "Architected and developed a cross-platform mobile application for campus mess operations, integrating student, guard, and college administration management modules.",
-            "Engineered a dynamic QR code verification system that auto-refreshes every 15 seconds, instantly displaying student identity details upon guard scanning to eliminate proxy entries and fraud.",
-            "Implemented automated real-time entry logging and attendance tracking, eliminating unauthorized access and streamlining dining operations across the institution.",
-        ],
-        tech: [
-            "Flutter",
-            "Dart",
-            "Firebase",
-            "Provider",
-            "Git",
-            "Android",
-            "iOS",
-        ],
-    },
-    {
-        company: "ShoppCard",
-        role: "Mobile Application Developer Project Team Lead",
-        dates: "Aug 2025 – Nov 2025",
-        description: [
-            "Led a team of 5 developers to successfully build and deliver a Flutter-based Office Management mobile application on time with 100% deadline adherence.",
-            "Designed and implemented clean architecture patterns, improving code maintainability and boosting overall development efficiency by 35%.",
-            "Reduced release cycles by 30% and post-release bugs by 40% through rigorous testing, code reviews, and CI/CD integration.",
-            "Enhanced app performance and stability, resulting in a 25% increase in user satisfaction scores.",
-        ],
-        tech: [
-            "Flutter",
-            "Dart",
-            "Firebase",
-            "Provider",
-            "Git",
-            "Android",
-            "iOS",
-        ],
-    },
-    {
-        company: "Ethnus",
-        role: "MERN Full Stack Intern",
-        dates: "Aug 2023 – Nov 2023",
-        description: [
-            "Rapidly adapted to dynamic project requirements by integrating modern tools and frameworks, achieving a 30% increase in system efficiency and reducing development time by 25%.",
-            "Revamped legacy web applications, resolved critical performance bottlenecks, and improved user experience — driving a 20% surge in user traffic.",
-            "Led and coordinated a multidisciplinary team, streamlining workflows and boosting project completion rates by 40% while cutting delivery timelines by 30%.",
-        ],
-        tech: [
-            "MongoDB",
-            "Express.js",
-            "React",
-            "Node.js",
-            "JavaScript",
-            "REST APIs",
-            "Git",
-        ],
-    },
+  {
+    company: "IBSS Group of Institutions",
+    role: "Software Developer Team Lead",
+    dates: "Jan 2026 – Feb 2026",
+    description: [
+      "Architected and developed a cross-platform mobile application for campus mess operations, integrating student, guard, and college administration management modules.",
+      "Engineered a dynamic QR code verification system that auto-refreshes every 15 seconds, instantly displaying student identity details upon guard scanning to eliminate proxy entries and fraud.",
+      "Implemented automated real-time entry logging and attendance tracking, eliminating unauthorized access and streamlining dining operations across the institution.",
+    ],
+    tech: ["Flutter", "Dart", "Firebase", "Provider", "Git", "Android", "iOS"],
+  },
+  {
+    company: "ShoppCard",
+    role: "Mobile Application Developer Project Team Lead",
+    dates: "Aug 2025 – Nov 2025",
+    description: [
+      "Led a team of 5 developers to successfully build and deliver a Flutter-based Office Management mobile application on time with 100% deadline adherence.",
+      "Designed and implemented clean architecture patterns, improving code maintainability and boosting overall development efficiency by 35%.",
+      "Reduced release cycles by 30% and post-release bugs by 40% through rigorous testing, code reviews, and CI/CD integration.",
+      "Enhanced app performance and stability, resulting in a 25% increase in user satisfaction scores.",
+    ],
+    tech: ["Flutter", "Dart", "Firebase", "Provider", "Git", "Android", "iOS"],
+  },
+  {
+    company: "Ethnus",
+    role: "MERN Full Stack Intern",
+    dates: "Aug 2023 – Nov 2023",
+    description: [
+      "Rapidly adapted to dynamic project requirements by integrating modern tools and frameworks, achieving a 30% increase in system efficiency and reducing development time by 25%.",
+      "Revamped legacy web applications, resolved critical performance bottlenecks, and improved user experience — driving a 20% surge in user traffic.",
+      "Led and coordinated a multidisciplinary team, streamlining workflows and boosting project completion rates by 40% while cutting delivery timelines by 30%.",
+    ],
+    tech: [
+      "MongoDB",
+      "Express.js",
+      "React",
+      "Node.js",
+      "JavaScript",
+      "REST APIs",
+      "Git",
+    ],
+  },
 ];

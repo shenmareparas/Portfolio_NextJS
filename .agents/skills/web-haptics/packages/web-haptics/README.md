@@ -59,19 +59,22 @@ haptics.trigger("success");
 
 ## Built-in Presets
 
-| Name      | Pattern                                                          | Description                    |
-| --------- | ---------------------------------------------------------------- | ------------------------------ |
-| `success` | `[{ duration: 50 }, { delay: 50, duration: 50 }]`               | Two taps indicating success    |
+| Name      | Pattern                                                                           | Description                       |
+| --------- | --------------------------------------------------------------------------------- | --------------------------------- |
+| `success` | `[{ duration: 50 }, { delay: 50, duration: 50 }]`                                 | Two taps indicating success       |
 | `nudge`   | `[{ duration: 80, intensity: 0.8 }, { delay: 80, duration: 50, intensity: 0.3 }]` | Strong tap followed by a soft tap |
-| `error`   | `[{ duration: 50, intensity: 0.75 }, ...]` ×3                   | Three sharp taps for errors    |
-| `buzz`    | `[{ duration: 1000, intensity: 1 }]`                            | A long vibration               |
+| `error`   | `[{ duration: 50, intensity: 0.75 }, ...]` ×3                                     | Three sharp taps for errors       |
+| `buzz`    | `[{ duration: 1000, intensity: 1 }]`                                              | A long vibration                  |
 
 You can also pass custom patterns directly:
 
 ```ts
 trigger([100, 50, 100]); // number[] shorthand (alternating on/off durations)
 trigger(200); // single vibration (ms)
-trigger([{ duration: 80, intensity: 0.8 }, { delay: 50, duration: 100 }]); // Vibration[]
+trigger([
+  { duration: 80, intensity: 0.8 },
+  { delay: 50, duration: 100 },
+]); // Vibration[]
 trigger({
   pattern: [{ duration: 50 }, { delay: 50, duration: 50 }],
   description: "custom",

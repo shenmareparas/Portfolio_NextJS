@@ -14,25 +14,55 @@ Install `web-haptics` (`bun add web-haptics`) and add haptic feedback to the app
 Repository: https://github.com/lochie/web-haptics | License: MIT | Zero dependencies
 Uses the Web Vibration API. Silently no-ops on unsupported platforms (desktop). No error handling or feature detection needed.
 
-## Trigger Types
+## Trigger Types & Presets
 
-`trigger()` accepts one of these strings (empty value defaults to a sensible "medium" impact):
+`trigger(input?, options?)` accepts a preset string, custom pattern, or duration (empty value defaults to `"medium"` impact):
 
 Notification (task outcomes):
 
-- "success" -- form saved, payment confirmed, upload complete
-- "warning" -- destructive action ahead, approaching limit, irreversible step
-- "error" -- validation failure, network error, permission denied
+- `"success"` -- form saved, payment confirmed, upload complete
+- `"warning"` -- destructive action ahead, approaching limit, irreversible step
+- `"error"` -- validation failure, network error, permission denied
 
 Impact (physical collisions):
 
-- "light" -- small toggle, subtle tap, minor interaction
-- "medium" -- button press, card snap-to-position, drop into place
-- "heavy" -- major state change, heavy element landed, force press
+- `"light"` -- small toggle, subtle tap, minor interaction
+- `"medium"` -- button press, card snap-to-position, drop into place
+- `"heavy"` -- major state change, heavy element landed, force press
+- `"soft"` -- cushioned feedback, gentle transition
+- `"rigid"` -- crisp, firm mechanical response
 
 Selection (discrete stepping):
 
-- "selection" -- picker scroll, stepper increment, slider detent, segment switch
+- `"selection"` -- picker scroll, stepper increment, slider detent, segment switch
+
+Specialty:
+
+- `"nudge"` -- strong tap followed by a soft tap
+- `"buzz"` -- sustained vibration alert (1000ms)
+
+### Custom Patterns & Durations
+
+You can pass custom pattern structures directly to `trigger()`:
+
+```ts
+trigger(200); // single vibration duration (ms)
+trigger([100, 50, 100]); // number[] alternating on/off durations
+trigger([
+  { duration: 80, intensity: 0.8 },
+  { delay: 50, duration: 100 },
+]); // Vibration[]
+trigger("success", { intensity: 0.8 }); // override preset intensity (0.0 to 1.0)
+```
+
+## Complete API Surface
+
+- `WebHaptics.isSupported`: Static boolean checking whether the browser/device supports the Vibration API.
+- `trigger(input?, options?)`: Trigger preset feedback or custom pattern. Returns `Promise<void>`.
+- `cancel()`: Immediately stop current vibration pattern.
+- `destroy()`: Teardown audio/DOM listeners and clean up resources.
+- `setDebug(debug: boolean)`: Enable simulated audio clicks for testing on desktop.
+- `setShowSwitch(show: boolean)`: Toggle floating haptic toggle switch.
 
 ## Framework Imports & Conventions
 
@@ -46,22 +76,22 @@ In this project, always use the dedicated viewport-guarded hook `@/hooks/use-mob
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
 export function ActionButton() {
-    const haptic = useMobileHaptics();
+  const haptic = useMobileHaptics();
 
-    return (
-        <button
-            onClick={() => {
-                haptic.trigger("medium");
-                // do action
-            }}
-        >
-            Tap me
-        </button>
-    );
+  return (
+    <button
+      onClick={() => {
+        haptic.trigger("medium");
+        // do action
+      }}
+    >
+      Tap me
+    </button>
+  );
 }
 ```
 
-*Note: `useMobileHaptics` uses React 19's `useSyncExternalStore` to ensure flicker-free SSR safety and restricts haptic execution strictly to mobile viewports (`(max-width: 768px)`).*
+_Note: `useMobileHaptics` uses React 19's `useSyncExternalStore` to ensure flicker-free SSR safety and restricts haptic execution strictly to mobile viewports (`(max-width: 768px)`)._
 
 ### Standard React:
 

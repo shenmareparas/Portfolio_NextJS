@@ -8,32 +8,32 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ## 🚀 Tech Stack
 
--   **Framework:** [Next.js 16.3.6 (App Router)](https://nextjs.org/) & React 19.3.0
--   **Runtime & Package Manager:** [Bun](https://bun.sh/)
--   **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + PostCSS
--   **Animations:** [Framer Motion v12](https://www.framer.com/motion/)
--   **Haptics:** [`web-haptics`](https://github.com/loeffel-io/web-haptics)
--   **UI Primitives:** [Radix UI](https://www.radix-ui.com/) & [Shadcn UI](https://ui.shadcn.com/)
--   **Icons:** [Lucide React](https://lucide.dev/) & [Simple Icons](https://simpleicons.org/)
--   **Forms & Validation:** React Hook Form + Zod (Formspree endpoint)
--   **Analytics:** Vercel Analytics & Speed Insights
+- **Framework:** [Next.js 16.3.6 (App Router)](https://nextjs.org/) & React 19.3.0
+- **Runtime & Package Manager:** [Bun](https://bun.sh/)
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com/) + PostCSS
+- **Animations:** [Framer Motion v12](https://www.framer.com/motion/)
+- **Haptics:** [`web-haptics`](https://github.com/loeffel-io/web-haptics)
+- **UI Primitives:** [Radix UI](https://www.radix-ui.com/) & [Shadcn UI](https://ui.shadcn.com/)
+- **Icons:** [Lucide React](https://lucide.dev/) & [Simple Icons](https://simpleicons.org/)
+- **Forms & Validation:** React Hook Form + Zod (Formspree endpoint)
+- **Analytics:** Vercel Analytics & Speed Insights
 
 ---
 
 ## ✨ Key Features
 
--   **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
--   **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
--   **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
--   **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
--   **🌊 Smooth Animations & Motion:**
-    -   **3D Coverflow Carousel:** Interactive 3D phone mockup carousel for mobile application showcases, modeled after the iPhone 18 Pro Max (native 19.5:9 aspect ratio, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis) with perspective transformations, gesture physics, and theme switching.
-    -   **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`) powering macOS, CLI, and web application showcases (e.g. *Live Wallpaper Engine for macOS*, *Play Store AI Console*, *NEXU5 Music Bot*). Supports theme-aware `{ light, dark }` screenshot pairs with uniform shadow margins, Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
-    -   **Dynamic Title Rotators:** Cycling header typography.
-    -   **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
-    -   **Timeline & Education:** Structured, responsive career, university, and certification timelines.
--   **💳 Digital QR Contact Card:** Dedicated `/qr` page for quick contact sharing and mobile scanning.
--   **📧 Validated Contact Form:** Form validation with Zod schemas and Formspree submission feedback.
+- **🎨 Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
+- **🌓 Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
+- **📳 Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
+- **🗺️ Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
+- **🌊 Smooth Animations & Motion:**
+  - **3D Coverflow Carousel:** Interactive 3D phone mockup carousel for mobile application showcases, modeled after the iPhone 18 Pro Max (native 19.5:9 aspect ratio, micro-thin 1.15mm borders, and brushed grade-5 titanium chassis) with perspective transformations, gesture physics, and theme switching.
+  - **Vertical Screenshot Gallery & Lightbox:** Dedicated vertical scrolling feed with a full-screen 3-image sliding strip lightbox (`[prev] [current] [next]`) powering macOS, CLI, and web application showcases (e.g. _Live Wallpaper Engine for macOS_, _Play Store AI Console_, _NEXU5 Music Bot_). Supports theme-aware `{ light, dark }` screenshot pairs with uniform shadow margins, Google Photos-style mobile gestures (pinch-at-focal-point zoom, 100% ⇄ 240% double-tap zoom toggle with synthetic event debouncing, velocity-aware swipe pagination, and pull-down to dismiss with progressive backdrop fade) alongside desktop mouse wheel zoom, double-click, and drag-to-pan. Architecture is powered by an atomic `useReducer` state machine and decomposed into modular sub-components (`LightboxStrip`, `LightboxControls`, `useLightboxGestures`).
+  - **Dynamic Title Rotators:** Cycling header typography.
+  - **Custom Cursor:** Fluid Framer Motion spring physics cursor with hover-target scaling.
+  - **Timeline & Education:** Structured, responsive career, university, and certification timelines.
+- **💳 Digital QR Contact Card:** Dedicated `/qr` page for quick contact sharing and mobile scanning.
+- **📧 Validated Contact Form:** Form validation with Zod schemas and Formspree submission feedback.
 
 ---
 
@@ -41,17 +41,19 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 ### Prerequisites
 
--   **Bun** (Recommended) or **Node.js** 18+
+- **Bun** (Recommended) or **Node.js** 18+
 
 ### Installation
 
 1.  **Clone the repository:**
+
     ```bash
     git clone https://github.com/shenmareparas/portfolio-nextjs.git
     cd portfolio-nextjs
     ```
 
 2.  **Install dependencies:**
+
     ```bash
     bun install
     # or
@@ -59,6 +61,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
     ```
 
 3.  **Run development server:**
+
     ```bash
     bun dev
     # or
@@ -109,42 +112,41 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 Portfolio content is centrally managed in the `data/` directory:
 
--   `data/config.ts`: Site metadata, SEO settings, dynamic copyright getter, and Formspree endpoint.
--   `data/profile.ts`: Bio, contact details, and resume links.
--   `data/projects.ts`: Project showcases, tags, live URLs, GitHub repositories, and gallery media.
--   `data/experience.ts` & `data/education.ts`: Work history, degrees, and certifications.
--   `data/skills.tsx`: Categorized skill stacks and icon mappings.
--   `data/socials.ts`: Social media profiles and contact links.
+- `data/config.ts`: Site metadata, SEO settings, dynamic copyright getter, and Formspree endpoint.
+- `data/profile.ts`: Bio, contact details, and resume links.
+- `data/projects.ts`: Project showcases, tags, live URLs, GitHub repositories, and gallery media.
+- `data/experience.ts` & `data/education.ts`: Work history, degrees, and certifications.
+- `data/skills.tsx`: Categorized skill stacks and icon mappings.
+- `data/socials.ts`: Social media profiles and contact links.
 
 ---
 
 ## ⚡ Performance & Quality Audits
 
--   **React Doctor Certified (100 / 100)**: Conforms to strict code quality, effect cleanup, and render optimization standards. React Doctor is installed locally and enforced via pre-commit git hook and npm script:
-    ```bash
-    bun run doctor
-    # or non-interactive full scan
-    bunx react-doctor --yes --verbose
-    ```
--   **A11y & Reduced Motion**: Automatically respects user OS accessibility settings via `<MotionConfig reducedMotion="user">`.
--   **Touch & Mobile Viewport Precision**: Screen-orientation lock (`PortraitLock`) is strictly scoped to coarse-pointer touch devices in landscape mode, leaving desktop browser resizes unaffected.
--   **SSR-Safe Mobile Haptics**: `useMobileHaptics` hook utilizes React 19 `useSyncExternalStore` for media queries to eliminate hydration flashes and safely trigger tactile feedback on supported mobile devices.
--   **Immediate Above-the-Fold LCP**: Zero blocking animation wrappers on above-the-fold hero content ensuring sub-second LCP/FCP.
--   **Flicker-Free SSR Hydration**: Utilizes React 19 `useSyncExternalStore` for client-only state synchronization to prevent hydration flashes.
--   **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners with pure side-effect-free state updaters.
--   **Atomic State Coordination (`useReducer`)**: Replaces fragmented state setters with typed reducers for complex modals to ensure predictable, race-condition-free transitions.
--   **Modular Sub-Component Architecture**: High-complexity features are cleanly factored into small sub-components and isolated custom hooks to maintain low cyclomatic complexity.
+- **React Doctor Certified (100 / 100)**: Conforms to strict code quality, effect cleanup, and render optimization standards. React Doctor is installed locally and enforced via pre-commit git hook and npm script:
+  ```bash
+  bun run doctor
+  # or non-interactive full scan
+  bunx react-doctor --yes --verbose
+  ```
+- **A11y & Reduced Motion**: Automatically respects user OS accessibility settings via `<MotionConfig reducedMotion="user">`.
+- **Touch & Mobile Viewport Precision**: Screen-orientation lock (`PortraitLock`) is strictly scoped to coarse-pointer touch devices in landscape mode, leaving desktop browser resizes unaffected.
+- **SSR-Safe Mobile Haptics**: `useMobileHaptics` hook utilizes React 19 `useSyncExternalStore` for media queries to eliminate hydration flashes and safely trigger tactile feedback on supported mobile devices.
+- **Immediate Above-the-Fold LCP**: Zero blocking animation wrappers on above-the-fold hero content ensuring sub-second LCP/FCP.
+- **Flicker-Free SSR Hydration**: Utilizes React 19 `useSyncExternalStore` for client-only state synchronization to prevent hydration flashes.
+- **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners with pure side-effect-free state updaters.
+- **Atomic State Coordination (`useReducer`)**: Replaces fragmented state setters with typed reducers for complex modals to ensure predictable, race-condition-free transitions.
+- **Modular Sub-Component Architecture**: High-complexity features are cleanly factored into small sub-components and isolated custom hooks to maintain low cyclomatic complexity.
 
 ---
 
 ## 📞 Contact
 
--   **Email:** [shenmareparas@gmail.com](mailto:shenmareparas@gmail.com)
--   **Website:** [shenmareparas.vercel.app](https://shenmareparas.vercel.app)
--   **LinkedIn:** [linkedin.com/in/shenmareparas](https://linkedin.com/in/shenmareparas)
--   **GitHub:** [@shenmareparas](https://github.com/shenmareparas)
+- **Email:** [shenmareparas@gmail.com](mailto:shenmareparas@gmail.com)
+- **Website:** [shenmareparas.vercel.app](https://shenmareparas.vercel.app)
+- **LinkedIn:** [linkedin.com/in/shenmareparas](https://linkedin.com/in/shenmareparas)
+- **GitHub:** [@shenmareparas](https://github.com/shenmareparas)
 
 ---
 
 © 2026 Paras Shenmare. All rights reserved.
-

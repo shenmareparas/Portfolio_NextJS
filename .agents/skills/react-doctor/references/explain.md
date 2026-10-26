@@ -13,7 +13,7 @@ Triggers: "why did this rule fire", "I disagree with this rule", "turn this rule
 2. Explain it before changing anything:
 
 ```bash
-npx react-doctor@latest rules explain react-doctor/no-array-index-as-key
+bunx react-doctor@latest rules explain react-doctor/no-array-index-as-key
 ```
 
 3. Pick the narrowest control that matches the user's intent (see decision guide).
@@ -21,22 +21,22 @@ npx react-doctor@latest rules explain react-doctor/no-array-index-as-key
 5. Validate the change did what they wanted:
 
 ```bash
-npx react-doctor@latest --verbose --diff
+bunx react-doctor@latest --verbose --diff
 ```
 
 ## Commands
 
 ```bash
-npx react-doctor@latest rules list                         # every rule + its effective severity
-npx react-doctor@latest rules list --configured            # only what your config changed
-npx react-doctor@latest rules list --category Performance   # filter by category
-npx react-doctor@latest rules explain <rule>               # why it matters + how to configure
-npx react-doctor@latest rules disable <rule>               # rule never runs
-npx react-doctor@latest rules enable <rule>                # turn back on at its recommended severity
-npx react-doctor@latest rules set <rule> warn              # off | warn | error
-npx react-doctor@latest rules category "React Native" off   # whole category
-npx react-doctor@latest rules ignore-tag design            # skip a rule family (design, test-noise, …)
-npx react-doctor@latest rules unignore-tag design
+bunx react-doctor@latest rules list                         # every rule + its effective severity
+bunx react-doctor@latest rules list --configured            # only what your config changed
+bunx react-doctor@latest rules list --category Performance   # filter by category
+bunx react-doctor@latest rules explain <rule>               # why it matters + how to configure
+bunx react-doctor@latest rules disable <rule>               # rule never runs
+bunx react-doctor@latest rules enable <rule>                # turn back on at its recommended severity
+bunx react-doctor@latest rules set <rule> warn              # off | warn | error
+bunx react-doctor@latest rules category "React Native" off   # whole category
+bunx react-doctor@latest rules ignore-tag design            # skip a rule family (design, test-noise, …)
+bunx react-doctor@latest rules unignore-tag design
 ```
 
 Rule references accept the full key (`react-doctor/no-danger`), the bare id (`no-danger`), or a legacy key (`react/no-danger`).
@@ -54,6 +54,11 @@ Match the control to the intent — prefer the narrowest one:
 - **Restore test or story findings to production health** → set `surfaces.score.includeFileContexts` or `surfaces.ciFailure.includeFileContexts` to `["test"]`, `["story"]`, or both. Other surface exclusions still apply.
 
 How the layers combine: `ignore.tags` disables every rule carrying that tag **before** linting, so a tagged rule stays off even if `rules`/`categories` set it to `warn`/`error` (a rule-level override cannot re-enable a tag-ignored rule). For rules that aren't tag-disabled, `rules` overrides `categories` overrides the rule's default. `surfaces` is visibility-only and never changes whether a rule runs.
+
+With `customRulesOnly: true`, ported rules stay off by default. Set a specific rule
+to `"warn"` or `"error"` in `rules` to enable it. Current and legacy rule keys both
+work. Category settings do not enable ported rules. Project requirements and tag
+exclusions still apply, and the React Compiler plugin stays off.
 
 ## Config shape
 

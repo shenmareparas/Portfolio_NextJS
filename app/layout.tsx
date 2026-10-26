@@ -15,98 +15,98 @@ import { siteConfig } from "@/data/config";
 import { PortraitLock } from "@/components/ui/portrait-lock";
 
 const inter = Inter({
-    variable: "--font-sans",
-    subsets: ["latin"],
-    display: "swap",
+  variable: "--font-sans",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const jetbrainsMono = JetBrains_Mono({
-    variable: "--font-mono",
-    subsets: ["latin"],
-    display: "swap",
+  variable: "--font-mono",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-    title: siteConfig.metadata.title,
-    description: siteConfig.metadata.description,
-    keywords: siteConfig.keywords,
-    metadataBase: new URL(siteConfig.url),
-    alternates: {
-        canonical: "/",
+  title: siteConfig.metadata.title,
+  description: siteConfig.metadata.description,
+  keywords: siteConfig.keywords,
+  metadataBase: new URL(siteConfig.url),
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    ...siteConfig.metadata.openGraph,
+    url: siteConfig.url,
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [
+      {
+        url: "/cover.webp",
+        width: 1200,
+        height: 630,
+        alt: siteConfig.title,
+      },
+    ],
+  },
+  twitter: {
+    ...siteConfig.metadata.twitter,
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: ["/cover.webp"],
+  },
+  applicationName: "Paras Shenmare Portfolio",
+  authors: [{ name: "Paras Shenmare", url: siteConfig.url }],
+  generator: "Next.js",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
-    openGraph: {
-        ...siteConfig.metadata.openGraph,
-        url: siteConfig.url,
-        title: siteConfig.title,
-        description: siteConfig.description,
-        images: [
-            {
-                url: "/cover.webp",
-                width: 1200,
-                height: 630,
-                alt: siteConfig.title,
-            },
-        ],
-    },
-    twitter: {
-        ...siteConfig.metadata.twitter,
-        title: siteConfig.title,
-        description: siteConfig.description,
-        images: ["/cover.webp"],
-    },
-    applicationName: "Paras Shenmare Portfolio",
-    authors: [{ name: "Paras Shenmare", url: siteConfig.url }],
-    generator: "Next.js",
-    robots: {
-        index: true,
-        follow: true,
-        googleBot: {
-            index: true,
-            follow: true,
-            "max-video-preview": -1,
-            "max-image-preview": "large",
-            "max-snippet": -1,
-        },
-    },
-    verification: {
-        google: "BL8qYWOaDd-2ODnXJxJU1Zr0LjTdtjPBvde1lJnhje0",
-    },
+  },
+  verification: {
+    google: "BL8qYWOaDd-2ODnXJxJU1Zr0LjTdtjPBvde1lJnhje0",
+  },
 };
 
 export default function RootLayout({
-    children,
+  children,
 }: Readonly<{
-    children: React.ReactNode;
+  children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en" suppressHydrationWarning>
-            <body
-                suppressHydrationWarning
-                className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen flex flex-col`}
-            >
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <LazyMotion features={domAnimation} strict>
-                        <MotionConfig reducedMotion="user">
-                            <NavigationProvider>
-                                <LoadingProvider>
-                                    <Preloader />
-                                    <CustomCursor />
-                                    <ClientLayout>{children}</ClientLayout>
-                                    <Toaster />
-                                </LoadingProvider>
-                            </NavigationProvider>
-                        </MotionConfig>
-                    </LazyMotion>
-                </ThemeProvider>
-                <Analytics />
-                <SpeedInsights />
-                <PortraitLock />
-            </body>
-        </html>
-    );
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        suppressHydrationWarning
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased min-h-screen flex flex-col`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <LazyMotion features={domAnimation} strict>
+            <MotionConfig reducedMotion="user">
+              <NavigationProvider>
+                <LoadingProvider>
+                  <Preloader />
+                  <CustomCursor />
+                  <ClientLayout>{children}</ClientLayout>
+                  <Toaster />
+                </LoadingProvider>
+              </NavigationProvider>
+            </MotionConfig>
+          </LazyMotion>
+        </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
+        <PortraitLock />
+      </body>
+    </html>
+  );
 }

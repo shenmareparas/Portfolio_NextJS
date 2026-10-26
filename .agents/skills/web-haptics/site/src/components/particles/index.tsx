@@ -309,7 +309,10 @@ export const ParticlesProvider = ({
     (
       x: number,
       y: number,
-      emojis: EmojiOption[] = [{ emoji: "\u2728", canFlip: false }, { emoji: "\uD83D\uDD25", canFlip: false }],
+      emojis: EmojiOption[] = [
+        { emoji: "\u2728", canFlip: false },
+        { emoji: "\uD83D\uDD25", canFlip: false },
+      ],
       duration?: number,
       gx: number = 0,
       gy: number = -1.5,
