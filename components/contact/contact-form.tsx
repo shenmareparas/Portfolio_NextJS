@@ -36,11 +36,14 @@ const formSchema = z.object({
 });
 
 import { siteConfig } from "@/data/config";
+import { useIsMobile, useIsWindows } from "@/hooks/use-is-windows";
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const haptic = useMobileHaptics();
+  const isMobile = useIsMobile();
+  const isWindows = useIsWindows();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -171,7 +174,14 @@ export function ContactForm() {
               <FormControl>
                 <Textarea
                   id="message"
-                  placeholder="Tell me about your project... (Press ⌘+Enter to submit)"
+                  placeholder={
+                    isMobile
+                      ? "Tell me about your project..."
+                      : isWindows
+                        ? "Tell me about your project... (Press Ctrl+Enter to submit)"
+                        : "Tell me about your project... (Press ⌘+Enter to submit)"
+                  }
+                  suppressHydrationWarning
                   className="min-h-[150px]"
                   onKeyDown={handleTextareaKeyDown}
                   {...field}

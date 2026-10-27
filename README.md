@@ -24,7 +24,8 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 
 - **Modern Aesthetics:** Clean glassmorphism, tailored neutral dark/light theme palettes, crisp typography, theme-aware project badge accent colors (with verified WCAG contrast), and high-resolution favicon/app icons (`favicon.ico`, `icon.png`, `apple-icon.png`).
 - **Dark/Light Mode:** System-aware theme switching powered by `next-themes` with zero layout flashes, including dynamic light/dark screenshot gallery switching across project showcases.
-- **Command Palette & Global Keyboard System:** Instant `⌘K` / `Ctrl+K` Spotlight search palette indexing pages, projects, social profiles, and quick actions. Features Vim-style navigation chords (`g h`, `g p`, `g a`, `g c`), numeric route jumps (`1`–`4`), instant theme toggle (`t`), and a visual shortcuts cheat sheet (`?`). The header features a unified, minimalist spotlight pill (`[ Search... ⌘K ]`) with responsive mobile controls.
+- **Command Palette & Global Keyboard System:** Instant `⌘K` / `Ctrl+K` Spotlight search palette indexing pages, projects, social profiles, and quick actions. Features Vim-style navigation chords (`g h`, `g p`, `g a`, `g c`), numeric route jumps (`1`–`4`), instant theme toggle (`t`), and a visual shortcuts cheat sheet (`?`) with adaptive Mac (`⌘K`, `⌘↵`) and Windows (`Ctrl+K`, `Ctrl+↵`) mappings. The header features an adaptive spotlight pill (`[ Search... ⌘K ]` on macOS, `[ Search... Ctrl+K ]` on Windows/PC), automatically hidden on mobile viewports to prioritize screen space.
+- **Adaptive Cross-Platform Experience:** Custom SSR-safe client platform hooks (`useIsMac`, `useIsMobile`, `useIsWindows`) leveraging `useSyncExternalStore` provide tailored keyboard shortcut hints and textarea submit placeholders without hydration mismatch or layout shifts.
 - **Fluid Card Grid Navigation & Spotlight Dimming:** Accessible keyboard `Tab` traversal across project cards with visual elevation, spotlight glow, and sibling dimming via `useCardGridNav`. Smart synthetic mouse suppression prevents stationary mouse cursors from interrupting active keyboard navigation on scroll. Modal exits and keyboard navigation automatically hand off focus to `#main-content` for instant, sequential card traversal.
 - **Mobile Haptics:** Integrated `web-haptics` for tactile feedback during button presses, project snaps, form submissions, and warnings on mobile devices.
 - **Dynamic SEO & Sitemaps:** Automated XML sitemap generation (`/sitemap.xml`) indexing all static pages and project detail paths alongside configured search bot rules in `/robots.txt`.
@@ -102,7 +103,7 @@ I am a passionate Software Developer specializing in **Flutter**, **Android**, a
 │   ├── motion/              # Scroll reveals & Framer Motion helper wrappers
 │   ├── home/                # Homepage sections (Hero, Featured, etc.)
 │   └── about/               # About page sections (CredentialsSection, CertificationCard, AchievementCard)
-├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock)
+├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock, useIsWindows)
 ├── data/                    # The source of truth for portfolio content & static state
 ├── lib/                     # System utilities (cn styling merger, time formatters, etc.)
 ├── types/                   # Shared TypeScript interface definitions
@@ -142,6 +143,7 @@ Portfolio content is centrally managed in the `data/` directory:
 - **Flicker-Free SSR Hydration**: Utilizes React 19 `useSyncExternalStore` for client-only state synchronization to prevent hydration flashes.
 - **Guaranteed Lifecycle Cleanup**: Proper garbage collection of all timers (`setTimeout`, `setInterval`) and event listeners with pure side-effect-free state updaters.
 - **Atomic State Coordination (`useReducer`)**: Replaces fragmented state setters with typed reducers for complex modals to ensure predictable, race-condition-free transitions.
+- **SSR-Safe Platform & Device Detection**: Leverages React 19 `useSyncExternalStore` in `useIsWindows`, `useIsMac`, and `useIsMobile` to conditionally render platform-specific keyboard shortcuts (`Ctrl+K` vs `⌘K`) and form submission hints without hydration mismatches or client flashes.
 - **Modular Sub-Component Architecture**: High-complexity features are cleanly factored into small sub-components and isolated custom hooks to maintain low cyclomatic complexity.
 
 ---

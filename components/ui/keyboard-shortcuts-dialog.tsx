@@ -5,6 +5,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { X, Keyboard, ArrowRight } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
+import { useIsWindows } from "@/hooks/use-is-windows";
 
 interface ShortcutGroup {
   category: string;
@@ -14,7 +15,7 @@ interface ShortcutGroup {
   }[];
 }
 
-const SHORTCUT_GROUPS: ShortcutGroup[] = [
+const MAC_SHORTCUT_GROUPS: ShortcutGroup[] = [
   {
     category: "Navigation",
     items: [
@@ -56,6 +57,48 @@ const SHORTCUT_GROUPS: ShortcutGroup[] = [
   },
 ];
 
+const WINDOWS_SHORTCUT_GROUPS: ShortcutGroup[] = [
+  {
+    category: "Navigation",
+    items: [
+      { keys: ["g", "h"], description: "Go to Home page" },
+      { keys: ["g", "p"], description: "Go to Projects" },
+      { keys: ["g", "a"], description: "Go to About page" },
+      { keys: ["g", "c"], description: "Go to Contact page" },
+      { keys: ["1", "4"], description: "Quick jump to pages 1–4" },
+      { keys: ["⌫", "Esc"], description: "Back to Projects (on project page)" },
+      { keys: ["r"], description: "Scroll to top of page" },
+    ],
+  },
+  {
+    category: "Global Actions",
+    items: [
+      { keys: ["Ctrl", "K"], description: "Open Command Palette / Search" },
+      { keys: ["/"], description: "Quick search focus" },
+      { keys: ["t"], description: "Toggle Light / Dark theme" },
+      { keys: ["?"], description: "Show this shortcuts cheat sheet" },
+      { keys: ["Esc"], description: "Close modal / Clear focus" },
+    ],
+  },
+  {
+    category: "Galleries & Lightbox",
+    items: [
+      { keys: ["←", "→"], description: "Previous / Next screenshot" },
+      { keys: ["Enter"], description: "Open image in full lightbox" },
+      { keys: ["+", "-"], description: "Zoom in / Zoom out in viewer" },
+      { keys: ["0"], description: "Reset lightbox zoom" },
+    ],
+  },
+  {
+    category: "Forms & Controls",
+    items: [
+      { keys: ["Tab"], description: "Advance to next interactive element" },
+      { keys: ["⇧", "Tab"], description: "Move to previous element" },
+      { keys: ["Ctrl", "↵"], description: "Submit contact form" },
+    ],
+  },
+];
+
 interface KeyboardShortcutsDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -65,6 +108,10 @@ export function KeyboardShortcutsDialog({
   isOpen,
   onClose,
 }: KeyboardShortcutsDialogProps) {
+  const isWindows = useIsWindows();
+  const shortcutGroups = isWindows
+    ? WINDOWS_SHORTCUT_GROUPS
+    : MAC_SHORTCUT_GROUPS;
   const dialogRef = useRef<HTMLDivElement>(null);
 
   const onCloseRef = useRef(onClose);
@@ -148,7 +195,7 @@ export function KeyboardShortcutsDialog({
 
             {/* Content Groups */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6 overscroll-contain">
-              {SHORTCUT_GROUPS.map((group) => (
+              {shortcutGroups.map((group) => (
                 <div key={group.category} className="space-y-3">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
                     {group.category}

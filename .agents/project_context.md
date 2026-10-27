@@ -50,7 +50,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── motion/              # Scroll reveals & Framer Motion helper wrappers
 │   ├── home/                # Homepage sections (Hero, Featured, etc.)
 │   └── about/               # About page sections (CredentialsSection, CertificationCard, AchievementCard)
-├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock)
+├── hooks/                   # Custom reusable React hooks (useCardGridNav, useMobileHaptics, useScrollLock, useIsWindows)
 ├── data/                    # The source of truth for portfolio content & static state
 ├── lib/                     # System utilities (cn styling merger, time formatters, etc.)
 ├── types/                   # Shared TypeScript interface definitions
@@ -77,9 +77,11 @@ To update or manage the portfolio content, developers should edit the following 
 
 - **Command Palette & Global Keyboard System**:
   - **Command Palette (`components/ui/command-palette.tsx`)**: Triggered via `⌘K` or `Ctrl+K`. Indexes all routes, projects, social handles, external links, and system actions (e.g. theme toggle) with real-time filtering, group headers, and quick-action shortcuts.
-  - **Keyboard Shortcuts Dialog (`components/ui/keyboard-shortcuts-dialog.tsx`)**: Triggered via `?`. Presents a visual cheat sheet of all available shortcuts grouped by Navigation, Actions, and Navigation Chords.
+  - **Keyboard Shortcuts Dialog (`components/ui/keyboard-shortcuts-dialog.tsx`)**: Triggered via `?`. Presents a visual cheat sheet of all available shortcuts grouped by Navigation, Actions, and Navigation Chords, dynamically selecting between `MAC_SHORTCUT_GROUPS` (`⌘K`, `⌘↵`) and `WINDOWS_SHORTCUT_GROUPS` (`Ctrl+K`, `Ctrl+↵`) via `useIsWindows()`.
   - **Global Keyboard Provider (`components/providers/keyboard-provider.tsx`)**: Listens for vim-style navigation chords (`g h` for Home, `g p` for Projects, `g a` for About, `g c` for Contact), numeric page jumps (`1`–`4`), theme switching (`t`), and shortcut overlays.
-  - **Minimalist Spotlight Pill (`components/layout/header.tsx`)**: Unified `[ Search... ⌘K ]` pill button anchored seamlessly in the desktop header navigation, collapsing down to a compact search icon on mobile viewports.
+  - **Minimalist Spotlight Pill (`components/layout/header.tsx`)**: Unified spotlight search pill anchored in the desktop header navigation showing `[ Search... ⌘K ]` on macOS and `[ Search... Ctrl+K ]` on Windows/PC, automatically suppressed on mobile devices to preserve navbar real estate.
+  - **Platform-Aware Form Hints (`components/contact/contact-form.tsx`)**: Message textarea adapts placeholder text dynamically across mobile (shortcut-free), Windows (`Ctrl+Enter`), and macOS (`⌘+Enter`) with hydration suppression.
+  - **SSR-Safe Platform Detection (`hooks/use-is-windows.ts`)**: Custom hook suite (`useIsMac`, `useIsMobile`, `useIsWindows`) leveraging `useSyncExternalStore` for flicker-free OS and device detection, defaulting SSR output to Windows/PC to ensure flawless server-to-client hydration.
 - **Card Grid Traversal & Spotlight Dimming System**:
   - **`useCardGridNav` Hook (`hooks/use-card-grid-nav.ts`)**: Synchronizes mouse hover and keyboard focus states across project card grids (`/projects` and featured section). When any card is focused or hovered, inactive siblings dim to `opacity-40 scale-[0.98]`.
   - **Stationary Mouse Suppression**: Debounces synthetic `mousemove`/`mouseenter` events dispatched when cards scroll beneath a stationary mouse cursor, ensuring keyboard `Tab` traversal is never interrupted.
@@ -139,3 +141,5 @@ To update or manage the portfolio content, developers should edit the following 
 - **Stationary Mouse Suppression & Hover Debouncing**: Verifies physical pointer displacement before toggling hover states to prevent stationary mouse cursors from hijacking keyboard `Tab` flow (`useCardGridNav`).
 - **Focus Anchoring on `#main-content`**: Seamlessly resets tab target to the primary content container when navigating routes or closing modals, ensuring direct keyboard access to page cards.
 - **Keyboard-Aware Custom Cursor**: Auto-hides the spring cursor during keyboard interaction and gracefully reveals it on physical pointer displacement.
+- **SSR-Safe Cross-Platform Adaptation**: Leverages `useSyncExternalStore` in `useIsWindows`, `useIsMac`, and `useIsMobile` to conditionally render platform-specific keyboard shortcuts (`Ctrl+K` vs `⌘K`) and placeholders without layout shift or hydration mismatch flags.
+- **Safe-Area Inset Hero Calibration**: Homepage hero section incorporates dynamic `env(safe-area-inset-bottom, 0px)` offsets and calibrated vertical height breakpoints (`@media(max-height:500px)` on mobile, `@media(max-height:750px)` on desktop) to ensure scroll indicators never collide with mobile navigation bars.
