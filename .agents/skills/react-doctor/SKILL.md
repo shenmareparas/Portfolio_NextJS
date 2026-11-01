@@ -42,6 +42,20 @@ The playbook is the single source of truth — a scan → filter → triage → 
 
 Pair it with the matching per-rule prompts at `https://www.react.doctor/prompts/rules/<plugin>/<rule>.md` (fetched on demand inside the playbook) so each fix uses the canonical, reviewer-tested recipe.
 
+Use `--scope contextual --base origin/main` when a team wants existing findings
+in the code it is editing. Rules can select an element, function, file, or an
+explicit set of related nodes. For `exhaustive-deps`, edits in the hook call or a
+resolved local callback can surface a finding on an unchanged dependency array.
+Rules without wider ownership keep changed-line filtering.
+
+## Explaining diagnostics at a specific location
+
+To understand why a rule fired or why an inline suppression did not apply at a specific `file:line`:
+
+```bash
+bunx react-doctor@latest why <file:line>
+```
+
 ## Configuring or explaining rules
 
 When the user wants to understand a rule, disagrees with one, or wants to disable / tune which rules run (not fix code), read [references/explain.md](references/explain.md) and follow it. Start with `bunx react-doctor@latest rules explain <rule>`, then apply the narrowest control via `bunx react-doctor@latest rules disable|set|category|ignore-tag …`, which edits your `doctor.config.*` (or `package.json#reactDoctor`).
@@ -59,7 +73,10 @@ bunx react-doctor@latest --verbose --scope changed
 | `--scope changed`    | Only report issues introduced vs the base branch (default: full)                        |
 | `--scope contextual` | Report findings in modified functions, JSX elements, or files, as selected by each rule |
 | `--scope lines`      | Only report issues on the changed lines                                                 |
+| `--base <ref>`       | Base git ref for files/changed/lines/contextual scope (auto-detected when omitted)      |
+| `--staged`           | Scan only staged files for pre-commit hooks                                             |
 | `--score`            | Output only the numeric score                                                           |
+| `why <file:line>`    | Explain why a rule fired (or why a suppression did not apply) at a location             |
 | `design`             | Run only the focused UI design diagnostics                                              |
 
 ### Reuse a base scan

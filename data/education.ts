@@ -57,6 +57,13 @@ export const certifications: Certification[] = [
     link: "https://drive.google.com/file/d/1-DJ9M9wGSBZqCU_tlHpW02qn175Bk-0V/view",
   },
   {
+    name: "Google UX Design Professional Certificate",
+    issuer: "Google",
+    platform: "Coursera",
+    year: "2023",
+    link: "https://www.coursera.org/account/accomplishments/verify/F79N6T7PQ233",
+  },
+  {
     name: "Introduction to Cybersecurity",
     issuer: "Cisco",
     year: "2023",
@@ -73,13 +80,6 @@ export const certifications: Certification[] = [
     issuer: "Kaggle",
     year: "2023",
     link: "https://drive.google.com/file/d/1zwoHWXgDWgX5jKoPPQvHxVPBrnBHPjx8/view?usp=sharing",
-  },
-  {
-    name: "Google UX Design Professional Certificate",
-    issuer: "Google",
-    platform: "Coursera",
-    year: "2023",
-    link: "https://www.coursera.org/account/accomplishments/verify/F79N6T7PQ233",
   },
   {
     name: "Industrial IoT Markets and Security",

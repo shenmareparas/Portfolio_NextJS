@@ -16,6 +16,12 @@ Triggers: "why did this rule fire", "I disagree with this rule", "turn this rule
 bunx react-doctor@latest rules explain react-doctor/no-array-index-as-key
 ```
 
+Or explain why a rule fired at a specific code location:
+
+```bash
+bunx react-doctor@latest why <file:line>
+```
+
 3. Pick the narrowest control that matches the user's intent (see decision guide).
 4. Apply it with a `rules` subcommand (edits your `doctor.config.*` or `package.json#reactDoctor` in place, preserving other fields and formatting).
 5. Validate the change did what they wanted:
@@ -31,6 +37,7 @@ bunx react-doctor@latest rules list                         # every rule + its e
 bunx react-doctor@latest rules list --configured            # only what your config changed
 bunx react-doctor@latest rules list --category Performance   # filter by category
 bunx react-doctor@latest rules explain <rule>               # why it matters + how to configure
+bunx react-doctor@latest why <file:line>                    # explain why a rule fired at a location
 bunx react-doctor@latest rules disable <rule>               # rule never runs
 bunx react-doctor@latest rules enable <rule>                # turn back on at its recommended severity
 bunx react-doctor@latest rules set <rule> warn              # off | warn | error
