@@ -12,6 +12,7 @@ export function FeaturedProjects() {
     hasHover,
     activeIndex,
     focusedIndex,
+    isKeyboardNav,
     handleHover,
     handleMouseLeave,
     handleFocus,
@@ -40,7 +41,7 @@ export function FeaturedProjects() {
             onMouseLeave={handleMouseLeave}
             onFocus={() => handleFocus(index)}
             onBlur={() => handleBlur(index)}
-            disabled={!hasHover}
+            disabled={!hasHover || isKeyboardNav}
             priority={true}
           />
         ))}

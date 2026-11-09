@@ -77,16 +77,16 @@ function CommandPaletteItemRow({
   return (
     <button
       type="button"
+      id={`command-item-${item.id}`}
       data-item-index={index}
       role="option"
+      tabIndex={-1}
       aria-selected={isSelected}
       onClick={onSelect}
-      onMouseEnter={onHover}
+      onMouseMove={onHover}
       className={cn(
         "w-full flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer",
-        isSelected
-          ? "bg-primary text-primary-foreground"
-          : "hover:bg-muted text-foreground",
+        isSelected ? "bg-primary text-primary-foreground" : "text-foreground",
       )}
     >
       <div className="flex items-center gap-3 min-w-0">
@@ -167,6 +167,7 @@ function CommandPaletteFooter({
       </div>
       <button
         type="button"
+        tabIndex={-1}
         onClick={onOpenShortcuts}
         className="flex items-center gap-1 hover:text-foreground transition-colors cursor-pointer"
       >
@@ -420,6 +421,7 @@ interface CommandPaletteResultsProps {
   query: string;
   onSelectItem: (item: PaletteItem) => void;
   onHoverIndex: (index: number) => void;
+  onWheel?: () => void;
 }
 
 function CommandPaletteResults({
@@ -429,12 +431,14 @@ function CommandPaletteResults({
   query,
   onSelectItem,
   onHoverIndex,
+  onWheel,
 }: CommandPaletteResultsProps) {
   return (
     <div
       ref={listRef}
       id="command-palette-results"
       role="listbox"
+      onWheel={onWheel}
       className="flex-1 overflow-y-auto p-2 space-y-1 overscroll-contain"
     >
       {filteredItems.length === 0 ? (
@@ -471,6 +475,41 @@ function CommandPaletteModal({
   const { toast } = useToast();
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
+  const isKeyboardNavRef = useRef(true);
+  const lastMousePosRef = useRef({ screenX: -1, screenY: -1 });
+
+  // Track physical mouse displacement (>3px screen coords) to ignore stationary cursors & scroll events
+  useEffect(() => {
+    const handleWindowMouseMove = (e: MouseEvent) => {
+      if (lastMousePosRef.current.screenX === -1) {
+        lastMousePosRef.current = { screenX: e.screenX, screenY: e.screenY };
+        return;
+      }
+
+      const dx = Math.abs(e.screenX - lastMousePosRef.current.screenX);
+      const dy = Math.abs(e.screenY - lastMousePosRef.current.screenY);
+
+      if (dx > 3 || dy > 3) {
+        isKeyboardNavRef.current = false;
+        lastMousePosRef.current = { screenX: e.screenX, screenY: e.screenY };
+      }
+    };
+
+    window.addEventListener("mousemove", handleWindowMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleWindowMouseMove);
+    };
+  }, []);
+
+  const handleHoverIndex = useCallback((index: number) => {
+    if (!isKeyboardNavRef.current) {
+      setSelectedIndex(index);
+    }
+  }, []);
+
+  const handleWheel = useCallback(() => {
+    isKeyboardNavRef.current = true;
+  }, []);
 
   const toggleTheme = useCallback(() => {
     const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
@@ -522,14 +561,23 @@ function CommandPaletteModal({
     );
   }, [allItems, query]);
 
-  // Focus input on mount
+  // Focus input on mount with robust multi-frame guarantee
   useEffect(() => {
-    const timer = setTimeout(() => {
-      inputRef.current?.focus();
-    }, 20);
+    const focusInput = () => {
+      if (inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+      }
+    };
+
+    focusInput();
+    const rafId = requestAnimationFrame(focusInput);
+    const timer1 = setTimeout(focusInput, 30);
+    const timer2 = setTimeout(focusInput, 80);
 
     return () => {
-      clearTimeout(timer);
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
     };
   }, []);
 
@@ -561,6 +609,7 @@ function CommandPaletteModal({
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    isKeyboardNavRef.current = true;
     if (e.key === "?") {
       e.preventDefault();
       inputRef.current?.blur();
@@ -568,12 +617,12 @@ function CommandPaletteModal({
       onOpenShortcuts?.();
       return;
     }
-    if (e.key === "ArrowDown") {
+    if (e.key === "ArrowDown" || (e.key === "Tab" && !e.shiftKey)) {
       e.preventDefault();
       setSelectedIndex((prev) =>
         prev < filteredItems.length - 1 ? prev + 1 : 0,
       );
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === "ArrowUp" || (e.key === "Tab" && e.shiftKey)) {
       e.preventDefault();
       setSelectedIndex((prev) =>
         prev > 0 ? prev - 1 : filteredItems.length - 1,
@@ -628,7 +677,10 @@ function CommandPaletteModal({
         transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-xl max-h-[70vh] flex flex-col rounded-2xl border border-border bg-card shadow-2xl overflow-hidden overscroll-contain"
       >
-        <div className="flex items-center gap-3 border-b border-border px-4 py-3.5">
+        <div
+          onClick={() => inputRef.current?.focus()}
+          className="flex items-center gap-3 border-b border-border px-4 py-3.5 cursor-text"
+        >
           <label htmlFor="command-palette-input" className="sr-only">
             Search commands and projects
           </label>
@@ -639,9 +691,16 @@ function CommandPaletteModal({
           <input
             id="command-palette-input"
             ref={inputRef}
+            autoFocus
             value={query}
             aria-label="Search commands and projects"
+            aria-activedescendant={
+              filteredItems[selectedIndex]
+                ? `command-item-${filteredItems[selectedIndex].id}`
+                : undefined
+            }
             onChange={(e) => {
+              isKeyboardNavRef.current = true;
               setQuery(e.target.value);
               setSelectedIndex(0);
             }}
@@ -662,7 +721,8 @@ function CommandPaletteModal({
           selectedIndex={selectedIndex}
           query={query}
           onSelectItem={handleSelectItem}
-          onHoverIndex={(index) => setSelectedIndex(index)}
+          onHoverIndex={handleHoverIndex}
+          onWheel={handleWheel}
         />
 
         <CommandPaletteFooter

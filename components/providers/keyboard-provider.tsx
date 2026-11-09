@@ -119,6 +119,12 @@ function useGlobalKeyboardShortcuts(config: GlobalShortcutsConfig) {
       // Cmd+K or Ctrl+K works everywhere
       if ((e.metaKey || e.ctrlKey) && (e.key === "k" || e.key === "K")) {
         e.preventDefault();
+        if (
+          document.activeElement instanceof HTMLElement &&
+          document.activeElement !== document.body
+        ) {
+          document.activeElement.blur();
+        }
         s.setCommandPaletteOpen((prev) => !prev);
         s.setHelpOpen(false);
         return;
@@ -304,6 +310,13 @@ export function KeyboardProvider({ children }: { children: React.ReactNode }) {
   const { resolvedTheme, setTheme } = useTheme();
 
   const openCommandPalette = useCallback(() => {
+    if (
+      typeof document !== "undefined" &&
+      document.activeElement instanceof HTMLElement &&
+      document.activeElement !== document.body
+    ) {
+      document.activeElement.blur();
+    }
     setHelpOpen(false);
     setCommandPaletteOpen(true);
   }, []);

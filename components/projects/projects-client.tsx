@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { projects as projectsData } from "@/data/projects";
 import { ProjectCard } from "@/components/projects/project-card";
 import { useNavigation } from "@/components/providers/navigation-provider";
@@ -8,6 +8,7 @@ import { useCardGridNav } from "@/hooks/use-card-grid-nav";
 
 export function ProjectsClient() {
   const { previousPath } = useNavigation();
+  const hasMountedRef = useRef(false);
   const [isRestoring, setIsRestoring] = useState(
     () =>
       previousPath?.startsWith("/projects/") && previousPath !== "/projects",
@@ -54,16 +55,23 @@ export function ProjectsClient() {
       } else {
         resetTimer = setTimeout(() => setIsRestoring(false), 0);
       }
-    } else if (isKeyboardNav) {
-      // If arriving via keyboard navigation (Cmd+K, shortcuts), prime focus on main-content
+    } else if (!hasMountedRef.current && isKeyboardNav) {
+      // If arriving via keyboard navigation on initial mount, prime focus on main-content
       // so the very next Tab traverses directly through the project cards
       focusTimer = setTimeout(() => {
+        const hasOpenDialog =
+          document.querySelector('[role="dialog"]') !== null ||
+          document.querySelector('[aria-modal="true"]') !== null;
+        if (hasOpenDialog) return;
+
         const main = document.getElementById("main-content");
         if (main && !main.contains(document.activeElement)) {
           main.focus({ preventScroll: true });
         }
       }, 50);
     }
+
+    hasMountedRef.current = true;
 
     return () => {
       if (restoreTimer) clearTimeout(restoreTimer);
@@ -96,7 +104,7 @@ export function ProjectsClient() {
             onMouseLeave={handleMouseLeave}
             onFocus={() => handleFocus(index)}
             onBlur={() => handleBlur(index)}
-            disabled={!hasHover}
+            disabled={!hasHover || isKeyboardNav}
             priority={index < 6}
           />
         ))}

@@ -9,6 +9,8 @@ import {
 } from "react";
 
 let globalIsKeyboardNav = false;
+let lastGlobalScreenX = -1;
+let lastGlobalScreenY = -1;
 
 if (typeof window !== "undefined") {
   window.addEventListener(
@@ -27,9 +29,16 @@ if (typeof window !== "undefined") {
   );
 
   window.addEventListener("mousemove", (e) => {
-    if (e.movementX !== 0 || e.movementY !== 0) {
+    // Only genuine physical displacement (>3px screen coords) deactivates keyboard mode
+    if (
+      lastGlobalScreenX !== -1 &&
+      (Math.abs(e.screenX - lastGlobalScreenX) > 3 ||
+        Math.abs(e.screenY - lastGlobalScreenY) > 3)
+    ) {
       globalIsKeyboardNav = false;
     }
+    lastGlobalScreenX = e.screenX;
+    lastGlobalScreenY = e.screenY;
   });
 }
 
@@ -64,7 +73,12 @@ export function useCardGridNav() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab" || e.key.startsWith("Arrow")) {
+      if (
+        e.key === "Tab" ||
+        e.key.startsWith("Arrow") ||
+        e.key === "Enter" ||
+        ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k")
+      ) {
         globalIsKeyboardNav = true;
         setIsKeyboardNav(true);
         setHoveredIndex(null);
@@ -72,31 +86,19 @@ export function useCardGridNav() {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Check if coordinates actually changed with threshold > 2px to prevent scrolling from firing synthetic mousemove
+      // Check physical screen coordinates threshold (>3px) to prevent synthetic scroll events
       if (
         lastMousePosRef.current.x !== -1 &&
-        (Math.abs(lastMousePosRef.current.x - e.clientX) > 2 ||
-          Math.abs(lastMousePosRef.current.y - e.clientY) > 2)
+        (Math.abs(lastMousePosRef.current.x - e.screenX) > 3 ||
+          Math.abs(lastMousePosRef.current.y - e.screenY) > 3)
       ) {
         globalIsKeyboardNav = false;
         setIsKeyboardNav(false);
 
-        // Clear any focused card state when physically moving mouse
-        setFocusedIndex((prev) => {
-          if (prev !== null) {
-            if (
-              typeof document !== "undefined" &&
-              document.activeElement instanceof HTMLElement &&
-              document.activeElement.closest(".group")
-            ) {
-              document.activeElement.blur();
-            }
-            return null;
-          }
-          return prev;
-        });
+        // Transition from keyboard focus to mouse hover: clear focusedIndex
+        setFocusedIndex(null);
       }
-      lastMousePosRef.current = { x: e.clientX, y: e.clientY };
+      lastMousePosRef.current = { x: e.screenX, y: e.screenY };
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -112,7 +114,6 @@ export function useCardGridNav() {
     (index: number) => {
       if (hasHover && !isKeyboardNav && !globalIsKeyboardNav) {
         setHoveredIndex(index);
-        setFocusedIndex(null);
       }
     },
     [hasHover, isKeyboardNav],
@@ -122,29 +123,28 @@ export function useCardGridNav() {
     setHoveredIndex(null);
   }, []);
 
-  const handleFocus = useCallback(
-    (index: number) => {
-      if (isKeyboardNav || globalIsKeyboardNav) {
-        setFocusedIndex(index);
-        setHoveredIndex(null);
-      }
-    },
-    [isKeyboardNav],
-  );
+  const handleFocus = useCallback((index: number) => {
+    setFocusedIndex(index);
+    setHoveredIndex(null);
+  }, []);
 
   const handleBlur = useCallback((index: number) => {
     setFocusedIndex((prev) => (prev === index ? null : prev));
   }, []);
 
-  const activeKeyboard = isKeyboardNav || globalIsKeyboardNav;
-  const activeIndex = activeKeyboard ? focusedIndex : hoveredIndex;
+  const activeIndex =
+    focusedIndex !== null
+      ? focusedIndex
+      : isKeyboardNav || globalIsKeyboardNav
+        ? null
+        : hoveredIndex;
 
   return {
     hasHover,
     activeIndex,
-    focusedIndex: activeKeyboard ? focusedIndex : null,
+    focusedIndex,
     hoveredIndex,
-    isKeyboardNav: activeKeyboard,
+    isKeyboardNav: isKeyboardNav || globalIsKeyboardNav,
     handleHover,
     handleMouseLeave,
     handleFocus,

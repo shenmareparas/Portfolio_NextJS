@@ -89,18 +89,22 @@ const CursorInner = ({
   );
 
   useEffect(() => {
-    let lastX = initialX;
-    let lastY = initialY;
+    let lastScreenX = -1;
+    let lastScreenY = -1;
     let isKeyboardActive = false;
 
     const updateMousePosition = (e: MouseEvent) => {
-      if (e.clientX !== lastX || e.clientY !== lastY) {
-        lastX = e.clientX;
-        lastY = e.clientY;
-        if (isKeyboardActive) {
-          isKeyboardActive = false;
-          dispatchInteract({ isHidden: false });
-        }
+      const isPhysicalMovement =
+        lastScreenX !== -1 &&
+        (Math.abs(e.screenX - lastScreenX) > 3 ||
+          Math.abs(e.screenY - lastScreenY) > 3);
+
+      lastScreenX = e.screenX;
+      lastScreenY = e.screenY;
+
+      if (isPhysicalMovement && isKeyboardActive) {
+        isKeyboardActive = false;
+        dispatchInteract({ isHidden: false });
       }
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -119,7 +123,12 @@ const CursorInner = ({
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab" || e.key.startsWith("Arrow")) {
+      if (
+        e.key !== "Shift" &&
+        e.key !== "Alt" &&
+        e.key !== "Control" &&
+        e.key !== "Meta"
+      ) {
         isKeyboardActive = true;
         dispatchInteract({ isHidden: true, isHovering: false });
       }
