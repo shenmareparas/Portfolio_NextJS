@@ -72,15 +72,31 @@ export function useCardGridNav() {
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Check if coordinates actually changed to prevent scrolling from firing synthetic mousemove
+      // Check if coordinates actually changed with threshold > 2px to prevent scrolling from firing synthetic mousemove
       if (
-        lastMousePosRef.current.x !== e.clientX ||
-        lastMousePosRef.current.y !== e.clientY
+        lastMousePosRef.current.x !== -1 &&
+        (Math.abs(lastMousePosRef.current.x - e.clientX) > 2 ||
+          Math.abs(lastMousePosRef.current.y - e.clientY) > 2)
       ) {
-        lastMousePosRef.current = { x: e.clientX, y: e.clientY };
         globalIsKeyboardNav = false;
-        setIsKeyboardNav((prev) => (prev ? false : prev));
+        setIsKeyboardNav(false);
+
+        // Clear any focused card state when physically moving mouse
+        setFocusedIndex((prev) => {
+          if (prev !== null) {
+            if (
+              typeof document !== "undefined" &&
+              document.activeElement instanceof HTMLElement &&
+              document.activeElement.closest(".group")
+            ) {
+              document.activeElement.blur();
+            }
+            return null;
+          }
+          return prev;
+        });
       }
+      lastMousePosRef.current = { x: e.clientX, y: e.clientY };
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -96,6 +112,7 @@ export function useCardGridNav() {
     (index: number) => {
       if (hasHover && !isKeyboardNav && !globalIsKeyboardNav) {
         setHoveredIndex(index);
+        setFocusedIndex(null);
       }
     },
     [hasHover, isKeyboardNav],
@@ -105,28 +122,29 @@ export function useCardGridNav() {
     setHoveredIndex(null);
   }, []);
 
-  const handleFocus = useCallback((index: number) => {
-    setFocusedIndex(index);
-    setHoveredIndex(null);
-  }, []);
+  const handleFocus = useCallback(
+    (index: number) => {
+      if (isKeyboardNav || globalIsKeyboardNav) {
+        setFocusedIndex(index);
+        setHoveredIndex(null);
+      }
+    },
+    [isKeyboardNav],
+  );
 
   const handleBlur = useCallback((index: number) => {
     setFocusedIndex((prev) => (prev === index ? null : prev));
   }, []);
 
-  const activeIndex =
-    focusedIndex !== null
-      ? focusedIndex
-      : isKeyboardNav || globalIsKeyboardNav
-        ? null
-        : hoveredIndex;
+  const activeKeyboard = isKeyboardNav || globalIsKeyboardNav;
+  const activeIndex = activeKeyboard ? focusedIndex : hoveredIndex;
 
   return {
     hasHover,
     activeIndex,
-    focusedIndex,
+    focusedIndex: activeKeyboard ? focusedIndex : null,
     hoveredIndex,
-    isKeyboardNav,
+    isKeyboardNav: activeKeyboard,
     handleHover,
     handleMouseLeave,
     handleFocus,

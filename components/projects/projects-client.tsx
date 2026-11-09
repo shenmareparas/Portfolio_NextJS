@@ -41,9 +41,12 @@ export function ProjectsClient() {
               behavior: "instant",
               block: "center",
             });
-            const link = element.querySelector("a");
-            if (link) {
-              link.focus({ preventScroll: true });
+            // Only focus the card if user is actively navigating via keyboard
+            if (isKeyboardNav) {
+              const link = element.querySelector("a");
+              if (link) {
+                link.focus({ preventScroll: true });
+              }
             }
           }
           setIsRestoring(false);
