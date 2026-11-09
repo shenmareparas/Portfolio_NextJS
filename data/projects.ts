@@ -26,6 +26,11 @@ export const projects: Project[] = [
     image: "/project/vitbmess/banner.webp",
     logo: "/project/vitbmess/logo.webp",
     accentColor: "#4F870D",
+    share: {
+      title: "VIT Bhopal Mess - Real-Time Mess Menu & Food Search",
+      description:
+        "Cross-platform app & website serving 10,000+ students daily with instant mess menu and food search at VIT University.",
+    },
     gallery: [
       {
         light: "/project/vitbmess/1a.webp",
@@ -83,6 +88,11 @@ export const projects: Project[] = [
     image: "/project/chess/banner.webp",
     logo: "/project/chess/logo.webp",
     accentColor: "#2EA66E",
+    share: {
+      title: "Chess Offline: Play 2 Player - Stockfish 18 Engine",
+      description:
+        "High-performance offline chess game with 750,000+ downloads, 5 AI difficulty levels, and pass-and-play multiplayer on Google Play.",
+    },
     gallery: [
       "/project/chess/1.webp",
       "/project/chess/2.webp",
@@ -113,6 +123,11 @@ export const projects: Project[] = [
     image: "/project/yodoc/banner.webp",
     logo: "/project/yodoc/logo.webp",
     accentColor: "#26A6EF",
+    share: {
+      title: "YoDoc - Symptom Checker & First-Aid Mobile App",
+      description:
+        "Health-tech mobile application for symptom analysis and instant verified first-aid recommendations on Google Play.",
+    },
     gallery: [
       "/project/yodoc/1.webp",
       "/project/yodoc/2.webp",
@@ -138,6 +153,11 @@ export const projects: Project[] = [
     image: "/project/cropshop/banner.webp",
     logo: "/project/cropshop/logo.webp",
     accentColor: "#82b43c",
+    share: {
+      title: "CropShop - Agri E-Commerce Platform",
+      description:
+        "Dual-app mobile ecosystem connecting farmers directly to consumers with real-time inventory, orders, and payments.",
+    },
     gallery: [
       {
         light: "/project/cropshop/1a.webp",
@@ -268,6 +288,11 @@ export const projects: Project[] = [
       light: "#B85D3B",
       dark: "#E29D86",
     },
+    share: {
+      title: "Expense Tracker - Shared Bill Splitting & Supabase Sync",
+      description:
+        "Modern Flutter expense tracker and group bill splitting app with 6 split modes and Supabase cloud sync.",
+    },
     gallery: [
       {
         light: "/project/expense_tracker/1a.webp",
@@ -332,6 +357,11 @@ export const projects: Project[] = [
     image: "/project/live_wallpaper/banner.webp",
     logo: "/project/live_wallpaper/logo.webp",
     accentColor: "#007AFF",
+    share: {
+      title: "Live Wallpaper Engine for macOS - Dynamic Desktop & Lock Screen",
+      description:
+        "Native macOS menu bar app built in pure Swift, AppKit, and SwiftUI with hardware-accelerated HEVC playback.",
+    },
     galleryLayout: "vertical",
     gallery: [
       {
@@ -373,6 +403,11 @@ export const projects: Project[] = [
     image: "/project/nexu5_music_bot/banner.webp",
     logo: "/project/nexu5_music_bot/logo.webp",
     accentColor: "#06B6D4",
+    share: {
+      title: "NEXU5 - Ultra-Low Latency Discord Music Bot",
+      description:
+        "Clean, modern, and performant Discord music bot built with Bun, discord.js v14, and yt-dlp.",
+    },
     galleryLayout: "vertical",
     gallery: ["/project/nexu5_music_bot/banner.webp"],
   },
@@ -392,6 +427,11 @@ export const projects: Project[] = [
     image: "/project/play_store_ai_review/banner.webp",
     logo: "/project/play_store_ai_review/logo.webp",
     accentColor: "#34A853",
+    share: {
+      title: "Play Store AI Console - Google Play Reviews with Gemini AI",
+      description:
+        "Specialized developer console for fetching Google Play reviews and automating contextual replies using Gemini AI.",
+    },
     galleryLayout: "vertical",
     gallery: [
       {

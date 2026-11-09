@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CoverflowCarousel } from "@/components/ui/coverflow-carousel";
 import { VerticalGallery } from "@/components/ui/vertical-gallery";
 import { FadeIn } from "@/components/motion/fade-in";
+import { siteConfig } from "@/data/config";
 import { projects as projectsData } from "@/data/projects";
 import { Project } from "@/types/project";
 
@@ -35,11 +36,42 @@ export async function generateMetadata({ params }: ProjectPageProps) {
     };
   }
 
+  const shareTitle =
+    project.share?.title || `${project.title} | Paras Shenmare`;
+  const shareDescription = project.share?.description || project.description;
+  const rawImage = project.share?.image || project.image;
+  const shareImage = rawImage.startsWith("http")
+    ? rawImage
+    : `${siteConfig.url}${rawImage}`;
+  const projectUrl = `${siteConfig.url}/projects/${slug}`;
+
   return {
     title: project.title,
     description: project.description,
     alternates: {
       canonical: `/projects/${slug}`,
+    },
+    openGraph: {
+      title: shareTitle,
+      description: shareDescription,
+      url: projectUrl,
+      siteName: siteConfig.title,
+      type: "article",
+      images: [
+        {
+          url: shareImage,
+          width: 1200,
+          height: 630,
+          alt: project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: shareTitle,
+      description: shareDescription,
+      creator: siteConfig.metadata.twitter.creator,
+      images: [shareImage],
     },
   };
 }

@@ -1,5 +1,11 @@
 export type GalleryItem = string | { light: string; dark: string };
 
+export interface ProjectShareInfo {
+  title?: string;
+  description?: string;
+  image?: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -20,4 +26,5 @@ export interface Project {
   accentColor?: string | { light: string; dark: string };
   gallery?: GalleryItem[];
   galleryLayout?: "carousel" | "vertical";
+  share?: ProjectShareInfo;
 }
