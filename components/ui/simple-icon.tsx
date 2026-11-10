@@ -4,16 +4,20 @@ interface SimpleIconProps {
   icon: SimpleIcon;
   className?: string;
   color?: string;
+  label?: string;
 }
 
 export const SimpleIconComponent = ({
   icon,
   className,
   color,
+  label,
 }: SimpleIconProps) => {
   return (
     <svg
-      role="img"
+      role={label ? "img" : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
       viewBox="0 0 24 24"
       className={className}
       fill={color || "currentColor"}

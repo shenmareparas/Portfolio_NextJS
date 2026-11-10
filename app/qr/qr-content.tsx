@@ -172,6 +172,7 @@ END:VCARD`;
               </div>
               <div className="text-muted-foreground opacity-50 transition-opacity group-hover:opacity-100">
                 <svg
+                  aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"

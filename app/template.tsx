@@ -14,13 +14,16 @@ export default function Template({ children }: { children: React.ReactNode }) {
     previousPath?.startsWith("/projects/") &&
     previousPath !== "/projects";
 
+  // Keep initial SSR load at opacity: 1 so above-the-fold hero content paints immediately without LCP delay
+  const shouldAnimate = previousPath !== null && !isBackFromProjectDetails;
+
   return (
     <m.div
-      initial={
-        isBackFromProjectDetails ? { opacity: 1 } : { y: 20, opacity: 0 }
+      initial={shouldAnimate ? { y: 12, opacity: 0 } : false}
+      animate={{ y: 0, opacity: 1 }}
+      transition={
+        shouldAnimate ? { ease: "easeOut", duration: 0.35 } : { duration: 0 }
       }
-      animate={isBackFromProjectDetails ? { opacity: 1 } : { y: 0, opacity: 1 }}
-      transition={{ ease: "easeInOut", duration: 0.75 }}
       className="flex-1 flex flex-col"
     >
       {children}

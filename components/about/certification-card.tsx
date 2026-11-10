@@ -13,7 +13,7 @@ import {
   siCisco,
   siCoursera,
   siKaggle,
-} from "simple-icons";
+} from "simple-icons/icons";
 import { RenderedIcon } from "@/components/ui/rendered-icon";
 
 function getCertificationIcon(cert: Certification) {

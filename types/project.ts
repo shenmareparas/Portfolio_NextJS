@@ -28,3 +28,8 @@ export interface Project {
   galleryLayout?: "carousel" | "vertical";
   share?: ProjectShareInfo;
 }
+
+export type ProjectSummary = Pick<
+  Project,
+  "slug" | "title" | "description" | "tags" | "image" | "accentColor"
+>;

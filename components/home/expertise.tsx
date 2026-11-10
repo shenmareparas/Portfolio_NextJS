@@ -42,6 +42,8 @@ export function Expertise() {
       <div className="mx-auto max-w-3xl space-y-4">
         {expertise.map((item) => {
           const Icon = iconMap[item.icon];
+          const isOpen = openItem === item.id;
+          const panelId = `expertise-panel-${item.id}`;
           return (
             <div
               key={item.id}
@@ -49,13 +51,18 @@ export function Expertise() {
             >
               <button
                 type="button"
+                aria-expanded={isOpen}
+                aria-controls={panelId}
                 onClick={() => toggleItem(item.id)}
-                className="flex w-full items-center justify-between p-6 text-left font-medium transition-colors hover:bg-muted/50"
+                className="flex w-full items-center justify-between p-6 text-left font-medium transition-colors hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
               >
                 <div className="flex items-center gap-3">
                   {Icon && (
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                      <Icon className="h-5 w-5 text-primary" />
+                      <Icon
+                        className="h-5 w-5 text-primary"
+                        aria-hidden="true"
+                      />
                     </div>
                   )}
                   <span className="text-lg md:text-xl font-semibold">
@@ -63,16 +70,19 @@ export function Expertise() {
                   </span>
                 </div>
                 <ChevronDown
+                  aria-hidden="true"
                   className={cn(
                     "h-5 w-5 text-muted-foreground transition-transform duration-200",
-                    openItem === item.id && "rotate-180",
+                    isOpen && "rotate-180",
                   )}
                 />
               </button>
               <div
+                id={panelId}
+                inert={!isOpen}
                 className={cn(
                   "grid transition-[grid-template-rows,opacity] duration-300 ease-in-out",
-                  openItem === item.id
+                  isOpen
                     ? "grid-rows-[1fr] opacity-100"
                     : "grid-rows-[0fr] opacity-0",
                 )}

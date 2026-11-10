@@ -75,7 +75,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
         <TooltipContent>
           <p>
             Theme{" "}
-            <kbd className="ml-1 text-[10px] opacity-70 font-mono px-1 py-0.5 rounded bg-muted">
+            <kbd className="ml-1 text-[10px] text-muted-foreground font-mono px-1 py-0.5 rounded bg-muted">
               T
             </kbd>
           </p>

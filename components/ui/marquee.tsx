@@ -4,6 +4,7 @@ interface MarqueeProps {
   className?: string;
   reverse?: boolean;
   pauseOnHover?: boolean;
+  paused?: boolean;
   children?: React.ReactNode;
   vertical?: boolean;
   repeat?: number;
@@ -14,6 +15,7 @@ export function Marquee({
   className,
   reverse,
   pauseOnHover = false,
+  paused = false,
   children,
   vertical = false,
   repeat = 4,
@@ -36,10 +38,13 @@ export function Marquee({
         .map((_, i) => (
           <div
             key={i}
+            aria-hidden={i > 0 || undefined}
+            inert={i > 0}
             className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
               "animate-marquee flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,
               "group-hover:[animation-play-state:paused]": pauseOnHover,
+              "[animation-play-state:paused]": paused,
               "[animation-direction:reverse]": reverse,
             })}
           >

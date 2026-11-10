@@ -9,14 +9,27 @@ import {
   useMemo,
   useRef,
 } from "react";
+import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { useNavigation } from "@/components/providers/navigation-provider";
-import { CommandPalette } from "@/components/ui/command-palette";
-import { KeyboardShortcutsDialog } from "@/components/ui/keyboard-shortcuts-dialog";
 import { AnimatePresence, m } from "framer-motion";
 import { useScrollLock } from "@/hooks/use-scroll-lock";
 import { setGlobalKeyboardNav } from "@/hooks/use-card-grid-nav";
+
+const CommandPalette = dynamic(
+  () =>
+    import("@/components/ui/command-palette").then((mod) => mod.CommandPalette),
+  { ssr: false },
+);
+
+const KeyboardShortcutsDialog = dynamic(
+  () =>
+    import("@/components/ui/keyboard-shortcuts-dialog").then(
+      (mod) => mod.KeyboardShortcutsDialog,
+    ),
+  { ssr: false },
+);
 
 interface KeyboardContextType {
   isCommandPaletteOpen: boolean;
@@ -39,7 +52,9 @@ interface GlobalShortcutsConfig {
   toggleTheme: () => void;
   openCommandPalette: () => void;
   setCommandPaletteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setPaletteEverOpened: React.Dispatch<React.SetStateAction<boolean>>;
   setHelpOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setHelpEverOpened: React.Dispatch<React.SetStateAction<boolean>>;
   setActiveChord: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -125,6 +140,7 @@ function useGlobalKeyboardShortcuts(config: GlobalShortcutsConfig) {
         ) {
           document.activeElement.blur();
         }
+        s.setPaletteEverOpened(true);
         s.setCommandPaletteOpen((prev) => !prev);
         s.setHelpOpen(false);
         return;
@@ -142,6 +158,7 @@ function useGlobalKeyboardShortcuts(config: GlobalShortcutsConfig) {
 
       if (e.key === "?") {
         e.preventDefault();
+        s.setHelpEverOpened(true);
         s.setHelpOpen((prev) => !prev);
         s.setCommandPaletteOpen(false);
         return;
@@ -301,7 +318,9 @@ function ChordIndicator({ activeChord }: { activeChord: string | null }) {
 
 export function KeyboardProvider({ children }: { children: React.ReactNode }) {
   const [isCommandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const [hasOpenedPalette, setPaletteEverOpened] = useState(false);
   const [isHelpOpen, setHelpOpen] = useState(false);
+  const [hasOpenedHelp, setHelpEverOpened] = useState(false);
   const [activeChord, setActiveChord] = useState<string | null>(null);
 
   const router = useRouter();
@@ -318,6 +337,7 @@ export function KeyboardProvider({ children }: { children: React.ReactNode }) {
       document.activeElement.blur();
     }
     setHelpOpen(false);
+    setPaletteEverOpened(true);
     setCommandPaletteOpen(true);
   }, []);
 
@@ -327,6 +347,7 @@ export function KeyboardProvider({ children }: { children: React.ReactNode }) {
 
   const openHelp = useCallback(() => {
     setCommandPaletteOpen(false);
+    setHelpEverOpened(true);
     setHelpOpen(true);
   }, []);
 
@@ -356,7 +377,9 @@ export function KeyboardProvider({ children }: { children: React.ReactNode }) {
       toggleTheme,
       openCommandPalette,
       setCommandPaletteOpen,
+      setPaletteEverOpened,
       setHelpOpen,
+      setHelpEverOpened,
       setActiveChord,
     }),
     [
@@ -397,13 +420,17 @@ export function KeyboardProvider({ children }: { children: React.ReactNode }) {
     <KeyboardContext.Provider value={contextValue}>
       {children}
 
-      {/* Global Modals */}
-      <CommandPalette
-        isOpen={isCommandPaletteOpen}
-        onClose={closeCommandPalette}
-        onOpenShortcuts={openHelp}
-      />
-      <KeyboardShortcutsDialog isOpen={isHelpOpen} onClose={closeHelp} />
+      {/* Global Modals (loaded lazily on first interaction) */}
+      {hasOpenedPalette && (
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={closeCommandPalette}
+          onOpenShortcuts={openHelp}
+        />
+      )}
+      {hasOpenedHelp && (
+        <KeyboardShortcutsDialog isOpen={isHelpOpen} onClose={closeHelp} />
+      )}
 
       {/* Active Chord Micro Indicator */}
       <ChordIndicator activeChord={activeChord} />

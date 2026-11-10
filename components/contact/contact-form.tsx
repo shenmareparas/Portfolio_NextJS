@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import * as z from "zod/mini";
 import { Loader2 } from "lucide-react";
 import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 
@@ -21,18 +21,24 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
+  name: z.string().check(
+    z.minLength(2, {
+      message: "Name must be at least 2 characters.",
+    }),
+  ),
   email: z.email({
     message: "Please enter a valid email address.",
   }),
-  subject: z.string().min(5, {
-    message: "Subject must be at least 5 characters.",
-  }),
-  message: z.string().min(10, {
-    message: "Message must be at least 10 characters.",
-  }),
+  subject: z.string().check(
+    z.minLength(5, {
+      message: "Subject must be at least 5 characters.",
+    }),
+  ),
+  message: z.string().check(
+    z.minLength(10, {
+      message: "Message must be at least 10 characters.",
+    }),
+  ),
 });
 
 import { siteConfig } from "@/data/config";

@@ -55,6 +55,7 @@ export function CredentialsSection({
           {/* Smooth Collapsible Drawer for Remaining Certifications */}
           {hasMore && (
             <div
+              inert={!isExpanded}
               className={cn(
                 "grid transition-[grid-template-rows,opacity] duration-300 ease-in-out",
                 isExpanded

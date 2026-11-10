@@ -15,10 +15,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Project } from "@/types/project";
+import { ProjectSummary } from "@/types/project";
 
 interface ProjectCardProps {
-  project: Project;
+  project: ProjectSummary;
   index: number;
   isDimmed?: boolean;
   isFocused?: boolean;
@@ -28,6 +28,24 @@ interface ProjectCardProps {
   onBlur?: () => void;
   disabled?: boolean;
   priority?: boolean;
+}
+
+function getShouldAnimateCard(previousPath: string | null): boolean {
+  if (previousPath === null) return false;
+  return !(
+    previousPath.startsWith("/projects/") && previousPath !== "/projects"
+  );
+}
+
+function getAccentColors(accentColor: ProjectSummary["accentColor"]): {
+  light?: string;
+  dark?: string;
+} {
+  if (!accentColor) return {};
+  if (typeof accentColor === "object") {
+    return { light: accentColor.light, dark: accentColor.dark };
+  }
+  return { light: accentColor, dark: accentColor };
 }
 
 export function ProjectCard({
@@ -43,22 +61,22 @@ export function ProjectCard({
   priority,
 }: ProjectCardProps) {
   const { previousPath } = useNavigation();
-  const shouldAnimate = !(
-    previousPath?.startsWith("/projects/") && previousPath !== "/projects"
+  const shouldAnimate = getShouldAnimateCard(previousPath);
+  const { light: accentLight, dark: accentDark } = getAccentColors(
+    project.accentColor,
   );
-
-  const accentLight =
-    typeof project.accentColor === "object"
-      ? project.accentColor.light
-      : project.accentColor;
-  const accentDark =
-    typeof project.accentColor === "object"
-      ? project.accentColor.dark
-      : project.accentColor;
+  const badgeStyle = project.accentColor
+    ? ({
+        "--accent-light": accentLight,
+        "--accent-dark": accentDark,
+        "--accent-light-bg": `${accentLight}15`,
+        "--accent-dark-bg": `${accentDark}20`,
+      } as React.CSSProperties)
+    : undefined;
 
   return (
     <m.div
-      initial={shouldAnimate ? { opacity: 0, y: 20 } : { opacity: 1, y: 0 }}
+      initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
       animate={{
         opacity: isDimmed ? 0.5 : 1,
         filter: isDimmed ? "brightness(0.8)" : "brightness(1)",
@@ -136,7 +154,7 @@ export function ProjectCard({
             </span>
             <ArrowUpRight className="h-5 w-5 translate-y-2 opacity-0 transition-[transform,opacity] duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100 text-[var(--project-accent)] dark:text-[var(--project-accent-dark)]" />
           </CardTitle>
-          <CardDescription className="line-clamp-2 text-muted-foreground/80">
+          <CardDescription className="line-clamp-2 text-muted-foreground">
             {project.description}
           </CardDescription>
         </CardHeader>
@@ -149,16 +167,7 @@ export function ProjectCard({
                 variant="accented"
                 shape="pill"
                 className="transition-colors duration-300"
-                style={
-                  project.accentColor
-                    ? ({
-                        "--accent-light": accentLight,
-                        "--accent-dark": accentDark,
-                        "--accent-light-bg": `${accentLight}15`,
-                        "--accent-dark-bg": `${accentDark}20`,
-                      } as React.CSSProperties)
-                    : undefined
-                }
+                style={badgeStyle}
               >
                 {tag}
               </Badge>

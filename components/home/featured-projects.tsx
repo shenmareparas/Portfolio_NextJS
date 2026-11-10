@@ -1,13 +1,13 @@
 "use client";
 
-import { projects } from "@/data/projects";
+import { ProjectSummary } from "@/types/project";
 import { ProjectCard } from "@/components/projects/project-card";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useCardGridNav } from "@/hooks/use-card-grid-nav";
 
-export function FeaturedProjects() {
+export function FeaturedProjects({ projects }: { projects: ProjectSummary[] }) {
   const {
     hasHover,
     activeIndex,
@@ -30,7 +30,7 @@ export function FeaturedProjects() {
         </p>
       </div>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.slice(0, 3).map((project, index) => (
+        {projects.map((project, index) => (
           <ProjectCard
             key={project.slug}
             project={project}
@@ -42,7 +42,6 @@ export function FeaturedProjects() {
             onFocus={() => handleFocus(index)}
             onBlur={() => handleBlur(index)}
             disabled={!hasHover || isKeyboardNav}
-            priority={true}
           />
         ))}
       </div>

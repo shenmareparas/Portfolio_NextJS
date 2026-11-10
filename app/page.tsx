@@ -6,11 +6,13 @@ import { profile } from "@/data/profile";
 import { siteConfig } from "@/data/config";
 
 import { FeaturedProjects } from "@/components/home/featured-projects";
+import { projects } from "@/data/projects";
 
 import { Testimonials } from "@/components/home/testimonials";
 import { testimonials } from "@/data/testimonials";
 
 import { Expertise } from "@/components/home/expertise";
+import { ProjectSummary } from "@/types/project";
 
 export const metadata: Metadata = {
   title: {
@@ -26,6 +28,17 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const featuredProjects: ProjectSummary[] = projects
+    .slice(0, 3)
+    .map(({ slug, title, description, tags, image, accentColor }) => ({
+      slug,
+      title,
+      description,
+      tags,
+      image,
+      accentColor,
+    }));
+
   return (
     <div className="flex flex-1 flex-col items-center w-full max-w-full overflow-x-clip">
       <section className="space-y-6 pb-20 pt-6 md:pb-12 md:pt-10 lg:py-24 [@media(max-height:750px)]:py-8 min-h-[calc(100dvh-4rem)] flex flex-col justify-center relative w-full">
@@ -71,7 +84,7 @@ export default function Home() {
       </section>
 
       {/* Featured Projects */}
-      <FeaturedProjects />
+      <FeaturedProjects projects={featuredProjects} />
 
       {/* Expertise Section */}
       <Expertise />

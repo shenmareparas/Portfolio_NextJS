@@ -6,7 +6,7 @@ import {
   Sparkles,
   Medal,
 } from "lucide-react";
-import { siAndroid } from "simple-icons";
+import { siAndroid } from "simple-icons/icons";
 import { RenderedIcon } from "@/components/ui/rendered-icon";
 import { cn } from "@/lib/utils";
 

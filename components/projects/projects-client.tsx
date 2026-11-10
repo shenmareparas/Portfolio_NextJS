@@ -105,7 +105,7 @@ export function ProjectsClient() {
             onFocus={() => handleFocus(index)}
             onBlur={() => handleBlur(index)}
             disabled={!hasHover || isKeyboardNav}
-            priority={index < 6}
+            priority={index < 2}
           />
         ))}
       </div>

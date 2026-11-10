@@ -28,7 +28,7 @@ import { Globe, Terminal, Sparkles, Cloud, Code, Database } from "lucide-react";
 
 const JavaIcon = ({ className }: { className?: string }) => (
   <svg
-    role="img"
+    aria-hidden="true"
     viewBox="0 0 128 128"
     className={className}
     fill="currentColor"
