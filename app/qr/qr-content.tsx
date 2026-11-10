@@ -3,7 +3,8 @@
 import { useEffect } from "react";
 
 import Link from "next/link";
-import { useWebHaptics } from "web-haptics/react";
+import type { HapticInput } from "web-haptics";
+import { useMobileHaptics } from "@/hooks/use-mobile-haptics";
 import { profile } from "@/data/profile";
 import { socials } from "@/data/socials";
 import { RenderedIcon } from "@/components/ui/rendered-icon";
@@ -13,22 +14,13 @@ import { FileDown, UserPlus, Globe, Phone, Mail } from "lucide-react";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 
 export function QrContent() {
-  const haptic = useWebHaptics();
+  const haptic = useMobileHaptics();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
-  const handleHapticFeedback = (
-    type:
-      | "light"
-      | "medium"
-      | "heavy"
-      | "success"
-      | "warning"
-      | "error"
-      | "selection" = "medium",
-  ) => {
+  const handleHapticFeedback = (type: HapticInput = "medium") => {
     haptic.trigger(type);
   };
 

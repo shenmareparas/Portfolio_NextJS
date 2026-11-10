@@ -25,7 +25,10 @@ export const projects: Project[] = [
     },
     image: "/project/vitbmess/banner.webp",
     logo: "/project/vitbmess/logo.webp",
-    accentColor: "#4F870D",
+    accentColor: {
+      light: "#47790C",
+      dark: "#56940E",
+    },
     share: {
       title: "VIT Bhopal Mess - Real-Time Mess Menu & Food Search",
       description:
@@ -87,7 +90,10 @@ export const projects: Project[] = [
     },
     image: "/project/chess/banner.webp",
     logo: "/project/chess/logo.webp",
-    accentColor: "#2EA66E",
+    accentColor: {
+      light: "#227A51",
+      dark: "#2EA66E",
+    },
     share: {
       title: "Chess Offline: Play 2 Player - Stockfish 18 Engine",
       description:
@@ -122,7 +128,10 @@ export const projects: Project[] = [
     },
     image: "/project/yodoc/banner.webp",
     logo: "/project/yodoc/logo.webp",
-    accentColor: "#26A6EF",
+    accentColor: {
+      light: "#0D71AB",
+      dark: "#26A6EF",
+    },
     share: {
       title: "YoDoc - Symptom Checker & First-Aid Mobile App",
       description:
@@ -152,7 +161,10 @@ export const projects: Project[] = [
     },
     image: "/project/cropshop/banner.webp",
     logo: "/project/cropshop/logo.webp",
-    accentColor: "#82b43c",
+    accentColor: {
+      light: "#567627",
+      dark: "#82b43c",
+    },
     share: {
       title: "CropShop - Agri E-Commerce Platform",
       description:
@@ -227,7 +239,10 @@ export const projects: Project[] = [
     },
     image: "/project/music_player/banner.webp",
     logo: "/project/music_player/logo.webp",
-    accentColor: "#21BF5C",
+    accentColor: {
+      light: "#167C3C",
+      dark: "#21BF5C",
+    },
     gallery: [
       "/project/music_player/1.webp",
       "/project/music_player/2.webp",
@@ -245,7 +260,10 @@ export const projects: Project[] = [
     timeline: "2024",
     image: "/project/stopwatch/banner.webp",
     logo: "/project/stopwatch/logo.webp",
-    accentColor: "#FC2B80",
+    accentColor: {
+      light: "#D00357",
+      dark: "#FC2B80",
+    },
     gallery: [
       {
         light: "/project/stopwatch/1a.webp",
@@ -285,7 +303,7 @@ export const projects: Project[] = [
     image: "/project/expense_tracker/banner.webp",
     logo: "/project/expense_tracker/logo.webp",
     accentColor: {
-      light: "#B85D3B",
+      light: "#A75536",
       dark: "#E29D86",
     },
     share: {
@@ -356,7 +374,10 @@ export const projects: Project[] = [
     },
     image: "/project/live_wallpaper/banner.webp",
     logo: "/project/live_wallpaper/logo.webp",
-    accentColor: "#007AFF",
+    accentColor: {
+      light: "#0068D9",
+      dark: "#0C81FF",
+    },
     share: {
       title: "Live Wallpaper Engine for macOS - Dynamic Desktop & Lock Screen",
       description:
@@ -402,7 +423,10 @@ export const projects: Project[] = [
     },
     image: "/project/nexu5_music_bot/banner.webp",
     logo: "/project/nexu5_music_bot/logo.webp",
-    accentColor: "#06B6D4",
+    accentColor: {
+      light: "#04768A",
+      dark: "#06B6D4",
+    },
     share: {
       title: "NEXU5 - Ultra-Low Latency Discord Music Bot",
       description:
@@ -426,7 +450,10 @@ export const projects: Project[] = [
     },
     image: "/project/play_store_ai_review/banner.webp",
     logo: "/project/play_store_ai_review/logo.webp",
-    accentColor: "#34A853",
+    accentColor: {
+      light: "#267B3D",
+      dark: "#34A853",
+    },
     share: {
       title: "Play Store AI Console - Google Play Reviews with Gemini AI",
       description:

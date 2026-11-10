@@ -27,7 +27,7 @@ bunx react-doctor@latest why <file:line>
 5. Validate the change did what they wanted:
 
 ```bash
-bunx react-doctor@latest --verbose --diff
+bunx react-doctor@latest --verbose --scope changed
 ```
 
 ## Commands
@@ -36,10 +36,13 @@ bunx react-doctor@latest --verbose --diff
 bunx react-doctor@latest rules list                         # every rule + its effective severity
 bunx react-doctor@latest rules list --configured            # only what your config changed
 bunx react-doctor@latest rules list --category Performance   # filter by category
-bunx react-doctor@latest rules explain <rule>               # why it matters + how to configure
+bunx react-doctor@latest rules list --tag design            # filter by tag (design, test-noise, ...)
+bunx react-doctor@latest rules list --framework nextjs      # filter by framework (global, nextjs, ...)
+bunx react-doctor@latest rules list --json                  # structured JSON output
+bunx react-doctor@latest rules explain <rule> [--json]      # why it matters + how to configure
 bunx react-doctor@latest why <file:line>                    # explain why a rule fired at a location
 bunx react-doctor@latest rules disable <rule>               # rule never runs
-bunx react-doctor@latest rules enable <rule>                # turn back on at its recommended severity
+bunx react-doctor@latest rules enable <rule> [--severity warn|error]
 bunx react-doctor@latest rules set <rule> warn              # off | warn | error
 bunx react-doctor@latest rules category "React Native" off   # whole category
 bunx react-doctor@latest rules ignore-tag design            # skip a rule family (design, test-noise, …)
@@ -83,3 +86,5 @@ export default {
 ## Educating the user
 
 When explaining a rule, lead with the "Why it matters" guidance from `rules explain` and, when they want depth, the per-rule recipe at `https://www.react.doctor/prompts/rules/<plugin>/<rule>.md`. Only after they understand it should you offer to disable it — many "bad" rules are catching real issues.
+
+Unknown bundled rule IDs in `rules` produce a warning on stderr, including in JSON mode. Use `rules list` or `rules explain <rule>` to verify IDs after an upgrade. A warning does not change the scan's blocking threshold or rewrite the config. Arbitrary custom-plugin namespaces are outside this bundled-ID check.

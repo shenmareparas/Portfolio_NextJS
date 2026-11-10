@@ -104,7 +104,7 @@ const CarouselCard = React.memo(
         }}
       >
         {/* iPhone Pro Max Chassis: Grade-5 brushed titanium frame with micro-bezel */}
-        <div className="relative w-full h-full rounded-[13cqw] bg-gradient-to-b from-[#2e2e32] via-[#1c1c1f] to-[#161618] p-[0.7cqw] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.08)]">
+        <div className="relative w-full h-full rounded-[13cqw] bg-linear-to-b from-[#2e2e32] via-[#1c1c1f] to-[#161618] p-[0.7cqw] shadow-[0_25px_50px_-12px_rgba(0,0,0,0.8),0_0_0_1px_rgba(255,255,255,0.08)]">
           {/* Titanium chamfer outer edge reflection */}
           <div className="absolute inset-0 rounded-[13cqw] border-[0.4cqw] border-white/[0.07] pointer-events-none z-10" />
           {/* All-screen OLED display viewport */}
@@ -139,7 +139,7 @@ const NavigationButton = ({
 }: {
   direction: "left" | "right";
   onClick: () => void;
-  haptic: { trigger: (type?: string) => void };
+  haptic: { trigger: ReturnType<typeof useMobileHaptics>["trigger"] };
 }) => {
   const isLeft = direction === "left";
   return (

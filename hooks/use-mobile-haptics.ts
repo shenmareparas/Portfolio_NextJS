@@ -2,6 +2,11 @@
 
 import { useWebHaptics } from "web-haptics/react";
 import { useCallback, useSyncExternalStore } from "react";
+import type {
+  HapticInput,
+  TriggerOptions,
+  WebHapticsOptions,
+} from "web-haptics";
 
 const subscribeMobile = (callback: () => void) => {
   const mq = window.matchMedia("(max-width: 768px)");
@@ -12,8 +17,16 @@ const subscribeMobile = (callback: () => void) => {
 const getMobileSnapshot = () => window.matchMedia("(max-width: 768px)").matches;
 const getServerSnapshot = () => false;
 
-export function useMobileHaptics() {
-  const defaultHaptics = useWebHaptics();
+/**
+ * Wraps `useWebHaptics` with an SSR-safe `(max-width: 768px)` viewport guard
+ * so haptic feedback triggers only on mobile viewports.
+ */
+export function useMobileHaptics(webHapticsOptions?: WebHapticsOptions) {
+  const {
+    trigger: triggerWebHaptic,
+    cancel,
+    isSupported,
+  } = useWebHaptics(webHapticsOptions);
   const isMobile = useSyncExternalStore(
     subscribeMobile,
     getMobileSnapshot,
@@ -21,13 +34,14 @@ export function useMobileHaptics() {
   );
 
   const trigger = useCallback(
-    (type?: string) => {
+    (input?: HapticInput, options?: TriggerOptions) => {
       if (isMobile) {
-        defaultHaptics.trigger(type);
+        return triggerWebHaptic(input, options);
       }
+      return undefined;
     },
-    [isMobile, defaultHaptics],
+    [isMobile, triggerWebHaptic],
   );
 
-  return { ...defaultHaptics, trigger };
+  return { trigger, cancel, isSupported };
 }

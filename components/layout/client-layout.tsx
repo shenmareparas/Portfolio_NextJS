@@ -21,7 +21,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
         <main
           id="main-content"
           tabIndex={-1}
-          className="block w-full min-h-screen focus:outline-none"
+          className="w-full min-h-dvh focus:outline-none"
         >
           {children}
         </main>

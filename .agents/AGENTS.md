@@ -7,41 +7,44 @@ This document outlines the development guidelines, constraints, and conventions 
 1. **Framework**: Next.js 16 (App Router), React 19, TypeScript, and Bun as the package manager and runner.
 2. **Styling**: Tailwind CSS v4. Ensure configuration is done via CSS variables or standard Tailwind classes. Avoid using deprecated Tailwind v3 config structures or styles.
 3. **Animations**: Framer Motion. Keep animations smooth, subtle, and responsive.
-4. **Haptics**: `web-haptics` (local skill in `.agents/skills/web-haptics`) should be used for interactive elements targeting mobile viewports (e.g., buttons, toggles, form submissions). Always use `@/hooks/use-mobile-haptics`, which wraps `useWebHaptics` with `useSyncExternalStore` for SSR-safe mobile media query subscription. Refer to [web-haptics SKILL.md](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/.agents/skills/web-haptics/SKILL.md) for trigger details.
+4. **Haptics**: `web-haptics` (local skill in `.agents/skills/web-haptics`) should be used for interactive elements targeting mobile viewports (e.g., buttons, toggles, form submissions, `/qr` actions). Always use `@/hooks/use-mobile-haptics`, which wraps `useWebHaptics` with `useSyncExternalStore` on `(max-width: 768px)` and forwards optional `WebHapticsOptions` plus the full `(input?: HapticInput, options?: TriggerOptions)` API. Refer to [web-haptics SKILL.md](skills/web-haptics/SKILL.md) for trigger details.
 5. **UI Components**: Built using Shadcn UI primitives (`components/ui/`) and Radix UI.
-6. **Code Health & Quality Audits**: React Doctor is installed locally and enforced via pre-commit git hooks and `bun run doctor`. AI agents must follow [react-doctor SKILL.md](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/.agents/skills/react-doctor/SKILL.md) before committing or wrapping up features to ensure a 100/100 score.
+6. **Code Health & Quality Audits**: React Doctor (`^0.9.22`) is installed locally and enforced via pre-commit git hooks and `bun run doctor`. AI agents must follow [react-doctor SKILL.md](skills/react-doctor/SKILL.md) before committing or wrapping up features to maintain a `0`-issue score (plus optional `design` audits).
 
 ---
 
 ## Codebase & Folder Conventions
 
-- **Pages and Routing**: All routing is under `app/` using Next.js App Router.
+- **Pages and Routing**: All routing is under `app/` using Next.js App Router (`page.tsx` serves Hero, Featured Projects, Expertise, and Testimonials; `/about` serves Bio, Skills, Experience Timeline, Education, and Credentials).
+- **Next.js Config (`next.config.ts`)**: Enables `experimental.inlineCss: true` (inlines styles in `<head>` to eliminate render-blocking stylesheet roundtrips), `experimental.optimizePackageImports`, and HTTP security headers (`X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Cross-Origin-Opener-Policy`, `Strict-Transport-Security`, `Permissions-Policy`, `Content-Security-Policy: frame-ancestors 'none'`).
 - **Components**:
-  - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs, `command-palette.tsx`, `keyboard-shortcuts-dialog.tsx`, `custom-cursor.tsx`, `coverflow-carousel.tsx`, `vertical-gallery.tsx`).
-  - `components/layout/`: Global structure components (Header with Minimalist Spotlight Search Pill `[ Search... ⌘K ]`, Footer, Navbar).
-  - `components/motion/`: Framer-motion helper components.
-  - Page-specific components reside in folders like `components/home/`, `components/projects/`, `components/experience/`, and `components/about/` (`credentials-section.tsx`, `certification-card.tsx`, `achievement-card.tsx`).
+  - `components/ui/`: Low-level reusable UI components (buttons, inputs, tooltips, dialogs, `command-palette.tsx`, `keyboard-shortcuts-dialog.tsx`, `custom-cursor.tsx`, `custom-cursor-inner.tsx`, `preloader.tsx`, `marquee.tsx`, `simple-icon.tsx`, `rendered-icon.tsx`, `portrait-lock.tsx`, `go-to-top.tsx`, `coverflow-carousel.tsx`, `vertical-gallery.tsx`).
+  - `components/layout/`: Global structure components (SSR-rendered `Header` with Minimalist Spotlight Search Pill `[ Search... ⌘K ]` / `aria-keyshortcuts` and desktop `Primary` + mobile `Mobile` `<nav>` landmarks without `createPortal`, `Footer`, `ClientLayout`).
+  - `components/motion/`: Framer-motion helper components (`fade-in.tsx`).
+  - Page-specific components reside in folders like `components/home/`, `components/projects/`, `components/experience/`, `components/contact/`, and `components/about/` (`credentials-section.tsx`, `certification-card.tsx`, `achievement-card.tsx`).
 - **Hooks**:
   - `hooks/use-card-grid-nav.ts`: Reusable card grid navigation hook synchronizing hover & keyboard focus, suppressing stationary synthetic mousemove events, and coordinating grid spotlight dimming.
   - `hooks/use-is-windows.ts`: SSR-safe platform detection hooks (`useIsMac`, `useIsMobile`, `useIsWindows`) leveraging `useSyncExternalStore` to adapt shortcut key badges (`⌘K` vs `Ctrl+K`), modal cheat sheets, and form submission hints without hydration mismatch flashes.
-  - `hooks/use-mobile-haptics.ts`: Mobile vibration and haptic feedback wrapper.
+  - `hooks/use-mobile-haptics.ts`: SSR-safe `(max-width: 768px)` mobile vibration/haptic feedback wrapper forwarding `WebHapticsOptions`, `HapticInput`, and `TriggerOptions` with stable memoized callbacks.
   - `hooks/use-scroll-lock.ts`: Scroll locking hook for full-screen dialogs and modals.
 - **Data-Driven Configuration**:
   - **CRITICAL**: Do NOT hardcode personal details, experience, education, or project lists directly in the page components. Always read from or modify files in the `data/` directory:
-    - [config.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/config.ts): Site SEO and metadata.
-    - [profile.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/profile.ts): Bio, contact details, and resume links.
-    - [projects.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/projects.ts): List of featured and personal projects. Key conventions:
+    - [config.ts](../data/config.ts): Site SEO and metadata.
+    - [profile.ts](../data/profile.ts): Bio, contact details, and resume links.
+    - [projects.ts](../data/projects.ts): List of featured and personal projects. Key conventions:
       - Cover banners: Standardized to `image: "/project/<slug>/banner.webp"`.
       - Gallery layouts: Mobile apps use 3D Coverflow (`galleryLayout: "carousel"`) modeled on the iPhone 18 Pro Max chassis (19.5:9 aspect ratio, micro-thin 1.15mm borders, brushed titanium frame); desktop/macOS/CLI/web console apps (such as _Live Wallpaper Engine for macOS_, _Play Store AI Console_, _NEXU5_) use vertical scrolling (`galleryLayout: "vertical"`).
       - Theme-aware gallery items: Supports `GalleryItem = string | { light: string; dark: string }` for automatic theme-switched screenshots.
-      - Theme-aware accent colors: Projects support `accentColor: string | { light: string; dark: string }` to ensure pill badges and interactive accents maintain accessible WCAG contrast across both light and dark themes based on app icon branding.
+      - Theme-aware accent colors: All 11 projects use `{ light, dark }` `accentColor` shades calibrated to maintain `>= 4.70:1` WCAG AA contrast on pill badges and interactive accents across both light and dark themes while preserving app icon branding.
+      - Custom social sharing metadata: Projects support `share?: ProjectShareInfo` (`title`, `description`, `image`) for tailored Open Graph and Twitter cards.
       - Screenshot cropping: Window/app captures must have excessive OS transparent drop-shadow borders cropped away (preserving only a subtle 14–15px margin around the window frame) to maintain consistent aspect ratios across the lightbox.
-    - Favicons & App Icons: Managed via Next.js metadata file conventions: [app/favicon.ico](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/app/favicon.ico) (32x32), [app/icon.png](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/app/icon.png) (512x512), [app/apple-icon.png](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/app/apple-icon.png) (180x180), and fallback [public/favicon.ico](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/public/favicon.ico).
-    - [experience.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/experience.ts) & [education.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/education.ts): Timelines.
-    - [skills.tsx](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/skills.tsx): Categorized developer skills using Lucide and Simple Icons.
-    - [testimonials.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/testimonials.ts): User/client feedback.
-    - [expertise.ts](file:///Users/parasshenmare/Developer/nextjs_projects/portfolio_nextjs/data/expertise.ts): Core domain expertise list.
-- **Types**: All TypeScript interfaces and types must be placed in `types/`. Cross-reference types before declaring new ones.
+    - Favicons & App Icons: Managed via Next.js metadata file conventions: [app/favicon.ico](../app/favicon.ico) (32x32), [app/icon.png](../app/icon.png) (512x512), [app/apple-icon.png](../app/apple-icon.png) (180x180), and fallback [public/favicon.ico](../public/favicon.ico).
+    - [experience.ts](../data/experience.ts) & [education.ts](../data/education.ts): Timelines.
+    - [skills.tsx](../data/skills.tsx): Categorized developer skills using Lucide and `simple-icons/icons`.
+    - [socials.tsx](../data/socials.tsx): Social links and brand icons (`simple-icons/icons` + Lucide).
+    - [testimonials.ts](../data/testimonials.ts): User/client feedback.
+    - [expertise.ts](../data/expertise.ts): Core domain expertise list.
+- **Types**: All TypeScript interfaces and types must be placed in `types/` (including `ProjectSummary` and `ProjectShareInfo` in `types/project.ts`). Cross-reference types before declaring new ones.
 
 ---
 
@@ -50,18 +53,20 @@ This document outlines the development guidelines, constraints, and conventions 
 - **Theme Support**: The site is light/dark system-aware. Ensure all new components use Tailwind's dark-mode classes (e.g., `dark:bg-zinc-950`).
 - **Typography & Colors**:
   - Use high-quality curated color palettes (primarily Zinc/Neutral greys, with vibrant, tailored accent gradients).
-  - Ensure visual excellence, premium aesthetics (glassmorphism/backdrop-filters where appropriate), and high contrast (WCAG standards).
+  - Light-mode `--muted-foreground` is set to `#636363` (`6.00:1` on `#ffffff`, `5.50:1` on `#f5f5f5`) and dark-mode `--muted-foreground` is `#a3a3a3` (`7.85:1` on `#0a0a0a`). Avoid low-opacity modifiers (e.g., `/80`, `/70`, `opacity-70`) on readable UI labels so all text maintains WCAG AA `>= 4.5:1` contrast.
 - **Responsive Design**: Ensure mobile-first designs. Never assume a desktop width.
-- **Form Validation**: Always pair React Hook Form with Zod for contact or input validation.
+- **Form Validation**: Pair React Hook Form with `zod/mini` (`zod/v4-mini`) for lean, tree-shakeable contact and input validation.
 
 ---
 
 ## Key Commands
 
 - **Run Dev Server**: `bun dev`
-- **Build Production**: `bun run build`
+- **Build Production**: `bun run build` (or `bun --bun node_modules/.bin/next build --webpack` in Bun-only environments without `node`)
+- **Format Code**: `bun fmt`
+- **Type Check**: `bunx tsc --noEmit`
 - **Lint Code**: `bun run lint`
-- **React Doctor Audit**: `bun run doctor` (or `bunx react-doctor --yes --verbose`)
+- **React Doctor Audit**: `bun run doctor -- --yes --verbose` (or `bun --bun node_modules/.bin/react-doctor design --verbose` for focused UI design diagnostics)
 - **Install Dependencies**: `bun install`
 
 ---
@@ -93,3 +98,7 @@ This document outlines the development guidelines, constraints, and conventions 
 21. **Card Grid Spotlight Dimming & Focus Parity**: Interactive card grids must provide visual and kinetic parity between mouse hover and keyboard focus states. When any card receives focus via keyboard (`onFocus`) or hover (`onMouseEnter`), adjacent sibling cards dim uniformly (`opacity-40 scale-[0.98]`). Focus styles (`group-focus-within:`) must match hover animations (`group-hover:`) to ensure complete accessibility compliance.
 22. **Dual-Column Balanced Layout & Zero-Reflow Collapsible Overflow**: Content-heavy credential and achievement lists must avoid single-column long vertical stacks. Group complementary categories (e.g., Certifications and Achievements) into a responsive side-by-side grid (`grid grid-cols-1 md:grid-cols-2`) with equalized initial item counts to preserve vertical symmetry. Overflow items must be managed via zero-reflow CSS Grid expanders (`grid-template-rows: 0fr -> 1fr` with `transition-[grid-template-rows,opacity]`) and tactile mobile haptic toggles (`useMobileHaptics`). Maintain aesthetic cohesion by strictly using the site's primary and neutral theme tokens rather than multi-colored ad-hoc accents.
 23. **SSR-Safe Platform & Operating System Adaptation (`useIsWindows`, `useIsMac`, `useIsMobile`)**: For platform-specific keyboard shortcuts (`Ctrl+K` vs `⌘K`, `Ctrl+↵` vs `⌘+↵`) and responsive controls, use `useSyncExternalStore` with stable module-level getters. Default SSR snapshots to Windows/PC (the majority user base) with `suppressHydrationWarning` on dynamic shortcut badges to prevent hydration mismatch errors, while gracefully suppressing desktop shortcut hints entirely on mobile viewports.
+24. **No SSR `opacity: 0` on Template or Reveal Wrappers**: `app/template.tsx`, `FadeIn`, and `ProjectCard` must gate entrance `opacity: 0` animations on `previousPath !== null` (client-side SPA navigations only) so initial SSR documents render at `opacity: 1` without LCP/Speed Index render delay.
+25. **Lazy-Loaded Overlays, `zod/mini`, & Intent-Based Prefetch**: Load `CommandPalette`, `KeyboardShortcutsDialog`, and `CustomCursorInner` lazily via `next/dynamic(..., { ssr: false })` only on interaction or fine-pointer detection. Keep `Preloader` as a pure CSS compositor `scaleX` keyframe animation (no `setInterval`), pass trimmed `ProjectSummary[]` props from Server Components, omit `priority` on below-the-fold homepage cards (and limit `/projects` priority preloads to `index < 2`), use `zod/mini` in forms, and prefetch header nav links on hover/focus (`prefetch={false}` + `router.prefetch`).
+26. **Off-Screen Deferral & Accessible Motion Controls**: Apply `.defer-offscreen-section` (`content-visibility: auto; contain-intrinsic-size: auto 560px`) to heavy below-the-fold sections like `Testimonials`, use `motion-safe:scroll-smooth` on smooth-scrolling carousels, reuse identical SVG paths via `<symbol>` + `<use>`, cap `Marquee` at `repeat={2}` with `aria-hidden="true"` and `inert` on the cloned track, expose a Pause/Resume control (WCAG 2.2.2), and scope `@media (prefers-reduced-motion: reduce)` rules per animation rather than using global `0.01ms` overrides.
+27. **Decorative SVG Semantics, Accessible Labels, & Inert Disclosures**: Set `aria-hidden="true"` and omit `role="img"` on decorative SVGs (`SimpleIconComponent` without `label`, `JavaIcon`, UI arrows), keep visible control text verbatim in accessible names (using `aria-keyshortcuts` + `aria-hidden="true"` on shortcut `<kbd>` badges to avoid `label-content-name-mismatch`), pair `aria-expanded` / `aria-controls` with `inert` on collapsed disclosures (`Expertise`, `CredentialsSection`), use Tailwind v4 canonical gradients (`bg-linear-*`) and `min-h-dvh`, and keep interactive `<input>` font sizes at `>= 16px` (`text-base`) on mobile (`CommandPalette`) to prevent iOS Safari zoom.

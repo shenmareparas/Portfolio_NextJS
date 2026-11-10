@@ -4,19 +4,19 @@ description: Add haptic feedback to web apps using the web-haptics library. Use 
 license: MIT
 metadata:
   author: lochie
-  version: "1.1"
+  version: "1.2"
 ---
 
 Install `web-haptics` (`bun add web-haptics`) and add haptic feedback to the app following these rules:
 
 ## Package: web-haptics
 
-Repository: https://github.com/lochie/web-haptics | License: MIT | Zero dependencies
-Uses the Web Vibration API. Silently no-ops on unsupported platforms (desktop). No error handling or feature detection needed.
+Repository: https://github.com/lochie/web-haptics | License: MIT | Zero dependencies (installed: `0.0.6`)
+Uses the Web Vibration API (`navigator.vibrate`) on supported Android/mobile browsers and falls back to an injected `<input switch>` toggle click on unsupported mobile platforms like iOS Safari. Silently no-ops on non-vibrating desktop hardware unless debug audio is enabled. No error handling or feature detection is required before triggering.
 
 ## Trigger Types & Presets
 
-`trigger(input?, options?)` accepts a preset string, custom pattern, or duration (empty value defaults to `"medium"` impact):
+`WebHaptics.trigger(input?, options?)` and `useWebHaptics().trigger(input?, options?)` accept a preset string, custom pattern, `HapticPreset`, or duration in ms (omitting `input` defaults to a `"medium"` impact). Per-vibration durations are clamped at `1000ms` (`MAX_PHASE_MS`).
 
 Notification (task outcomes):
 
@@ -39,36 +39,46 @@ Selection (discrete stepping):
 Specialty:
 
 - `"nudge"` -- strong tap followed by a soft tap
-- `"buzz"` -- sustained vibration alert (1000ms)
+- `"buzz"` -- sustained vibration alert (`1000ms`)
 
-### Custom Patterns & Durations
+### Custom Patterns, Presets & Durations
 
-You can pass custom pattern structures directly to `trigger()`:
+You can pass `defaultPatterns.*`, custom pattern structures, or intensity overrides directly to `WebHaptics.trigger()` or `useWebHaptics().trigger()`:
 
 ```ts
-trigger(200); // single vibration duration (ms)
-trigger([100, 50, 100]); // number[] alternating on/off durations
-trigger([
+import { WebHaptics, defaultPatterns } from "web-haptics";
+
+const haptics = new WebHaptics();
+haptics.trigger(defaultPatterns.light);
+haptics.trigger(200); // single vibration duration (ms)
+haptics.trigger([100, 50, 100]); // number[] alternating on/off durations
+haptics.trigger([
   { duration: 80, intensity: 0.8 },
   { delay: 50, duration: 100 },
 ]); // Vibration[]
-trigger("success", { intensity: 0.8 }); // override preset intensity (0.0 to 1.0)
+haptics.trigger({
+  pattern: [{ duration: 50 }, { delay: 50, duration: 50 }],
+}); // HapticPreset
+haptics.trigger("success", { intensity: 0.8 }); // override default intensity (0.0 to 1.0; default 0.5)
 ```
 
 ## Complete API Surface
 
-- `WebHaptics.isSupported`: Static boolean checking whether the browser/device supports the Vibration API.
-- `trigger(input?, options?)`: Trigger preset feedback or custom pattern. Returns `Promise<void>`.
-- `cancel()`: Immediately stop current vibration pattern.
-- `destroy()`: Teardown audio/DOM listeners and clean up resources.
-- `setDebug(debug: boolean)`: Enable simulated audio clicks for testing on desktop.
-- `setShowSwitch(show: boolean)`: Toggle floating haptic toggle switch.
+- `new WebHaptics(options?)`: Class instance accepting `WebHapticsOptions` (`{ debug?: boolean; showSwitch?: boolean }`).
+- `WebHaptics.isSupported`: Static boolean (`true` when `navigator.vibrate` is available).
+- `haptics.trigger(input?, options?)`: Trigger a preset, duration, `HapticPattern`, or `HapticPreset`. Returns `Promise<void>`.
+- `haptics.cancel()`: Stop any active pattern and cancel vibration (`navigator.vibrate(0)`).
+- `haptics.destroy()`: Stop patterns, remove injected DOM elements, and close `AudioContext` resources.
+- `haptics.setDebug(debug: boolean)`: Enable or disable simulated audio click feedback for desktop testing.
+- `haptics.setShowSwitch(show: boolean)`: Show or hide the fallback `<input switch>` debug control.
+- `useWebHaptics(options?)` (`web-haptics/react`): Returns `{ trigger, cancel, isSupported }`, where `trigger` returns `Promise<void> | undefined`.
+- Exported TypeScript types (`web-haptics`): `Vibration`, `HapticPattern`, `HapticPreset`, `HapticInput`, `TriggerOptions`, `WebHapticsOptions`, plus `defaultPatterns` and `version`.
 
 ## Framework Imports & Conventions
 
 ### Next.js (App Router) & React 19 (Portfolio Pattern)
 
-In this project, always use the dedicated viewport-guarded hook `@/hooks/use-mobile-haptics`:
+In this project, always use the dedicated viewport-guarded hook `@/hooks/use-mobile-haptics` (`hooks/use-mobile-haptics.ts`) for standard components:
 
 ```tsx
 "use client";
@@ -91,9 +101,12 @@ export function ActionButton() {
 }
 ```
 
-_Note: `useMobileHaptics` uses React 19's `useSyncExternalStore` to ensure flicker-free SSR safety and restricts haptic execution strictly to mobile viewports (`(max-width: 768px)`)._
+_Implementation notes:_
 
-### Standard React:
+- `useMobileHaptics(webHapticsOptions?: WebHapticsOptions)` uses React 19's `useSyncExternalStore` on `(max-width: 768px)` (`getServerSnapshot` returns `false`) to avoid hydration mismatches and restrict haptic execution strictly to mobile viewports across all client routes (including `app/qr/qr-content.tsx`).
+- In `hooks/use-mobile-haptics.ts`, `trigger(input?: HapticInput, options?: TriggerOptions)` forwards the full `useWebHaptics()` signature (presets, numeric ms, `number[]`, `Vibration[]`, `HapticPreset`, and `TriggerOptions`) and returns `Promise<void> | undefined`, alongside `cancel` and `isSupported`.
+
+### Standard React
 
 ```tsx
 import { useWebHaptics } from "web-haptics/react";
@@ -103,7 +116,7 @@ const haptic = useWebHaptics();
 <button onClick={() => haptic.trigger()}>Tap me</button>;
 ```
 
-Vue:
+### Vue
 
 ```vue
 <script setup>
@@ -116,7 +129,7 @@ const haptic = useWebHaptics();
 </template>
 ```
 
-Svelte:
+### Svelte
 
 ```svelte
 <script>
@@ -129,7 +142,7 @@ Svelte:
 <button on:click={() => haptic.trigger()}>Tap me</button>
 ```
 
-Vanilla JS:
+### Vanilla JS
 
 ```js
 import { WebHaptics } from "web-haptics";
@@ -139,8 +152,10 @@ haptics.trigger(); // medium impact
 haptics.trigger("success");
 ```
 
-Next.js: add "use client" to any component using useWebHaptics().
-Nuxt/SvelteKit: works directly, library handles SSR.
+### SSR & Client Boundaries
+
+- Next.js: add `"use client"` to any component importing `useMobileHaptics()` or `useWebHaptics()`.
+- Nuxt / SvelteKit: works directly; the library guards DOM/navigator access during SSR.
 
 ## Apple HIG Design Rules -- FOLLOW THESE
 

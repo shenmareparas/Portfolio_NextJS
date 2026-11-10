@@ -706,7 +706,7 @@ function CommandPaletteModal({
             }}
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search projects..."
-            className="w-full bg-transparent text-sm sm:text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
+            className="w-full bg-transparent text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
             aria-autocomplete="list"
             aria-controls="command-palette-results"
           />

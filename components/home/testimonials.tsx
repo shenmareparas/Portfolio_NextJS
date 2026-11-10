@@ -217,7 +217,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
       >
         <div
           ref={scrollRef}
-          className="flex w-full overflow-x-auto snap-x snap-mandatory gap-4 px-4 py-8 scroll-smooth no-scrollbar"
+          className="flex w-full overflow-x-auto snap-x snap-mandatory gap-4 px-4 py-8 motion-safe:scroll-smooth no-scrollbar"
         >
           {testimonials.map((testimonial) => (
             <TestimonialCard
@@ -245,8 +245,8 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
             />
           ))}
         </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-background dark:from-background" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-background dark:from-background" />
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-linear-to-r from-background dark:from-background" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-linear-to-l from-background dark:from-background" />
         <button
           type="button"
           onClick={() => setIsMarqueePaused((prev) => !prev)}
