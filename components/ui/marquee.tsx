@@ -1,4 +1,8 @@
+"use client";
+
+import React from "react";
 import { cn } from "@/lib/utils";
+import { useDraggableMarquee } from "@/hooks/use-draggable-marquee";
 
 interface MarqueeProps {
   className?: string;
@@ -8,19 +12,76 @@ interface MarqueeProps {
   children?: React.ReactNode;
   vertical?: boolean;
   repeat?: number;
+  draggable?: boolean;
+  speed?: number;
   [key: string]: unknown;
 }
 
 export function Marquee({
   className,
-  reverse,
+  reverse = false,
   pauseOnHover = false,
   paused = false,
   children,
   vertical = false,
   repeat = 4,
+  draggable = false,
+  speed,
   ...props
 }: MarqueeProps) {
+  const { rootRef, trackRef } = useDraggableMarquee({
+    draggable,
+    className,
+    speed,
+    reverse,
+    pauseOnHover,
+    paused,
+    vertical,
+  });
+
+  if (draggable) {
+    return (
+      <div
+        ref={rootRef}
+        {...props}
+        className={cn(
+          "group flex w-full max-w-full overflow-hidden p-2 [--gap:1rem] [gap:var(--gap)]",
+          "cursor-grab select-none [touch-action:pan-y] data-[dragging]:cursor-grabbing",
+          "[&[data-dragging]_*]:cursor-grabbing [&[data-dragging]_*]:pointer-events-none",
+          {
+            "flex-row": !vertical,
+            "flex-col": vertical,
+          },
+          className,
+        )}
+      >
+        <div
+          ref={trackRef}
+          className={cn("flex shrink-0 [gap:var(--gap)]", {
+            "w-max flex-row": !vertical,
+            "h-max flex-col": vertical,
+          })}
+        >
+          {Array(repeat)
+            .fill(0)
+            .map((_, i) => (
+              <div
+                key={i}
+                aria-hidden={i > 0 || undefined}
+                inert={i > 0}
+                className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
+                  "flex-row": !vertical,
+                  "flex-col": vertical,
+                })}
+              >
+                {children}
+              </div>
+            ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       {...props}

@@ -28,14 +28,14 @@ I am a Software Developer specializing in **Flutter**, **Android**, and **iOS** 
 - **Curated Flagship Projects:** Homepage spotlights 3 flagship projects driven by `featured: true` in `data/projects.ts`: _Play Store AI Console_, _Chess Offline: Play 2 Player_, and _Live Wallpaper Engine for macOS_, served as trimmed `ProjectSummary` payloads with lazy image loading.
 - **Adaptive Cross-Platform Experience:** SSR-safe platform hooks (`useIsMac`, `useIsMobile`, `useIsWindows`) built on `useSyncExternalStore` adapt shortcut badges and form hints without hydration mismatches.
 - **Fluid Card Grid Navigation & Spotlight Dimming:** Accessible keyboard `Tab` traversal across project cards with spotlight dimming via `useCardGridNav`, synthetic mousemove suppression during scroll, subtle `0.7` opacity dimming on inactive cards (without muddy brightness reduction filters in light mode), and automatic focus handoff to `#main-content` after closing modals or running route chords.
-- **Infinite LogoLoop Tech Showcase:** Smooth, physics-based infinite horizontal logo loop positioned above Featured Projects on the homepage. Decomposed with modular item rendering, zero-ref-mutation layout effects, responsive fade masks, touch drag/fling gestures, and theme-neutral monochrome styling matching the site design.
+- **Infinite LogoLoop Tech Showcase:** Smooth, physics-based infinite horizontal logo loop positioned above Featured Projects on the homepage showcasing 32 technologies across all skills and tools from the About section (Languages, Mobile, Web, Backend, Tools). Decomposed with modular item rendering, zero-ref-mutation layout effects, responsive fade masks, touch drag/fling gestures, and theme-neutral monochrome styling matching the site design.
 - **Mobile Haptics:** Integrated `web-haptics` via `useMobileHaptics` (supporting `HapticInput`, `TriggerOptions`, and `WebHapticsOptions` on `(max-width: 768px)` viewports) for tactile feedback across mobile buttons, accordions, carousel snaps, `/qr` actions, and form validation.
 - **Dynamic SEO & Social Metadata:** Automated XML sitemap (`/sitemap.xml`), `/robots.txt`, and per-project Open Graph / Twitter `share` metadata (`ProjectShareInfo`).
 - **Dual Showcase Media System:**
   - **3D Coverflow Carousel:** Interactive 3D phone mockup carousel modeled after the iPhone 18 Pro Max (`19.5:9` aspect ratio, micro-thin borders, brushed titanium frame) with gesture physics and theme switching.
   - **Vertical Screenshot Gallery & Lightbox:** Vertical scrolling feed with a full-screen 3-slot lightbox (`useReducer`, `useLightboxGestures`, `LightboxStrip`, `LightboxControls`) for macOS, CLI, and web apps (_Live Wallpaper Engine for macOS_, _Play Store AI Console_, _NEXU5_), supporting mobile pinch-to-zoom, debounced double-tap zoom, swipe pagination, pull-down dismiss, mouse-wheel zoom, and drag-to-pan.
 - **Timeline, Education & Dual-Column Credentials:** Work timeline and education alongside a balanced dual-column Credentials & Recognition section (`components/about/credentials-section.tsx`) pairing 13 certifications (6 visible + `inert`-guarded CSS Grid expander) and 6 achievements.
-- **Accessible Testimonials & Expertise:** Native mobile snap-scroll / desktop CSS `Marquee` (`repeat={2}` with `aria-hidden` + `inert` cloned track, SVG `<symbol>`/`<use>` star reuse, and hover-pause behavior), plus an `aria-expanded` / `inert`-guarded Expertise accordion.
+- **Accessible Testimonials & Expertise:** Mobile native snap-scroll carousel alongside desktop interactive drag-and-scroll `Marquee` (`draggable` powered by `useDraggableMarquee` with pointer dragging, momentum glide, wheel scrubbing, `repeat={2}` with `aria-hidden` + `inert` cloned track, SVG `<symbol>`/`<use>` star reuse, and hover/focus pause behavior), plus an `aria-expanded` / `inert`-guarded Expertise accordion.
 - **Digital QR Contact Card & Contact Form:** Dedicated `/qr` digital business card with vCard download, plus a `zod/mini`-validated contact form at `/contact`.
 
 ---
@@ -94,7 +94,7 @@ I am a Software Developer specializing in **Flutter**, **Android**, and **iOS** 
 │   ├── projects/            # Full project list & dynamic [slug] project details page
 │   └── qr/                  # Digital QR Business Card / Contact Card
 ├── components/              # Modular UI components
-│   ├── ui/                  # Reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, Preloader, Marquee, SimpleIcon, CoverflowCarousel, VerticalGallery, LogoLoop)
+│   ├── ui/                  # Reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, Preloader, Marquee, SimpleIcon, AzureIcon, JavaIcon, CoverflowCarousel, VerticalGallery, LogoLoop)
 │   ├── layout/              # Header, Footer, ClientLayout
 │   ├── providers/           # ThemeProvider, NavigationProvider, LoadingProvider, KeyboardProvider
 │   ├── motion/              # Client-navigation-aware FadeIn wrapper
@@ -103,7 +103,7 @@ I am a Software Developer specializing in **Flutter**, **Android**, and **iOS** 
 │   ├── experience/          # ExperienceTimeline
 │   ├── contact/             # ContactForm, ContactCard
 │   └── about/               # CredentialsSection, CertificationCard, AchievementCard
-├── hooks/                   # Custom React hooks (useCardGridNav, useMobileHaptics, useScrollLock, useIsWindows, useToast)
+├── hooks/                   # Custom React hooks (useCardGridNav, useDraggableMarquee, useMobileHaptics, useScrollLock, useIsWindows, useToast)
 ├── data/                    # Source of truth for portfolio content & static configuration (projects, skills, tech-logos, etc.)
 ├── lib/                     # System utilities (`cn` class merger)
 ├── types/                   # Shared TypeScript interface & type definitions
@@ -121,8 +121,8 @@ Portfolio content is centrally managed in the `data/` directory:
 - `data/profile.ts`: Bio, contact details, and resume links.
 - `data/projects.ts`: Project showcases, tags, live URLs, GitHub repositories, custom `share` metadata, theme-aware `{ light, dark }` `accentColor` tokens, and gallery media.
 - `data/experience.ts` & `data/education.ts`: Work history, degrees, certifications, and structured honors/achievements.
-- `data/skills.tsx`: Categorized skill stacks and icon mappings.
-- `data/tech-logos.tsx`: Vector tech stack icons and titles for the homepage `<LogoLoop />` showcase.
+- `data/skills.tsx`: Categorized skill stacks (including Bun and Microsoft Azure) and icon mappings.
+- `data/tech-logos.tsx`: Vector tech stack icons and titles covering 32 technologies across all skills and tools for the homepage `<LogoLoop />` showcase.
 - `data/socials.tsx`: Social media profiles and contact links.
 - `data/testimonials.ts` & `data/expertise.ts`: Client/user testimonials and core expertise items.
 
@@ -149,7 +149,7 @@ Portfolio content is centrally managed in the `data/` directory:
 
 - **Zero SSR `opacity: 0` LCP Blocking:** `app/template.tsx`, `FadeIn`, and `ProjectCard` skip initial opacity-0 animations on direct SSR loads (`previousPath === null`) so above-the-fold hero content paints immediately.
 - **Lazy Overlays, CSS Preloader & Lean Bundles:** `CommandPalette` and `KeyboardShortcutsDialog` load lazily via `next/dynamic(..., { ssr: false })`; `CommandPalette` is decomposed (< 300 lines) with `CommandPaletteHeader`, `useCommandPaletteHoverScroll`, and programmatic multi-frame focus without JSX `autoFocus`; `Preloader` runs purely on CSS `scaleX` keyframes; `ContactForm` uses `zod/mini`; header links prefetch on hover/focus; homepage cards receive trimmed `ProjectSummary` payloads with lazy image loading.
-- **Off-Screen Deferral, Tailwind v4 & Accessible UX:** `Testimonials` applies `content-visibility: auto`, `motion-safe:scroll-smooth`, Tailwind v4 `bg-linear-*` fades, SVG `<symbol>`/`<use>` reuse, `repeat={2}` marquee with `inert` cloned tracks, and `pauseOnHover={true}` behavior; decorative SVGs (`SimpleIconComponent` without `label`, `JavaIcon`) use `aria-hidden="true"` without `role="img"`; desktop/mobile `<nav>` elements have distinct `aria-label` landmarks; `CommandPalette` uses `text-base` (`16px`) input sizing to prevent mobile zoom; `/qr` `<main>` uses `min-h-dvh`.
+- **Off-Screen Deferral, Tailwind v4 & Accessible UX:** `Testimonials` applies `content-visibility: auto`, `motion-safe:scroll-smooth`, Tailwind v4 `bg-linear-*` fades, SVG `<symbol>`/`<use>` reuse, `repeat={2}` marquee with `inert` cloned tracks, desktop interactive drag-and-scroll (`useDraggableMarquee`), and `pauseOnHover={true}` behavior; decorative SVGs (`SimpleIconComponent` without `label`, `JavaIcon`, `AzureIcon`) use `aria-hidden="true"` without `role="img"`; desktop/mobile `<nav>` elements have distinct `aria-label` landmarks; `CommandPalette` uses `text-base` (`16px`) input sizing to prevent mobile zoom; `/qr` `<main>` uses `min-h-dvh`.
 - **Security Headers (`next.config.ts`):** Sends `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy`, `Cross-Origin-Opener-Policy`, `Strict-Transport-Security` (`includeSubDomains; preload`), `Permissions-Policy`, and `Content-Security-Policy: frame-ancestors 'none'`.
 
 ---

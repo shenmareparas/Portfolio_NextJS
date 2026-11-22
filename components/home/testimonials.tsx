@@ -229,7 +229,12 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
       {/* Desktop View - Marquee */}
       <div className="hidden md:flex relative w-full max-w-full flex-col items-center justify-center overflow-hidden">
-        <Marquee pauseOnHover repeat={2} className="[--duration:40s] py-12">
+        <Marquee
+          draggable
+          pauseOnHover
+          repeat={2}
+          className="[--duration:40s] py-12"
+        >
           {testimonials.map((testimonial) => (
             <TestimonialCard
               key={testimonial.name}

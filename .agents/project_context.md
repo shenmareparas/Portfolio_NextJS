@@ -46,7 +46,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── projects/            # Full project list & dynamic [slug] project details page
 │   └── qr/                  # Digital QR Business Card / Contact Card
 ├── components/              # Modular UI components
-│   ├── ui/                  # Reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, Preloader, Marquee, SimpleIcon, CoverflowCarousel, VerticalGallery, LogoLoop)
+│   ├── ui/                  # Reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, Preloader, Marquee, SimpleIcon, AzureIcon, JavaIcon, CoverflowCarousel, VerticalGallery, LogoLoop)
 │   ├── layout/              # Header (Minimalist Spotlight Pill + SSR desktop/mobile navs), Footer, ClientLayout
 │   ├── providers/           # ThemeProvider, NavigationProvider, LoadingProvider, KeyboardProvider
 │   ├── motion/              # Client-navigation-aware FadeIn reveal wrapper
@@ -55,7 +55,7 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── experience/          # ExperienceTimeline
 │   ├── contact/             # ContactForm, ContactCard
 │   └── about/               # CredentialsSection, CertificationCard, AchievementCard
-├── hooks/                   # Custom React hooks (useCardGridNav, useMobileHaptics, useScrollLock, useIsWindows, useToast)
+├── hooks/                   # Custom React hooks (useCardGridNav, useDraggableMarquee, useMobileHaptics, useScrollLock, useIsWindows, useToast)
 ├── data/                    # Source of truth for portfolio content & static configuration (projects, skills, tech-logos, etc.)
 ├── lib/                     # Utilities (`cn` class merger)
 ├── types/                   # Shared TypeScript interface & type definitions
@@ -73,8 +73,8 @@ To update or manage portfolio content, edit files in `data/` rather than hardcod
 2. **[profile.ts](../data/profile.ts)**: Personal details (name, full name, description/bio blocks, contact email/phone, and resume PDF path).
 3. **[projects.ts](../data/projects.ts)**: List of 11 projects conforming to `Project` (`types/project.ts`, with `ProjectSummary` used on homepage cards). Highlights 3 flagship featured projects on the homepage (`featured: true`: _Play Store AI Console_, _Chess Offline: Play 2 Player_, and _Live Wallpaper Engine for macOS_). Supports `galleryLayout: "carousel" | "vertical"` (mobile apps use 3D Coverflow; desktop/macOS/CLI/web console projects such as _Live Wallpaper Engine for macOS_, _Play Store AI Console_, and _NEXU5_ use vertical scrolling screenshots with a zoomable lightbox), standardized cover banners (`image: "/project/<slug>/banner.webp"`), custom social sharing metadata (`share?: ProjectShareInfo`), theme-aware gallery pairs (`GalleryItem = string | { light: string; dark: string }`), and theme-aware `{ light, dark }` `accentColor` shades calibrated to meet `>= 4.70:1` WCAG AA contrast in both themes.
 4. **[experience.ts](../data/experience.ts)** & **[education.ts](../data/education.ts)**: Chronological work history, degrees, 13 certifications, and 6 achievements.
-5. **[skills.tsx](../data/skills.tsx)**: Tech logos and skill names grouped by language, mobile, web, backend, and tools (with `aria-hidden="true"` on decorative SVGs).
-6. **[tech-logos.tsx](../data/tech-logos.tsx)**: Vector tech stack entries using `simple-icons/icons` (React, Next.js, Flutter, Android, iOS, TypeScript, Swift, Kotlin, Python, etc.) rendered in the infinite `<LogoLoop />` showcase with disabled links and site-theme matching.
+5. **[skills.tsx](../data/skills.tsx)**: Tech logos and skill names grouped by language, mobile, web, backend (including Bun and Microsoft Azure), and tools (with `aria-hidden="true"` on decorative SVGs like `AzureIcon` and `JavaIcon`).
+6. **[tech-logos.tsx](../data/tech-logos.tsx)**: Vector tech stack entries covering all 32 technologies across Skills & Tools on the About page using `simple-icons/icons` (React, Next.js, Flutter, Android, iOS, TypeScript, Bun, Azure, etc.) rendered in the infinite `<LogoLoop />` showcase with disabled links and site-theme matching.
 7. **[socials.tsx](../data/socials.tsx)**: Social media profiles and icons (`simple-icons/icons` + Lucide).
 8. **[testimonials.ts](../data/testimonials.ts)**: User reviews and endorsements.
 9. **[expertise.ts](../data/expertise.ts)**: Core focus areas rendered as an accessible accordion.
@@ -106,8 +106,8 @@ To update or manage portfolio content, edit files in `data/` rather than hardcod
   - **Vertical Screenshot Gallery & Lightbox (`components/ui/vertical-gallery.tsx`)**: Vertical screenshot stream for desktop/macOS, CLI, and web apps with a full-screen 3-slot lightbox (`useReducer` + `useLightboxGestures` + `LightboxStrip` + `LightboxControls`) supporting focal pinch-to-zoom, debounced double-tap zoom, swipe navigation, pull-down dismiss, mouse-wheel zoom, and drag-to-pan.
 - **Credentials & Recognition Dual-Column System (`components/about/credentials-section.tsx`)**:
   - Balanced 2-column grid displaying 6 initial certifications (with 7 more inside an `inert`-guarded `grid-template-rows` expander) alongside 6 achievements, using direct `simple-icons/icons` imports.
-- **Testimonials Carousel & Marquee (`components/home/testimonials.tsx` & `components/ui/marquee.tsx`)**:
-  - Mobile native snap-scroll carousel (`motion-safe:scroll-smooth`) and desktop CSS marquee (`repeat={2}` with `aria-hidden="true"` and `inert` on the cloned track), Tailwind v4 `bg-linear-to-r`/`bg-linear-to-l` edge fades, SVG `<symbol>` + `<use>` star icons, conditional `AvatarImage`, off-screen `content-visibility: auto`, and hover pausing (`pauseOnHover={true}`).
+- **Testimonials Carousel & Marquee (`components/home/testimonials.tsx`, `components/ui/marquee.tsx`, & `hooks/use-draggable-marquee.ts`)**:
+  - Mobile native snap-scroll carousel (`motion-safe:scroll-smooth`) alongside desktop interactive drag-and-scroll marquee (`draggable`) powered by `useDraggableMarquee` with pointer tracking, velocity momentum gliding, wheel/trackpad horizontal scrubbing, and click debouncing. Features `repeat={2}` with `aria-hidden="true"` and `inert` on the cloned track, Tailwind v4 `bg-linear-to-r`/`bg-linear-to-l` edge fades, SVG `<symbol>` + `<use>` star icons, conditional `AvatarImage`, off-screen `content-visibility: auto`, hover pausing (`pauseOnHover={true}`), and keyboard focus pausing.
 - **Global Link Typography & CSS Isolation**:
   - Global `a { text-decoration: none; }` enforced across the site to eliminate unstyled browser underlines from header links, action buttons, certification cards, and achievement badges, with third-party CSS imports strictly isolated.
 - **Haptic Integrations**: `useMobileHaptics` (`hooks/use-mobile-haptics.ts`) wraps `web-haptics` with `useSyncExternalStore` on `(max-width: 768px)`, forwards `WebHapticsOptions`, `HapticInput`, and `TriggerOptions` with stable destructured callbacks, and powers mobile tactile triggers across interactive components and `/qr` (`app/qr/qr-content.tsx`).
@@ -139,6 +139,6 @@ To update or manage portfolio content, edit files in `data/` rather than hardcod
 - **Image Priority Discipline**: Below-the-fold homepage project cards omit `priority`, and `/projects` caps `priority` preloads at the first two cards (`index < 2`).
 - **Compositor-Only Preloader & Reduced Motion**: `Preloader` uses pure CSS `@keyframes` (`scaleX` + `opacity`) without JS timers; `<MotionConfig reducedMotion="user">` and targeted `@media (prefers-reduced-motion: reduce)` CSS rules respect user preferences without global `0.01ms` hacks.
 - **Off-Screen Layout Deferral & SVG Reuse**: `.defer-offscreen-section` applies `content-visibility: auto; contain-intrinsic-size: auto 560px` to off-screen `Testimonials`, and star icons reuse a single `<symbol>`.
-- **WCAG AA Contrast, Mobile Ergonomics & Accessibility Tree Hygiene**: Light (`--muted-foreground: #636363`) and dark (`--muted-foreground: #a3a3a3`) tokens, all 11 theme-aware project accents (`>= 4.70:1`), `aria-hidden="true"` decorative SVGs (`SimpleIconComponent`, `JavaIcon`), distinct `<nav>` landmark labels, `aria-keyshortcuts`, `inert` on collapsed/cloned regions, `text-base` (`16px`) search input sizing to prevent mobile iOS zoom (`CommandPalette`), and `min-h-dvh` viewport sizing on `/qr` ensure full accessibility compliance.
+- **WCAG AA Contrast, Mobile Ergonomics & Accessibility Tree Hygiene**: Light (`--muted-foreground: #636363`) and dark (`--muted-foreground: #a3a3a3`) tokens, all 11 theme-aware project accents (`>= 4.70:1`), `aria-hidden="true"` decorative SVGs (`SimpleIconComponent`, `JavaIcon`, `AzureIcon`), distinct `<nav>` landmark labels, `aria-keyshortcuts`, `inert` on collapsed/cloned regions, `text-base` (`16px`) search input sizing to prevent mobile iOS zoom (`CommandPalette`), and `min-h-dvh` viewport sizing on `/qr` ensure full accessibility compliance.
 - **Google Fonts Swap & SSR-Safe Hydration**: `Inter` and `JetBrains_Mono` configure `display: "swap"`; client-only checks and OS/media detection use `useSyncExternalStore` with pure state updaters and clean `useEffect` teardowns.
 - **Safe-Area Inset Hero Calibration**: Homepage hero calibrates `env(safe-area-inset-bottom, 0px)` offsets and vertical height breakpoints (`@media(max-height:500px)` / `@media(max-height:750px)`).
