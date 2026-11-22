@@ -46,17 +46,17 @@ This is a modern, high-performance portfolio website built using **Next.js 16 (A
 │   ├── projects/            # Full project list & dynamic [slug] project details page
 │   └── qr/                  # Digital QR Business Card / Contact Card
 ├── components/              # Modular UI components
-│   ├── ui/                  # Reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, CustomCursor, Preloader, Marquee, SimpleIcon, CoverflowCarousel, VerticalGallery)
+│   ├── ui/                  # Reusable controls (Button, Toast, CommandPalette, KeyboardShortcuts, CustomCursor, Preloader, Marquee, SimpleIcon, CoverflowCarousel, VerticalGallery, LogoLoop)
 │   ├── layout/              # Header (Minimalist Spotlight Pill + SSR desktop/mobile navs), Footer, ClientLayout
 │   ├── providers/           # ThemeProvider, NavigationProvider, LoadingProvider, KeyboardProvider
 │   ├── motion/              # Client-navigation-aware FadeIn reveal wrapper
-│   ├── home/                # Homepage sections (FeaturedProjects, Expertise, Testimonials)
+│   ├── home/                # Homepage sections (FeaturedProjects, TechStackLoop, Expertise, Testimonials)
 │   ├── projects/            # ProjectCard, ProjectsClient
 │   ├── experience/          # ExperienceTimeline
 │   ├── contact/             # ContactForm, ContactCard
 │   └── about/               # CredentialsSection, CertificationCard, AchievementCard
 ├── hooks/                   # Custom React hooks (useCardGridNav, useMobileHaptics, useScrollLock, useIsWindows, useToast)
-├── data/                    # Source of truth for portfolio content & static configuration
+├── data/                    # Source of truth for portfolio content & static configuration (projects, skills, tech-logos, etc.)
 ├── lib/                     # Utilities (`cn` class merger)
 ├── types/                   # Shared TypeScript interface & type definitions
 ├── next.config.ts           # Inline CSS, optimizePackageImports, and HTTP security headers
@@ -74,9 +74,10 @@ To update or manage portfolio content, edit files in `data/` rather than hardcod
 3. **[projects.ts](../data/projects.ts)**: List of 11 projects conforming to `Project` (`types/project.ts`, with `ProjectSummary` used on homepage cards). Supports `galleryLayout: "carousel" | "vertical"` (mobile apps use 3D Coverflow; desktop/macOS/CLI/web console projects such as _Live Wallpaper Engine for macOS_, _Play Store AI Console_, and _NEXU5_ use vertical scrolling screenshots with a zoomable lightbox), standardized cover banners (`image: "/project/<slug>/banner.webp"`), custom social sharing metadata (`share?: ProjectShareInfo`), theme-aware gallery pairs (`GalleryItem = string | { light: string; dark: string }`), and theme-aware `{ light, dark }` `accentColor` shades calibrated to meet `>= 4.70:1` WCAG AA contrast in both themes.
 4. **[experience.ts](../data/experience.ts)** & **[education.ts](../data/education.ts)**: Chronological work history, degrees, 13 certifications, and 6 achievements.
 5. **[skills.tsx](../data/skills.tsx)**: Tech logos and skill names grouped by language, mobile, web, backend, and tools (with `aria-hidden="true"` on decorative SVGs).
-6. **[socials.tsx](../data/socials.tsx)**: Social media profiles and icons (`simple-icons/icons` + Lucide).
-7. **[testimonials.ts](../data/testimonials.ts)**: User reviews and endorsements.
-8. **[expertise.ts](../data/expertise.ts)**: Core focus areas rendered as an accessible accordion.
+6. **[tech-logos.tsx](../data/tech-logos.tsx)**: Vector tech stack entries using `simple-icons/icons` (React, Next.js, Flutter, Android, iOS, TypeScript, Swift, Kotlin, Python, etc.) rendered in the infinite `<LogoLoop />` showcase with disabled links and site-theme matching.
+7. **[socials.tsx](../data/socials.tsx)**: Social media profiles and icons (`simple-icons/icons` + Lucide).
+8. **[testimonials.ts](../data/testimonials.ts)**: User reviews and endorsements.
+9. **[expertise.ts](../data/expertise.ts)**: Core focus areas rendered as an accessible accordion.
 
 ---
 
@@ -90,17 +91,24 @@ To update or manage portfolio content, edit files in `data/` rather than hardcod
   - **Platform-Aware Form Hints (`components/contact/contact-form.tsx`)**: Uses `zod/mini` for schema validation and adapts textarea shortcut hints across mobile, Windows (`Ctrl+Enter`), and macOS (`⌘+Enter`).
   - **SSR-Safe Platform Detection (`hooks/use-is-windows.ts`)**: `useIsMac`, `useIsMobile`, and `useIsWindows` use `useSyncExternalStore` for flicker-free OS/device detection without hydration flashes.
 - **Card Grid Traversal & Spotlight Dimming System**:
-  - **`useCardGridNav` Hook (`hooks/use-card-grid-nav.ts`)**: Synchronizes mouse hover and keyboard focus states across project card grids (`/projects` and featured section). When any card is focused or hovered, inactive siblings dim uniformly.
+  - **`useCardGridNav` Hook (`hooks/use-card-grid-nav.ts`)**: Synchronizes mouse hover and keyboard focus states across project card grids (`/projects` and featured section). When any card is focused or hovered, inactive siblings dim subtly (`opacity: 0.7`, `scale-[0.98]`). No brightness filters are applied, preventing muddy grey discoloration on light-theme white cards.
   - **Stationary Mouse Suppression**: Ignores synthetic `mousemove`/`mouseenter` events dispatched when cards scroll beneath a stationary cursor (>3px physical displacement threshold), ensuring keyboard `Tab` traversal is uninterrupted.
   - **Direct Focus Handoff**: Dismissing the Command Palette or triggering a route chord anchors focus to `<main id="main-content" tabIndex={-1}>` so the next `Tab` lands directly on page content.
   - **Lazy Keyboard-Aware Custom Cursor (`components/ui/custom-cursor.tsx` & `custom-cursor-inner.tsx`)**: Dynamically imports `CursorInner` only when `(pointer: fine)` matches and physical mouse movement occurs, auto-hiding during keyboard navigation.
+- **Infinite LogoLoop Tech Showcase (`components/ui/logo-loop.tsx` & `components/home/tech-stack-loop.tsx`)**:
+  - Infinite horizontal tech logo carousel displayed above Featured Projects on the homepage.
+  - Implements smooth linear-to-glide velocity physics, optional dragging/flinging, seamless fade masks, hover scaling, and customizable directional travel.
+  - Built with decomposed `LogoLoopItem` subcomponents, module-level mathematical helper functions, and `useIsomorphicLayoutEffect` configuration synchronization to satisfy React Doctor complexity and ref-safety rules.
+  - Features `disableLinks` mode to display pure interactive badges without unwanted URL navigation, styled to match the portfolio's neutral monochrome color tokens without disruptive brand color clashes or border dividers.
 - **Dual Showcase Media System**:
   - **3D Coverflow Carousel (`components/ui/coverflow-carousel.tsx`)**: Interactive 3D phone mockup carousel modeled after the iPhone 18 Pro Max form factor (`19.5:9` aspect ratio, micro-thin borders, brushed titanium frame).
   - **Vertical Screenshot Gallery & Lightbox (`components/ui/vertical-gallery.tsx`)**: Vertical screenshot stream for desktop/macOS, CLI, and web apps with a full-screen 3-slot lightbox (`useReducer` + `useLightboxGestures` + `LightboxStrip` + `LightboxControls`) supporting focal pinch-to-zoom, debounced double-tap zoom, swipe navigation, pull-down dismiss, mouse-wheel zoom, and drag-to-pan.
 - **Credentials & Recognition Dual-Column System (`components/about/credentials-section.tsx`)**:
   - Balanced 2-column grid displaying 6 initial certifications (with 7 more inside an `inert`-guarded `grid-template-rows` expander) alongside 6 achievements, using direct `simple-icons/icons` imports.
 - **Testimonials Carousel & Marquee (`components/home/testimonials.tsx` & `components/ui/marquee.tsx`)**:
-  - Mobile native snap-scroll carousel (`motion-safe:scroll-smooth`) and desktop CSS marquee (`repeat={2}` with `aria-hidden="true"` and `inert` on the cloned track), Tailwind v4 `bg-linear-to-r`/`bg-linear-to-l` edge fades, SVG `<symbol>` + `<use>` star icons, conditional `AvatarImage`, off-screen `content-visibility: auto`, and a keyboard-accessible Pause/Resume button (WCAG 2.2.2).
+  - Mobile native snap-scroll carousel (`motion-safe:scroll-smooth`) and desktop CSS marquee (`repeat={2}` with `aria-hidden="true"` and `inert` on the cloned track), Tailwind v4 `bg-linear-to-r`/`bg-linear-to-l` edge fades, SVG `<symbol>` + `<use>` star icons, conditional `AvatarImage`, off-screen `content-visibility: auto`, and hover pausing (`pauseOnHover={true}`).
+- **Global Link Typography & CSS Isolation**:
+  - Global `a { text-decoration: none; }` enforced across the site to eliminate unstyled browser underlines from header links, action buttons, certification cards, and achievement badges, with third-party CSS imports strictly isolated.
 - **Haptic Integrations**: `useMobileHaptics` (`hooks/use-mobile-haptics.ts`) wraps `web-haptics` with `useSyncExternalStore` on `(max-width: 768px)`, forwards `WebHapticsOptions`, `HapticInput`, and `TriggerOptions` with stable destructured callbacks, and powers mobile tactile triggers across interactive components and `/qr` (`app/qr/qr-content.tsx`).
 - **Dynamic SEO & Sitemaps**: Automated XML sitemap (`app/sitemap.ts`), `robots.ts`, and per-project Open Graph / Twitter `share` metadata (`app/projects/[slug]/page.tsx`).
 
@@ -113,7 +121,8 @@ To update or manage portfolio content, edit files in `data/` rather than hardcod
 - **Format**: `bun fmt`
 - **Type Check**: `bunx tsc --noEmit`
 - **Lint Check**: `bun run lint`
-- **React Doctor Audit**: `react-doctor` v0.9.22 scans `0` issues across all 81 files (plus optional UI design audits via `design`):
+- **React Doctor Audit**: `react-doctor` v0.9.22 scans `0` issues across all 85 files (plus optional UI design audits via `design`):
+
   ```bash
   bun run doctor -- --yes --verbose
   # or in Bun-only environments without node:

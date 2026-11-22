@@ -84,7 +84,7 @@ export function AchievementCard({ achievement }: { achievement: Achievement }) {
         target="_blank"
         rel="noopener noreferrer"
         title={achievement.title}
-        className="block group rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+        className="block group rounded-xl no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
       >
         {cardInner}
       </a>

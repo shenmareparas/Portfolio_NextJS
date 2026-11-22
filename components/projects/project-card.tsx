@@ -78,8 +78,7 @@ export function ProjectCard({
     <m.div
       initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
       animate={{
-        opacity: isDimmed ? 0.5 : 1,
-        filter: isDimmed ? "brightness(0.8)" : "brightness(1)",
+        opacity: isDimmed ? 0.7 : 1,
         y: isFocused ? -8 : 0,
         scale: isFocused ? 1.02 : 1,
       }}
@@ -89,7 +88,6 @@ export function ProjectCard({
         duration: 0.4,
         delay: shouldAnimate ? index * 0.1 : 0,
         opacity: { duration: 0.2 },
-        filter: { duration: 0.2 },
         scale: { duration: 0.2 },
         y: { duration: 0.2 },
       }}

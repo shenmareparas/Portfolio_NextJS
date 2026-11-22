@@ -7,6 +7,7 @@ import { siteConfig } from "@/data/config";
 
 import { FeaturedProjects } from "@/components/home/featured-projects";
 import { projects } from "@/data/projects";
+import { TechStackLoop } from "@/components/home/tech-stack-loop";
 
 import { Testimonials } from "@/components/home/testimonials";
 import { testimonials } from "@/data/testimonials";
@@ -82,6 +83,9 @@ export default function Home() {
           />
         </div>
       </section>
+
+      {/* Technologies / Tools Logo Loop */}
+      <TechStackLoop />
 
       {/* Featured Projects */}
       <FeaturedProjects projects={featuredProjects} />

@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Marquee } from "@/components/ui/marquee";
 import { cn } from "@/lib/utils";
-import { Pause, Play } from "lucide-react";
 
 const TITLE_PREFIX_RE = /^(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?|Sir|Sr\.?|Jr\.?)$/i;
 
@@ -157,7 +156,6 @@ interface TestimonialsProps {
 
 export function Testimonials({ testimonials }: TestimonialsProps) {
   const [isMobilePaused, setIsMobilePaused] = useState(false);
-  const [isMarqueePaused, setIsMarqueePaused] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -231,12 +229,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
 
       {/* Desktop View - Marquee */}
       <div className="hidden md:flex relative w-full max-w-full flex-col items-center justify-center overflow-hidden">
-        <Marquee
-          pauseOnHover
-          paused={isMarqueePaused}
-          repeat={2}
-          className="[--duration:40s] py-12"
-        >
+        <Marquee pauseOnHover repeat={2} className="[--duration:40s] py-12">
           {testimonials.map((testimonial) => (
             <TestimonialCard
               key={testimonial.name}
@@ -247,28 +240,6 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
         </Marquee>
         <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-linear-to-r from-background dark:from-background" />
         <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-linear-to-l from-background dark:from-background" />
-        <button
-          type="button"
-          onClick={() => setIsMarqueePaused((prev) => !prev)}
-          aria-label={
-            isMarqueePaused
-              ? "Resume testimonials carousel"
-              : "Pause testimonials carousel"
-          }
-          className="relative z-10 mt-2 inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/80 px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background cursor-pointer"
-        >
-          {isMarqueePaused ? (
-            <>
-              <Play className="h-3 w-3" aria-hidden="true" />
-              <span>Resume</span>
-            </>
-          ) : (
-            <>
-              <Pause className="h-3 w-3" aria-hidden="true" />
-              <span>Pause</span>
-            </>
-          )}
-        </button>
       </div>
     </section>
   );

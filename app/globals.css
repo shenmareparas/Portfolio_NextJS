@@ -87,6 +87,10 @@ body {
   font-family: var(--font-sans);
 }
 
+a {
+  text-decoration: none;
+}
+
 ::selection {
   background-color: var(--primary);
   color: var(--primary-foreground);

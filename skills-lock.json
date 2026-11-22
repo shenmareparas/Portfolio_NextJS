@@ -1,10 +1,17 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
+    "ui-sdk": {
+      "source": "vercel-labs/ui",
+      "commit": "af0321f284fee01e91d6e2397ca70ec8af33de7b",
+      "sourceType": "github",
+      "skillPath": "packages/core/skills/ui-sdk/SKILL.md",
+      "computedHash": "930036de569c0d07313af7a065194fd1fa5f167293a20c6a404cd0a740abf500"
+    },
     "web-haptics": {
       "source": "lochie/web-haptics",
       "sourceType": "github",
-      "computedHash": "0f54a56bc7981d49f3447160f7e440c8963c0fdecacf05c45ddc8d58da26704e"
+      "computedHash": ""
     }
   }
 }

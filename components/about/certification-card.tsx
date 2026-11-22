@@ -65,7 +65,7 @@ export function CertificationCard({ cert }: { cert: Certification }) {
       target="_blank"
       rel="noopener noreferrer"
       title={`${cert.name} - ${subtitle} (${cert.year})`}
-      className="group relative flex items-center justify-between gap-3 p-3 rounded-xl border border-border/50 bg-card/60 hover:bg-card hover:border-primary/40 hover:shadow-xs transition-[border-color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
+      className="group relative flex items-center justify-between gap-3 p-3 rounded-xl border border-border/50 bg-card/60 hover:bg-card hover:border-primary/40 hover:shadow-xs no-underline transition-[border-color,background-color,box-shadow] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1"
     >
       <div className="flex items-center gap-3 min-w-0">
         <div className="h-9 w-9 rounded-lg flex items-center justify-center shrink-0 bg-primary/10 text-primary border border-primary/20 group-hover:scale-105 transition-transform duration-200">
