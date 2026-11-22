@@ -227,7 +227,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <FadeIn>
         <BackButton
           href="/projects"
-          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors cursor-hover"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-primary transition-colors"
         >
           <ArrowLeft className="mr-2 h-4 w-4" /> Back to Projects
         </BackButton>

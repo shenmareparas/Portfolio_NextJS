@@ -11,6 +11,7 @@ export interface Project {
   title: string;
   description: string;
   fullDescription: string;
+  featured?: boolean;
   tags: string[];
   role: string;
   timeline: string;

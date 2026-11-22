@@ -29,16 +29,17 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  const featuredProjects: ProjectSummary[] = projects
-    .slice(0, 3)
-    .map(({ slug, title, description, tags, image, accentColor }) => ({
-      slug,
-      title,
-      description,
-      tags,
-      image,
-      accentColor,
-    }));
+  const featured = projects.filter((p) => p.featured);
+  const featuredProjects: ProjectSummary[] = (
+    featured.length > 0 ? featured : projects.slice(0, 3)
+  ).map(({ slug, title, description, tags, image, accentColor }) => ({
+    slug,
+    title,
+    description,
+    tags,
+    image,
+    accentColor,
+  }));
 
   return (
     <div className="flex flex-1 flex-col items-center w-full max-w-full overflow-x-clip">

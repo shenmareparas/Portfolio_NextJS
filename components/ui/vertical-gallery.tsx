@@ -80,7 +80,7 @@ function LightboxControls({
           onClick={onZoomOut}
           onPointerDown={(e) => e.stopPropagation()}
           disabled={scale <= MIN_SCALE}
-          className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer cursor-hover flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
+          className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
           aria-label="Zoom out"
           title="Zoom out (-)"
         >
@@ -91,7 +91,7 @@ function LightboxControls({
           type="button"
           onClick={onResetZoom}
           onPointerDown={(e) => e.stopPropagation()}
-          className="min-h-10 sm:min-h-9 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold text-white/90 active:bg-white/20 hover:bg-white/10 transition-colors cursor-pointer cursor-hover flex items-center gap-1 sm:gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation tabular-nums"
+          className="min-h-10 sm:min-h-9 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold text-white/90 active:bg-white/20 hover:bg-white/10 transition-colors cursor-pointer flex items-center gap-1 sm:gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation tabular-nums"
           aria-label="Reset zoom to 100%"
           title="Reset zoom (0)"
         >
@@ -106,7 +106,7 @@ function LightboxControls({
           onClick={onZoomIn}
           onPointerDown={(e) => e.stopPropagation()}
           disabled={scale >= MAX_SCALE}
-          className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer cursor-hover flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
+          className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/10 disabled:opacity-30 disabled:hover:bg-transparent transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
           aria-label="Zoom in"
           title="Zoom in (+)"
         >
@@ -119,7 +119,7 @@ function LightboxControls({
           type="button"
           onClick={onClose}
           onPointerDown={(e) => e.stopPropagation()}
-          className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/15 transition-colors cursor-pointer cursor-hover flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
+          className="min-w-10 min-h-10 sm:min-w-9 sm:min-h-9 p-2 rounded-full text-white/80 hover:text-white active:bg-white/20 hover:bg-white/15 transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white touch-manipulation"
           aria-label="Close full screen view"
           title="Close (Esc)"
         >
@@ -133,7 +133,7 @@ function LightboxControls({
             type="button"
             onClick={onPrev}
             onPointerDown={(e) => e.stopPropagation()}
-            className="fixed left-2 sm:left-4 top-1/2 -translate-y-1/2 z-50 p-2.5 sm:p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:bg-zinc-700 text-white transition-colors duration-200 cursor-pointer cursor-hover border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto touch-manipulation"
+            className="fixed left-2 sm:left-4 top-1/2 -translate-y-1/2 z-50 p-2.5 sm:p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:bg-zinc-700 text-white transition-colors duration-200 cursor-pointer border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto touch-manipulation"
             aria-label="Previous image"
           >
             <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -142,7 +142,7 @@ function LightboxControls({
             type="button"
             onClick={onNext}
             onPointerDown={(e) => e.stopPropagation()}
-            className="fixed right-2 sm:right-4 top-1/2 -translate-y-1/2 z-50 p-2.5 sm:p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:bg-zinc-700 text-white transition-colors duration-200 cursor-pointer cursor-hover border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto touch-manipulation"
+            className="fixed right-2 sm:right-4 top-1/2 -translate-y-1/2 z-50 p-2.5 sm:p-3 rounded-full bg-zinc-900/90 hover:bg-zinc-800 active:bg-zinc-700 text-white transition-colors duration-200 cursor-pointer border border-white/20 shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white pointer-events-auto touch-manipulation"
             aria-label="Next image"
           >
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -1190,7 +1190,7 @@ export function VerticalGallery({
               onClick={() => handleOpen(idx)}
               whileHover={{ y: -8, scale: 1.02, transition: { duration: 0.2 } }}
               whileTap={{ scale: 0.98 }}
-              className="group relative w-full text-left rounded-2xl overflow-hidden border border-border/40 bg-zinc-900/5 dark:bg-zinc-900/40 transition-shadow duration-300 hover:shadow-xl dark:hover:shadow-2xl cursor-zoom-in cursor-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block"
+              className="group relative w-full text-left rounded-2xl overflow-hidden border border-border/40 bg-zinc-900/5 dark:bg-zinc-900/40 transition-shadow duration-300 hover:shadow-xl dark:hover:shadow-2xl cursor-zoom-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary block"
               aria-label={`Open ${title} screenshot ${idx + 1} in full screen`}
             >
               <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 pointer-events-none z-20">

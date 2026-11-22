@@ -2,6 +2,146 @@ import { Project } from "@/types/project";
 
 export const projects: Project[] = [
   {
+    slug: "play-store-ai-review",
+    title: "Play Store AI Console",
+    description:
+      "AI-powered dev console for fetching Google Play reviews, generating Gemini replies, and pushing to Play Console.",
+    fullDescription:
+      "A specialized console for Android developer teams to streamline app reputation and user engagement. Fetches live reviews via the Google Play Developer API (androidpublisher v3), imports historical CSV reports directly from Google Cloud Storage, and automatically translates multi-lingual feedback at zero API cost. Generates contextual developer replies using Google Gemini with dynamic model resolution, custom system prompts with 12 placeholders, targeted per-review directions ('Instruct AI'), and strict 350-character Play Store response limit guardrails before pushing directly to the Play Console with one click.",
+    featured: true,
+    tags: ["Next.js", "Gemini AI", "Google Play API", "TypeScript"],
+    role: "Full Stack Developer",
+    timeline: "2026",
+    links: {
+      github: "https://github.com/shenmareparas/play-store-ai-review",
+    },
+    image: "/project/play_store_ai_review/banner.webp",
+    logo: "/project/play_store_ai_review/logo.webp",
+    accentColor: {
+      light: "#267B3D",
+      dark: "#34A853",
+    },
+    share: {
+      title: "Play Store AI Console - Google Play Reviews with Gemini AI",
+      description:
+        "Specialized developer console for fetching Google Play reviews and automating contextual replies using Gemini AI.",
+    },
+    galleryLayout: "vertical",
+    gallery: [
+      {
+        light: "/project/play_store_ai_review/1a.webp",
+        dark: "/project/play_store_ai_review/1b.webp",
+      },
+      {
+        light: "/project/play_store_ai_review/2a.webp",
+        dark: "/project/play_store_ai_review/2b.webp",
+      },
+      {
+        light: "/project/play_store_ai_review/3a.webp",
+        dark: "/project/play_store_ai_review/3b.webp",
+      },
+    ],
+  },
+  {
+    slug: "chess",
+    title: "Chess Offline: Play 2 Player",
+    description:
+      "Feature-rich offline chess game with Stockfish AI and pass-and-play 2-player mode.",
+    fullDescription:
+      "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Features the Stockfish 18 AI engine across 5 difficulty levels, offline pass-and-play multiplayer, timed matches, and customizable board themes. Gained 750,000+ downloads and maintained a 4+ star rating on the Play Store.",
+    featured: true,
+    tags: ["Flutter", "Dart", "Flame Engine", "Chess AI", "Android", "iOS"],
+    role: "Lead Developer",
+    timeline: "2023 - Present",
+    links: {
+      github: "https://github.com/shenmareparas/Chess",
+      playStore:
+        "https://play.google.com/store/apps/details?id=com.shenmareparas.chess",
+    },
+    image: "/project/chess/banner.webp",
+    logo: "/project/chess/logo.webp",
+    accentColor: {
+      light: "#227A51",
+      dark: "#2EA66E",
+    },
+    share: {
+      title: "Chess Offline: Play 2 Player - Stockfish 18 Engine",
+      description:
+        "High-performance offline chess game with 750,000+ downloads, 5 AI difficulty levels, and pass-and-play multiplayer on Google Play.",
+    },
+    gallery: [
+      "/project/chess/1.webp",
+      "/project/chess/2.webp",
+      "/project/chess/3.webp",
+      "/project/chess/4.webp",
+      "/project/chess/5.webp",
+      "/project/chess/6.webp",
+      "/project/chess/7.webp",
+      "/project/chess/8.webp",
+      "/project/chess/9.webp",
+      "/project/chess/10.webp",
+    ],
+  },
+  {
+    slug: "live-wallpaper-engine-for-macos",
+    title: "Live Wallpaper Engine for macOS",
+    description:
+      "Native macOS dynamic desktop & lock screen wallpaper engine built with Swift and SwiftUI.",
+    fullDescription:
+      "A native macOS menu bar app built in pure Swift, AppKit, and SwiftUI to render smooth, animated wallpapers on the desktop and lock screen. Features hardware-accelerated HEVC playback, an integrated YouTube video downloader, multi-monitor support, and zero-CPU occlusion pausing when windows are covered.",
+    featured: true,
+    tags: [
+      "Swift",
+      "SwiftUI",
+      "AppKit",
+      "macOS",
+      "AVFoundation",
+      "VideoToolbox",
+      "yt-dlp",
+      "FFmpeg",
+    ],
+    role: "Developer",
+    timeline: "2026",
+    links: {
+      github: "https://github.com/shenmareparas/live-wallpaper",
+    },
+    image: "/project/live_wallpaper/banner.webp",
+    logo: "/project/live_wallpaper/logo.webp",
+    accentColor: {
+      light: "#0068D9",
+      dark: "#0C81FF",
+    },
+    share: {
+      title: "Live Wallpaper Engine for macOS - Dynamic Desktop & Lock Screen",
+      description:
+        "Native macOS menu bar app built in pure Swift, AppKit, and SwiftUI with hardware-accelerated HEVC playback.",
+    },
+    galleryLayout: "vertical",
+    gallery: [
+      {
+        light: "/project/live_wallpaper/1a.webp",
+        dark: "/project/live_wallpaper/1b.webp",
+      },
+      {
+        light: "/project/live_wallpaper/2a.webp",
+        dark: "/project/live_wallpaper/2b.webp",
+      },
+      {
+        light: "/project/live_wallpaper/3a.webp",
+        dark: "/project/live_wallpaper/3b.webp",
+      },
+      {
+        light: "/project/live_wallpaper/4a.webp",
+        dark: "/project/live_wallpaper/4b.webp",
+      },
+      {
+        light: "/project/live_wallpaper/5a.webp",
+        dark: "/project/live_wallpaper/5b.webp",
+      },
+      "/project/live_wallpaper/6.webp",
+    ],
+  },
+  {
     slug: "vitb-mess",
     title: "VIT Bhopal Mess",
     description:
@@ -71,45 +211,6 @@ export const projects: Project[] = [
         light: "/project/vitbmess/9a.webp",
         dark: "/project/vitbmess/9b.webp",
       },
-    ],
-  },
-  {
-    slug: "chess",
-    title: "Chess Offline: Play 2 Player",
-    description:
-      "Feature-rich offline chess game with Stockfish AI and pass-and-play 2-player mode.",
-    fullDescription:
-      "Built a high-performance cross-platform chess game using Flutter and the Flame engine. Features the Stockfish 18 AI engine across 5 difficulty levels, offline pass-and-play multiplayer, timed matches, and customizable board themes. Gained 750,000+ downloads and maintained a 4+ star rating on the Play Store.",
-    tags: ["Flutter", "Dart", "Flame Engine", "Chess AI", "Android", "iOS"],
-    role: "Lead Developer",
-    timeline: "2023 - Present",
-    links: {
-      github: "https://github.com/shenmareparas/Chess",
-      playStore:
-        "https://play.google.com/store/apps/details?id=com.shenmareparas.chess",
-    },
-    image: "/project/chess/banner.webp",
-    logo: "/project/chess/logo.webp",
-    accentColor: {
-      light: "#227A51",
-      dark: "#2EA66E",
-    },
-    share: {
-      title: "Chess Offline: Play 2 Player - Stockfish 18 Engine",
-      description:
-        "High-performance offline chess game with 750,000+ downloads, 5 AI difficulty levels, and pass-and-play multiplayer on Google Play.",
-    },
-    gallery: [
-      "/project/chess/1.webp",
-      "/project/chess/2.webp",
-      "/project/chess/3.webp",
-      "/project/chess/4.webp",
-      "/project/chess/5.webp",
-      "/project/chess/6.webp",
-      "/project/chess/7.webp",
-      "/project/chess/8.webp",
-      "/project/chess/9.webp",
-      "/project/chess/10.webp",
     ],
   },
   {
@@ -351,64 +452,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "live-wallpaper-engine-for-macos",
-    title: "Live Wallpaper Engine for macOS",
-    description:
-      "Native macOS dynamic desktop & lock screen wallpaper engine built with Swift and SwiftUI.",
-    fullDescription:
-      "A native macOS menu bar app built in pure Swift, AppKit, and SwiftUI to render smooth, animated wallpapers on the desktop and lock screen. Features hardware-accelerated HEVC playback, an integrated YouTube video downloader, multi-monitor support, and zero-CPU occlusion pausing when windows are covered.",
-    tags: [
-      "Swift",
-      "SwiftUI",
-      "AppKit",
-      "macOS",
-      "AVFoundation",
-      "VideoToolbox",
-      "yt-dlp",
-      "FFmpeg",
-    ],
-    role: "Developer",
-    timeline: "2026",
-    links: {
-      github: "https://github.com/shenmareparas/live-wallpaper",
-    },
-    image: "/project/live_wallpaper/banner.webp",
-    logo: "/project/live_wallpaper/logo.webp",
-    accentColor: {
-      light: "#0068D9",
-      dark: "#0C81FF",
-    },
-    share: {
-      title: "Live Wallpaper Engine for macOS - Dynamic Desktop & Lock Screen",
-      description:
-        "Native macOS menu bar app built in pure Swift, AppKit, and SwiftUI with hardware-accelerated HEVC playback.",
-    },
-    galleryLayout: "vertical",
-    gallery: [
-      {
-        light: "/project/live_wallpaper/1a.webp",
-        dark: "/project/live_wallpaper/1b.webp",
-      },
-      {
-        light: "/project/live_wallpaper/2a.webp",
-        dark: "/project/live_wallpaper/2b.webp",
-      },
-      {
-        light: "/project/live_wallpaper/3a.webp",
-        dark: "/project/live_wallpaper/3b.webp",
-      },
-      {
-        light: "/project/live_wallpaper/4a.webp",
-        dark: "/project/live_wallpaper/4b.webp",
-      },
-      {
-        light: "/project/live_wallpaper/5a.webp",
-        dark: "/project/live_wallpaper/5b.webp",
-      },
-      "/project/live_wallpaper/6.webp",
-    ],
-  },
-  {
     slug: "nexu5-discord-music-bot",
     title: "NEXU5 Discord Music Bot",
     description:
@@ -434,45 +477,5 @@ export const projects: Project[] = [
     },
     galleryLayout: "vertical",
     gallery: ["/project/nexu5_music_bot/banner.webp"],
-  },
-  {
-    slug: "play-store-ai-review",
-    title: "Play Store AI Console",
-    description:
-      "AI-powered dev console for fetching Google Play reviews, generating Gemini replies, and pushing to Play Console.",
-    fullDescription:
-      "A specialized console for Android developer teams to streamline app reputation and user engagement. Fetches live reviews via the Google Play Developer API (androidpublisher v3), imports historical CSV reports directly from Google Cloud Storage, and automatically translates multi-lingual feedback at zero API cost. Generates contextual developer replies using Google Gemini with dynamic model resolution, custom system prompts with 12 placeholders, targeted per-review directions ('Instruct AI'), and strict 350-character Play Store response limit guardrails before pushing directly to the Play Console with one click.",
-    tags: ["Next.js", "Gemini AI", "Google Play API", "TypeScript"],
-    role: "Full Stack Developer",
-    timeline: "2026",
-    links: {
-      github: "https://github.com/shenmareparas/play-store-ai-review",
-    },
-    image: "/project/play_store_ai_review/banner.webp",
-    logo: "/project/play_store_ai_review/logo.webp",
-    accentColor: {
-      light: "#267B3D",
-      dark: "#34A853",
-    },
-    share: {
-      title: "Play Store AI Console - Google Play Reviews with Gemini AI",
-      description:
-        "Specialized developer console for fetching Google Play reviews and automating contextual replies using Gemini AI.",
-    },
-    galleryLayout: "vertical",
-    gallery: [
-      {
-        light: "/project/play_store_ai_review/1a.webp",
-        dark: "/project/play_store_ai_review/1b.webp",
-      },
-      {
-        light: "/project/play_store_ai_review/2a.webp",
-        dark: "/project/play_store_ai_review/2b.webp",
-      },
-      {
-        light: "/project/play_store_ai_review/3a.webp",
-        dark: "/project/play_store_ai_review/3b.webp",
-      },
-    ],
   },
 ];

@@ -422,6 +422,9 @@ interface CommandPaletteResultsProps {
   onSelectItem: (item: PaletteItem) => void;
   onHoverIndex: (index: number) => void;
   onWheel?: () => void;
+  onScroll?: () => void;
+  onPointerDown?: () => void;
+  onMouseLeave?: () => void;
 }
 
 function CommandPaletteResults({
@@ -432,6 +435,9 @@ function CommandPaletteResults({
   onSelectItem,
   onHoverIndex,
   onWheel,
+  onScroll,
+  onPointerDown,
+  onMouseLeave,
 }: CommandPaletteResultsProps) {
   return (
     <div
@@ -439,6 +445,9 @@ function CommandPaletteResults({
       id="command-palette-results"
       role="listbox"
       onWheel={onWheel}
+      onScroll={onScroll}
+      onPointerDown={onPointerDown}
+      onMouseLeave={onMouseLeave}
       className="flex-1 overflow-y-auto p-2 space-y-1 overscroll-contain"
     >
       {filteredItems.length === 0 ? (
@@ -461,26 +470,39 @@ function CommandPaletteResults({
   );
 }
 
-function CommandPaletteModal({
-  onClose,
-  onOpenShortcuts,
-}: {
-  onClose: () => void;
-  onOpenShortcuts?: () => void;
-}) {
-  const [query, setQuery] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const router = useRouter();
-  const { resolvedTheme, setTheme } = useTheme();
-  const { toast } = useToast();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLDivElement>(null);
+interface UseCommandPaletteHoverScrollProps {
+  listRef: React.RefObject<HTMLDivElement | null>;
+  selectedIndex: number;
+  setSelectedIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+function useCommandPaletteHoverScroll({
+  listRef,
+  selectedIndex,
+  setSelectedIndex,
+}: UseCommandPaletteHoverScrollProps) {
   const isKeyboardNavRef = useRef(true);
   const lastMousePosRef = useRef({ screenX: -1, screenY: -1 });
+  const mouseClientPosRef = useRef({ clientX: -1, clientY: -1 });
+  const selectedIndexRef = useRef(selectedIndex);
+  const rafScrollRef = useRef<number | null>(null);
 
-  // Track physical mouse displacement (>3px screen coords) to ignore stationary cursors & scroll events
+  useEffect(() => {
+    selectedIndexRef.current = selectedIndex;
+  }, [selectedIndex]);
+
+  useEffect(() => {
+    return () => {
+      if (rafScrollRef.current !== null) {
+        cancelAnimationFrame(rafScrollRef.current);
+      }
+    };
+  }, []);
+
   useEffect(() => {
     const handleWindowMouseMove = (e: MouseEvent) => {
+      mouseClientPosRef.current = { clientX: e.clientX, clientY: e.clientY };
+
       if (lastMousePosRef.current.screenX === -1) {
         lastMousePosRef.current = { screenX: e.screenX, screenY: e.screenY };
         return;
@@ -501,15 +523,192 @@ function CommandPaletteModal({
     };
   }, []);
 
-  const handleHoverIndex = useCallback((index: number) => {
-    if (!isKeyboardNavRef.current) {
-      setSelectedIndex(index);
-    }
-  }, []);
+  const handleHoverIndex = useCallback(
+    (index: number) => {
+      if (!isKeyboardNavRef.current) {
+        setSelectedIndex(index);
+      }
+    },
+    [setSelectedIndex],
+  );
+
+  const handleScroll = useCallback(() => {
+    if (isKeyboardNavRef.current) return;
+    if (rafScrollRef.current !== null) return;
+
+    rafScrollRef.current = requestAnimationFrame(() => {
+      rafScrollRef.current = null;
+      if (isKeyboardNavRef.current) return;
+
+      const { clientX, clientY } = mouseClientPosRef.current;
+      if (clientX === -1 || clientY === -1) return;
+      if (!listRef.current) return;
+
+      const rect = listRef.current.getBoundingClientRect();
+      const isInsideList =
+        clientX >= rect.left &&
+        clientX <= rect.right &&
+        clientY >= rect.top &&
+        clientY <= rect.bottom;
+
+      if (!isInsideList) {
+        setSelectedIndex(-1);
+        return;
+      }
+
+      const el = document.elementFromPoint(clientX, clientY);
+      const itemEl = el?.closest("[data-item-index]");
+      if (itemEl && listRef.current.contains(itemEl)) {
+        const idxStr = itemEl.getAttribute("data-item-index");
+        if (idxStr !== null) {
+          const idx = parseInt(idxStr, 10);
+          if (!isNaN(idx)) {
+            setSelectedIndex(idx);
+            return;
+          }
+        }
+      }
+
+      const currentSelectedEl = listRef.current.querySelector(
+        `[data-item-index="${selectedIndexRef.current}"]`,
+      );
+      if (currentSelectedEl) {
+        const itemRect = currentSelectedEl.getBoundingClientRect();
+        if (itemRect.bottom < rect.top || itemRect.top > rect.bottom) {
+          setSelectedIndex(-1);
+        }
+      } else {
+        setSelectedIndex(-1);
+      }
+    });
+  }, [listRef, setSelectedIndex]);
 
   const handleWheel = useCallback(() => {
-    isKeyboardNavRef.current = true;
+    isKeyboardNavRef.current = false;
+    handleScroll();
+  }, [handleScroll]);
+
+  const handlePointerDown = useCallback(() => {
+    isKeyboardNavRef.current = false;
   }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    if (!isKeyboardNavRef.current) {
+      setSelectedIndex(-1);
+    }
+  }, [setSelectedIndex]);
+
+  const setKeyboardNavActive = useCallback((active = true) => {
+    isKeyboardNavRef.current = active;
+  }, []);
+
+  return {
+    isKeyboardNavRef,
+    handleHoverIndex,
+    handleScroll,
+    handleWheel,
+    handlePointerDown,
+    handleMouseLeave,
+    setKeyboardNavActive,
+  };
+}
+
+interface CommandPaletteHeaderProps {
+  inputRef: React.RefObject<HTMLInputElement | null>;
+  query: string;
+  activeItemId?: string;
+  onQueryChange: (query: string) => void;
+  onKeyDown: (e: React.KeyboardEvent) => void;
+}
+
+function CommandPaletteHeader({
+  inputRef,
+  query,
+  activeItemId,
+  onQueryChange,
+  onKeyDown,
+}: CommandPaletteHeaderProps) {
+  useEffect(() => {
+    const focusInput = () => {
+      if (inputRef.current && document.activeElement !== inputRef.current) {
+        inputRef.current.focus({ preventScroll: true });
+      }
+    };
+
+    focusInput();
+    const rafId = requestAnimationFrame(focusInput);
+    const timer1 = setTimeout(focusInput, 30);
+    const timer2 = setTimeout(focusInput, 80);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [inputRef]);
+
+  return (
+    <div
+      onClick={() => inputRef.current?.focus()}
+      className="flex items-center gap-3 border-b border-border px-4 py-3.5 cursor-text"
+    >
+      <label htmlFor="command-palette-input" className="sr-only">
+        Search commands and projects
+      </label>
+      <Search
+        className="h-5 w-5 text-muted-foreground shrink-0"
+        aria-hidden="true"
+      />
+      <input
+        id="command-palette-input"
+        ref={inputRef}
+        value={query}
+        aria-label="Search commands and projects"
+        aria-activedescendant={
+          activeItemId ? `command-item-${activeItemId}` : undefined
+        }
+        onChange={(e) => onQueryChange(e.target.value)}
+        onKeyDown={onKeyDown}
+        placeholder="Type a command or search projects..."
+        className="w-full bg-transparent text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
+        aria-autocomplete="list"
+        aria-controls="command-palette-results"
+      />
+      <kbd className="hidden sm:inline-flex h-5 items-center rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+        ESC
+      </kbd>
+    </div>
+  );
+}
+
+function CommandPaletteModal({
+  onClose,
+  onOpenShortcuts,
+}: {
+  onClose: () => void;
+  onOpenShortcuts?: () => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const router = useRouter();
+  const { resolvedTheme, setTheme } = useTheme();
+  const { toast } = useToast();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+
+  const {
+    isKeyboardNavRef,
+    handleHoverIndex,
+    handleScroll,
+    handleWheel,
+    handlePointerDown,
+    handleMouseLeave,
+    setKeyboardNavActive,
+  } = useCommandPaletteHoverScroll({
+    listRef,
+    selectedIndex,
+    setSelectedIndex,
+  });
 
   const toggleTheme = useCallback(() => {
     const nextTheme = resolvedTheme === "dark" ? "light" : "dark";
@@ -561,36 +760,17 @@ function CommandPaletteModal({
     );
   }, [allItems, query]);
 
-  // Focus input on mount with robust multi-frame guarantee
+  // Scroll active item into view ONLY during keyboard navigation
   useEffect(() => {
-    const focusInput = () => {
-      if (inputRef.current && document.activeElement !== inputRef.current) {
-        inputRef.current.focus({ preventScroll: true });
-      }
-    };
-
-    focusInput();
-    const rafId = requestAnimationFrame(focusInput);
-    const timer1 = setTimeout(focusInput, 30);
-    const timer2 = setTimeout(focusInput, 80);
-
-    return () => {
-      cancelAnimationFrame(rafId);
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, []);
-
-  // Scroll active item into view
-  useEffect(() => {
-    if (!listRef.current) return;
+    if (!listRef.current || !isKeyboardNavRef.current || selectedIndex < 0)
+      return;
     const activeEl = listRef.current.querySelector(
       `[data-item-index="${selectedIndex}"]`,
     );
     if (activeEl) {
       activeEl.scrollIntoView({ block: "nearest" });
     }
-  }, [selectedIndex]);
+  }, [isKeyboardNavRef, selectedIndex]);
 
   const handleSelectItem = useCallback(
     (item: PaletteItem) => {
@@ -609,7 +789,7 @@ function CommandPaletteModal({
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    isKeyboardNavRef.current = true;
+    setKeyboardNavActive(true);
     if (e.key === "?") {
       e.preventDefault();
       inputRef.current?.blur();
@@ -629,7 +809,8 @@ function CommandPaletteModal({
       );
     } else if (e.key === "Enter") {
       e.preventDefault();
-      const activeItem = filteredItems[selectedIndex];
+      const activeIndex = selectedIndex >= 0 ? selectedIndex : 0;
+      const activeItem = filteredItems[activeIndex];
       if (activeItem) {
         handleSelectItem(activeItem);
       }
@@ -645,6 +826,15 @@ function CommandPaletteModal({
       });
     }
   };
+
+  const handleQueryChange = useCallback(
+    (newQuery: string) => {
+      setKeyboardNavActive(true);
+      setQuery(newQuery);
+      setSelectedIndex(0);
+    },
+    [setKeyboardNavActive],
+  );
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center p-4 pt-16 sm:pt-24 overscroll-contain">
@@ -677,43 +867,13 @@ function CommandPaletteModal({
         transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-xl max-h-[70vh] flex flex-col rounded-2xl border border-border bg-card shadow-2xl overflow-hidden overscroll-contain"
       >
-        <div
-          onClick={() => inputRef.current?.focus()}
-          className="flex items-center gap-3 border-b border-border px-4 py-3.5 cursor-text"
-        >
-          <label htmlFor="command-palette-input" className="sr-only">
-            Search commands and projects
-          </label>
-          <Search
-            className="h-5 w-5 text-muted-foreground shrink-0"
-            aria-hidden="true"
-          />
-          <input
-            id="command-palette-input"
-            ref={inputRef}
-            autoFocus
-            value={query}
-            aria-label="Search commands and projects"
-            aria-activedescendant={
-              filteredItems[selectedIndex]
-                ? `command-item-${filteredItems[selectedIndex].id}`
-                : undefined
-            }
-            onChange={(e) => {
-              isKeyboardNavRef.current = true;
-              setQuery(e.target.value);
-              setSelectedIndex(0);
-            }}
-            onKeyDown={handleKeyDown}
-            placeholder="Type a command or search projects..."
-            className="w-full bg-transparent text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
-            aria-autocomplete="list"
-            aria-controls="command-palette-results"
-          />
-          <kbd className="hidden sm:inline-flex h-5 items-center rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-            ESC
-          </kbd>
-        </div>
+        <CommandPaletteHeader
+          inputRef={inputRef}
+          query={query}
+          activeItemId={filteredItems[selectedIndex]?.id}
+          onQueryChange={handleQueryChange}
+          onKeyDown={handleKeyDown}
+        />
 
         <CommandPaletteResults
           listRef={listRef}
@@ -723,6 +883,9 @@ function CommandPaletteModal({
           onSelectItem={handleSelectItem}
           onHoverIndex={handleHoverIndex}
           onWheel={handleWheel}
+          onScroll={handleScroll}
+          onPointerDown={handlePointerDown}
+          onMouseLeave={handleMouseLeave}
         />
 
         <CommandPaletteFooter

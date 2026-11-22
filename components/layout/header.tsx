@@ -33,7 +33,7 @@ export function Header() {
               href="/"
               prefetch={false}
               onMouseEnter={() => router.prefetch("/")}
-              className="flex items-center space-x-2 cursor-hover rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background no-underline"
+              className="flex items-center space-x-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background no-underline"
             >
               <span className="text-xl font-bold">Paras Shenmare</span>
             </Link>
@@ -66,7 +66,7 @@ export function Header() {
                   onFocus={() => router.prefetch(item.href)}
                   onClick={handleClick}
                   className={cn(
-                    "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary cursor-hover rounded-full no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                    "relative px-4 py-2 text-sm font-medium transition-colors hover:text-primary rounded-full no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
                     isActive
                       ? "bg-secondary text-foreground"
                       : "text-muted-foreground",

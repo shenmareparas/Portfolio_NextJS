@@ -10,7 +10,6 @@ import { LoadingProvider } from "@/components/providers/loading-provider";
 import { KeyboardProvider } from "@/components/providers/keyboard-provider";
 import { ClientLayout } from "@/components/layout/client-layout";
 import { Toaster } from "@/components/ui/toaster";
-import { CustomCursor } from "@/components/ui/custom-cursor";
 import { Preloader } from "@/components/ui/preloader";
 import { siteConfig } from "@/data/config";
 import { PortraitLock } from "@/components/ui/portrait-lock";
@@ -97,7 +96,6 @@ export default function RootLayout({
                 <LoadingProvider>
                   <KeyboardProvider>
                     <Preloader />
-                    <CustomCursor />
                     <ClientLayout>{children}</ClientLayout>
                     <Toaster />
                   </KeyboardProvider>
